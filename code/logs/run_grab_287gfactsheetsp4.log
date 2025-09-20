@@ -1,0 +1,369 @@
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20210112155612
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2021/20210112155612/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20210125041029
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20210125041029
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20210320180006
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2021/20210320180006/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20210328090508
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20210419181547
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2021/20210419181547/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20210425075351
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2021/20210425075351/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20210425075353
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20210428212003
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2021/20210428212003/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20210428212004
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20210429093345
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2021/20210429093345/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20210430221732
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20210503103411
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20210706001744
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2021/20210706001744/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20210801183415
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20210906040409
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2021/20210906040409/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20210906040410
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20210929103304
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2021/20210929103304/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20210929103306
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20211016104611
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2021/20211016104611/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20220110225653
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2022/20220110225653/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20220110225656
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20220114033324
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2022/20220114033324/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20220127053518
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2022/20220127053518/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20220304205420
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20220304205420
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20220423175956
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20220514120106
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2022/20220514120106/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20220514120108
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20220713114050
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2022/20220713114050/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20220814132657
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20220814132657
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20220902060132
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20221207080525
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2022/20221207080525/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20221207212322
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2022/20221207212322/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20230322140224
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2023/20230322140224/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20230923180633
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2023/20230923180633/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20230923180639
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20240308144328
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2024/20240308144328/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20240308144329
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20240704015206
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20240704133444
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20240721100459
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20240721183713
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20240809125413
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2024/20240809125413/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20240809125425
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20241110223337
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2024/20241110223337/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20241110223338
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20241201153910
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20241201153910
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20241212170832
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2024/20241212170832/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20241221150202
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20250131123230
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2025/20250131123230/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20250131123231
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20250202164505
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20250202195203
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2025/20250202195203/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20250206222814
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20250427030527
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2025/20250427030527/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20250427030536
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+Traceback (most recent call last):
+  File "/opt/anaconda3/bin/waybackpack", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/waybackpack/cli.py", line 156, in main
+    pack.download_to(
+  File "/opt/anaconda3/lib/python3.12/site-packages/waybackpack/pack.py", line 111, in download_to
+    content = asset.fetch(session=self.session, raw=raw, root=root)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/waybackpack/asset.py", line 54, in fetch
+    res = session.get(url)
+          ^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/waybackpack/session.py", line 61, in get
+    time.sleep(self.delay_retry)
+KeyboardInterrupt

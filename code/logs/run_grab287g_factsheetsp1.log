@@ -1,0 +1,274 @@
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20110220090259
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2011/20110220090259/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20110818151202
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2011/20110818151202/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20111020094214
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2011/20111020094214/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20120120154424
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2012/20120120154424/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20120122143915
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2012/20120122143915/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20120124190924
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2012/20120124190924/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20120127221630
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2012/20120127221630/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20120129122129
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2012/20120129122129/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20120131140722
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2012/20120131140722/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20120201072442
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2012/20120201072442/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20120202142504
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2012/20120202142504/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20120205142748
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2012/20120205142748/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20120209125643
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2012/20120209125643/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20120210095525
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2012/20120210095525/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20120211122539
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2012/20120211122539/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20120212142417
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2012/20120212142417/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20120213093623
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2012/20120213093623/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20120215061014
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2012/20120215061014/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20120218125745
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20120219204705
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20120223231106
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20120225050537
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20120225201726
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20120226114337
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20120227111443
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20120229084106
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20120303065259
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20120304155702
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2012/20120304155702/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20120305074422
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2012/20120305074422/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20120309154321
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2012/20120309154321/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20120606112224
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2012/20120606112224/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20120618203310
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2012/20120618203310/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20120725081802
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2012/20120725081802/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20120801234737
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2012/20120801234737/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20120808225431
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2012/20120808225431/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20120915195936
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2012/20120915195936/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20120928100424
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2012/20120928100424/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20121007043419
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2012/20121007043419/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20121013214554
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2012/20121013214554/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20121017014941
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2012/20121017014941/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20121019064646
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2012/20121019064646/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20130118070325
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2013/20130118070325/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20130402163405
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2013/20130402163405/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20130601201323
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2013/20130601201323/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20130729215844
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2013/20130729215844/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20130821162903
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2013/20130821162903/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20130904035853
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+Traceback (most recent call last):
+  File "/opt/anaconda3/bin/waybackpack", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/waybackpack/cli.py", line 142, in main
+    snapshots = search(
+                ^^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/waybackpack/cdx.py", line 31, in search
+    raise WaybackpackException("Difficulty connecting to Wayback Machine CDX API")
+waybackpack.cdx.WaybackpackException: Difficulty connecting to Wayback Machine CDX API
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+Traceback (most recent call last):
+  File "/opt/anaconda3/bin/waybackpack", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/waybackpack/cli.py", line 142, in main
+    snapshots = search(
+                ^^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/waybackpack/cdx.py", line 31, in search
+    raise WaybackpackException("Difficulty connecting to Wayback Machine CDX API")
+waybackpack.cdx.WaybackpackException: Difficulty connecting to Wayback Machine CDX API
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+Traceback (most recent call last):
+  File "/opt/anaconda3/bin/waybackpack", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/waybackpack/cli.py", line 142, in main
+    snapshots = search(
+                ^^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/waybackpack/cdx.py", line 31, in search
+    raise WaybackpackException("Difficulty connecting to Wayback Machine CDX API")
+waybackpack.cdx.WaybackpackException: Difficulty connecting to Wayback Machine CDX API
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.

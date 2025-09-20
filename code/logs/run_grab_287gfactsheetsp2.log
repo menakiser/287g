@@ -1,0 +1,300 @@
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20130904035853
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2013/20130904035853/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+Traceback (most recent call last):
+  File "/opt/anaconda3/bin/waybackpack", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/waybackpack/cli.py", line 142, in main
+    snapshots = search(
+                ^^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/waybackpack/cdx.py", line 31, in search
+    raise WaybackpackException("Difficulty connecting to Wayback Machine CDX API")
+waybackpack.cdx.WaybackpackException: Difficulty connecting to Wayback Machine CDX API
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+Traceback (most recent call last):
+  File "/opt/anaconda3/bin/waybackpack", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/waybackpack/cli.py", line 142, in main
+    snapshots = search(
+                ^^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/waybackpack/cdx.py", line 31, in search
+    raise WaybackpackException("Difficulty connecting to Wayback Machine CDX API")
+waybackpack.cdx.WaybackpackException: Difficulty connecting to Wayback Machine CDX API
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+Traceback (most recent call last):
+  File "/opt/anaconda3/bin/waybackpack", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/waybackpack/cli.py", line 142, in main
+    snapshots = search(
+                ^^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/waybackpack/cdx.py", line 31, in search
+    raise WaybackpackException("Difficulty connecting to Wayback Machine CDX API")
+waybackpack.cdx.WaybackpackException: Difficulty connecting to Wayback Machine CDX API
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+Traceback (most recent call last):
+  File "/opt/anaconda3/bin/waybackpack", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/waybackpack/cli.py", line 142, in main
+    snapshots = search(
+                ^^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/waybackpack/cdx.py", line 31, in search
+    raise WaybackpackException("Difficulty connecting to Wayback Machine CDX API")
+waybackpack.cdx.WaybackpackException: Difficulty connecting to Wayback Machine CDX API
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+Traceback (most recent call last):
+  File "/opt/anaconda3/bin/waybackpack", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/waybackpack/cli.py", line 142, in main
+    snapshots = search(
+                ^^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/waybackpack/cdx.py", line 31, in search
+    raise WaybackpackException("Difficulty connecting to Wayback Machine CDX API")
+waybackpack.cdx.WaybackpackException: Difficulty connecting to Wayback Machine CDX API
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+Traceback (most recent call last):
+  File "/opt/anaconda3/bin/waybackpack", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/waybackpack/cli.py", line 142, in main
+    snapshots = search(
+                ^^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/waybackpack/cdx.py", line 31, in search
+    raise WaybackpackException("Difficulty connecting to Wayback Machine CDX API")
+waybackpack.cdx.WaybackpackException: Difficulty connecting to Wayback Machine CDX API
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20200720155149
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2020/20200720155149/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20200930055947
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2020/20200930055947/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20201017173020
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2020/20201017173020/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20201114123048
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2020/20201114123048/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20201114123049
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2020/20201114123049/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20201115155415
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2020/20201115155415/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20201115170709
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2020/20201115170709/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20201115170710
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2020/20201115170710/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20201116072457
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2020/20201116072457/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20201116072458
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2020/20201116072458/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20201116083014
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2020/20201116083014/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20201116083015
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2020/20201116083015/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20201116084009
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2020/20201116084009/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20201116205001
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2020/20201116205001/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20201116205002
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2020/20201116205002/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20201117220317
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2020/20201117220317/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20201117220318
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2020/20201117220318/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20201118003915
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+Traceback (most recent call last):
+  File "/opt/anaconda3/bin/waybackpack", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/waybackpack/cli.py", line 142, in main
+    snapshots = search(
+                ^^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/waybackpack/cdx.py", line 31, in search
+    raise WaybackpackException("Difficulty connecting to Wayback Machine CDX API")
+waybackpack.cdx.WaybackpackException: Difficulty connecting to Wayback Machine CDX API
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+Traceback (most recent call last):
+  File "/opt/anaconda3/bin/waybackpack", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/waybackpack/cli.py", line 142, in main
+    snapshots = search(
+                ^^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/waybackpack/cdx.py", line 31, in search
+    raise WaybackpackException("Difficulty connecting to Wayback Machine CDX API")
+waybackpack.cdx.WaybackpackException: Difficulty connecting to Wayback Machine CDX API
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+Traceback (most recent call last):
+  File "/opt/anaconda3/bin/waybackpack", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/waybackpack/cli.py", line 142, in main
+    snapshots = search(
+                ^^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/waybackpack/cdx.py", line 31, in search
+    raise WaybackpackException("Difficulty connecting to Wayback Machine CDX API")
+waybackpack.cdx.WaybackpackException: Difficulty connecting to Wayback Machine CDX API
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+Traceback (most recent call last):
+  File "/opt/anaconda3/bin/waybackpack", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/waybackpack/cli.py", line 142, in main
+    snapshots = search(
+                ^^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/waybackpack/cdx.py", line 31, in search
+    raise WaybackpackException("Difficulty connecting to Wayback Machine CDX API")
+waybackpack.cdx.WaybackpackException: Difficulty connecting to Wayback Machine CDX API
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Connection error
+INFO:waybackpack.session: Waiting 5 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+Traceback (most recent call last):
+  File "/opt/anaconda3/bin/waybackpack", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/waybackpack/cli.py", line 142, in main
+    snapshots = search(
+                ^^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/waybackpack/cdx.py", line 31, in search
+    raise WaybackpackException("Difficulty connecting to Wayback Machine CDX API")
+waybackpack.cdx.WaybackpackException: Difficulty connecting to Wayback Machine CDX API

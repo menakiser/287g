@@ -1,0 +1,316 @@
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20140209051553
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2014/20140209051553/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20140414075008
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2014/20140414075008/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20140910162129
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2014/20140910162129/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20150213232336
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2015/20150213232336/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20150416134552
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2015/20150416134552/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20150424004259
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2015/20150424004259/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20150429193513
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2015/20150429193513/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20150515231841
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2015/20150515231841/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20150529063049
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2015/20150529063049/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20150729061758
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2015/20150729061758/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20150912163733
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20150929062806
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2015/20150929062806/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20160119003250
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2016/20160119003250/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20160119003251
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2016/20160119003251/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20160305020003
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2016/20160305020003/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20160305023013
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2016/20160305023013/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20160305023016
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2016/20160305023016/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20160317215255
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2016/20160317215255/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20160422191134
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2016/20160422191134/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20160826172814
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2016/20160826172814/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20160826172816
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2016/20160826172816/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20161123205033
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2016/20161123205033/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20161123205037
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2016/20161123205037/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20161130065646
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20161201190232
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2016/20161201190232/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20161211094112
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2016/20161211094112/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20161211185426
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2016/20161211185426/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20161211185428
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2016/20161211185428/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20170118064648
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20170118064648
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20170118102907
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2017/20170118102907/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20170118102908
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2017/20170118102908/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20170129120319
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2017/20170129120319/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20170201050229
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2017/20170201050229/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20170206090643
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20170216223118
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2017/20170216223118/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20170216223119
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2017/20170216223119/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20170314071457
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2017/20170314071457/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20170320000617
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2017/20170320000617/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20170405194421
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2017/20170405194421/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20170405194515
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2017/20170405194515/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20170429163941
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2017/20170429163941/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20170429163948
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2017/20170429163948/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20170623041449
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2017/20170623041449/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20170623041452
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2017/20170623041452/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20171207093915
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2017/20171207093915/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20171207093953
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2017/20171207093953/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20171228125550
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2017/20171228125550/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20171228125551
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2017/20171228125551/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20180608235301
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2018/20180608235301/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20180608235302
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2018/20180608235302/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20180802182725
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2018/20180802182725/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20180802182726
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2018/20180802182726/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20180813012610
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2018/20180813012610/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20181001070059
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2018/20181001070059/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20181001105657
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2018/20181001105657/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20181020011913
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2018/20181020011913/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20190104031453
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2019/20190104031453/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20190612042416
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2019/20190612042416/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20190612042417
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2019/20190612042417/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20191011225111
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2019/20191011225111/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20191030065520
+INFO:waybackpack.session: HTTP status code: 302
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2019/20191030065520/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20191030065521
+INFO:waybackpack.session: HTTP status code: 301
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2019/20191030065521/www.ice.gov/news/library/factsheets/287g.htm
+
