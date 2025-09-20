@@ -1,0 +1,14 @@
+# avoid data files
+*Data/
+*Data/*
+Data/*
+*.dta
+*.csv
+*.xlsx
+
+
+# iOS temporary files
+*.stswp
+*.DS_Store
+
+
