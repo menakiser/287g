@@ -1,7 +1,7 @@
 #!/bin/bash
 
 for year in {2021..2025}; do
-  outdir="/Users/jimenakiser/Desktop/287g/data/wayback/idarrests/$year"
+  outdir="/Users/jimenakiser/Desktop/287g/data/raw/wayback/idarrests/$year"
   mkdir -p "$outdir"
   
   waybackpack "https://www.ice.gov/identify-and-arrest/287g" \
