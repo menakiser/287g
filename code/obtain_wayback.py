@@ -43,6 +43,8 @@ def save_tables_to_excel(html_file_path, output_excel_path, datename):
         print(f"No tables found in {html_file_path}")
         return  # just skip saving, continue to next file
 
+    total_tables = len(tables)
+
     with pd.ExcelWriter(output_excel_path, engine='xlsxwriter') as writer:
         for i, table in enumerate(tables):
             try:
@@ -54,7 +56,7 @@ def save_tables_to_excel(html_file_path, output_excel_path, datename):
                         prev_paras.append(tag.get_text(strip=True))
                         if len(prev_paras) == 2:
                             break
-                prev_paras = prev_paras[::-1]  # reverse to restore order
+                prev_paras = prev_paras[::-1]
 
                 # --- parse table into DataFrame ---
                 df = pd.read_html(str(table))[0]
@@ -68,17 +70,16 @@ def save_tables_to_excel(html_file_path, output_excel_path, datename):
                             row_links.append(a["href"])
                     link_cols.append(row_links)
 
-                # Add link columns dynamically
                 max_links = max((len(x) for x in link_cols), default=0)
                 for k in range(max_links):
                     df[f"link{k+1}"] = [
                         links[k] if k < len(links) else None
-                        for links in link_cols[1:]  # skip header row links
+                        for links in link_cols[1:]  # skip header row
                     ]
 
                 # Add metadata columns
                 df["datename"] = datename
-                df["table_order"] = i + 1
+                df["table_order"] = f"{i+1}/{total_tables}"
 
                 sheet_name = f"Table{i+1}"
 
@@ -94,6 +95,7 @@ def save_tables_to_excel(html_file_path, output_excel_path, datename):
                 print(f"Failed to parse a table in {html_file_path}: {e}")
 
     print(f"Saved {len(tables)} tables to {output_excel_path}")
+
 
 
 

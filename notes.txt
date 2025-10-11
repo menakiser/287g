@@ -1,0 +1,59 @@
+
+Downloading using waybackpack 
+- create a sh file that loops through all years grab_287gfactsheets.sh
+- make it executable chmod +x grab_287gfactsheets.sh
+- run it and store log file to keep track of skipped files ./grab_287gfactsheets.sh > run_grab_287gfactsheets.log 2>&1
+
+
+
+
+*http://www.ice.gov/news/library/factsheets/287g.htm 
+4 times
+
+
+
+*http://www.ice.gov/news/library/factsheets/287g.htm
+197 times -> 2011-2014
+
+waybackpack http://www.ice.gov/news/library/factsheets/287g.htm -d /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2011 --from-date 20110101 --to-date 20111231 --no-clobber --uniques-only
+
+waybackpack http://www.ice.gov/news/library/factsheets/287g.htm -d /Users/jimenakiser/Desktop/287g/data/wayback/factsheets/2012 --from-date 20120101 --to-date 20121231
+
+
+* https://www.ice.gov/factsheets/287g
+2,561 - 2015 - 2017
+
+*https://www.ice.gov/287g
+3,626 times
+2017 -2021
+
+
+* https://www.ice.gov/identify-and-arrest/287g?msclkid=11fe3c00ba9311ec846e6a10d07fefb2
+2022-2025
+
+
+* https://www.ice.gov/identify-and-arrest/287g
+2,775 times, January 13, 2021 and September 18, 2025.
+--- after 20250221003342, documents are attached
+
+# waybackpack http://www.ice.gov/news/library/factsheets/287g.htm -d /Users/jimenakiser/liegroup\ Dropbox/Jimena\ Villanueva\ Kiser/secure_communities/ice/wayback/pre2015 --from-date 2010 --to-date 2014
+
+
+
+# waybackpack http://www.ice.gov/news/library/factsheets/287g -d /Users/jimenakiser/liegroup\ Dropbox/Jimena\ Villanueva\ Kiser/secure_communities/ice/wayback/2015-2020 --from-date 2015 --to-date 2020
+
+
+
+# https://www.ice.gov/doclib/about/offices/ero/287g/
+
+20170909114156
+# waybackpack https://www.ice.gov/identify-and-arrest/287g -d /Users/jimenakiser/liegroup\ Dropbox/Jimena\ Villanueva\ Kiser/secure_communities/ice/wayback/post2020 --from-date 2021 --to-date 2025 --no-clobber
+
+
+
+# works best if you try year by year
+
+
+https://www.ice.gov/doclib/about/offices/ero/287g/
+
+Install waybackpack terminal tool https://github.com/wabarc/wayback
