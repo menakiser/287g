@@ -11,4 +11,5 @@ Data/*
 *.stswp
 *.DS_Store
 
-
+*.docx
+*.pdf
