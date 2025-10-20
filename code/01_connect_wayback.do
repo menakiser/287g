@@ -30,6 +30,7 @@ foreach subfolder in `subfolders' {
 		
 		* make sure all variables are stored consistently 
 		rename_id_vars	// rename from A..H to v1..v9
+		rename_id_vars
 		store_2rows //store first two rows of information on current status of agreements
 		//assign consistent varnames
 		replace information1 = "" if _n==1
@@ -42,7 +43,7 @@ foreach subfolder in `subfolders' {
 		id_nsheets 
 		qui sum total_tables
 		local ttables = r(max)
-		di in red "`ttables' tables fount in `subfolder'/`file'"
+		di in red "`ttables' tables found in `subfolder'/`file'"
 		
 		*append
 		append using "$oi/ice_all_287g" 
@@ -57,7 +58,8 @@ foreach subfolder in `subfolders' {
 				di in red "Processing file `subfolder'/`file' - Table `i'"
 				
 				* make sure all variables are stored consistently as for Table 1
-				rename_id_vars	// rename from A..H to v1..v9
+				rename_id_vars	// rename from A..H to v1..v9, set everything to lower case
+				rename_id_vars
 				store_2rows //store first two rows of info
 				
 				*assign consistent varnames
@@ -80,24 +82,38 @@ foreach subfolder in `subfolders' {
 end
 
 
-
+cap program drop rename_id_vars
 program rename_id_vars
+	global varnamelist  `" "state" "law enforcement agency" "support type" "signed" "moa" "link1" "link2" "datename" "table_order" "'
+	global varnamelist2 `" "moa name" "meeting date" "location" "type" "datename" "table_order" "'
+
 	local i = 1
 	foreach var of varlist _all {
-		replace `var' = subinstr(`var', " ", "", .) if _n==3 //for storing names
+		local firstvar = `var'[1]
+		local lab: word `i' of $varnamelist
+		local lab2: word `i' of $varnamelist2
+		
+		replace `var' = strlower(`var')
+
+		//for storing names
+		replace `var' = subinstr(`var', " ", "", .) if _n==1  & ("`firstvar'" == "`lab'" | "`firstvar'" == "`lab2'")
+		replace `var' = subinstr(`var', " ", "", .) if _n==3 & "`firstvar'" != "`lab'" & "`firstvar'" == "`lab2'" 
+
 		rename `var' v`i'
+
 		local++ i 
 	}
 end
 
+cap program drop store_2rows
 program store_2rows
 	gen information1 = v1 if _n==1
 	gen information2 = v1 if _n==2
 	ereplace information1 = mode(information1)
 	ereplace information2 = mode(information2)
-	if information1[1]!="STATE" {
+	if information1[1]!="state" & information1[1]!="moaname" {
 		drop if _n==1
-		if information2[1]!="STATE" {
+		if information2[1]!="state"  & information1[1]!="moaname" {
 			drop if _n==1
 		}
 	}

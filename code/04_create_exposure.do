@@ -28,6 +28,7 @@ replace afact= 1 if mi(afact)
 
 
 *register date signed as the first date retrieved
+sort dateretrieved //first observed year 2011-02-20, all date signed in 2011 were pre 2010-08-19
 expand 2 if dateretrieved!=datesigned, gen(dup)
 replace dateretrieved=datesigned if dup==1 
 gen signing_date =  dateretrieved==datesigned
@@ -76,5 +77,14 @@ replace exposure_weight = 0 if exposure == 0
 replace exposure = exposure * exposure_weight
 drop exposure_weight
 
+* collapse by year from 2011 (first year of retrieval) to 2019 (last year of sample)
+sort date //start date 01 feb 2005, end on 31 dec 2021 (last date of retrieval)
+gen year = year(date) 
+collapse (mean) exposure , by(year supporttype statefips countyfips)
 
-* pending: by group
+keep if year >=2011 & year <=2019
+
+bys statefips countyfips: egen some_exp = max(exposure)
+drop if some_exp == 0
+drop some_exp
+
