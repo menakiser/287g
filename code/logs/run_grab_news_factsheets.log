@@ -1,0 +1,36 @@
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20150213232336
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/raw/wayback/news_factsheets/2015/20150213232336/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20150416134552
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/raw/wayback/news_factsheets/2015/20150416134552/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20150424004259
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/raw/wayback/news_factsheets/2015/20150424004259/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20150429193513
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/raw/wayback/news_factsheets/2015/20150429193513/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20150515231841
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/raw/wayback/news_factsheets/2015/20150515231841/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20150529063049
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/raw/wayback/news_factsheets/2015/20150529063049/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20150729061758
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/raw/wayback/news_factsheets/2015/20150729061758/www.ice.gov/news/library/factsheets/287g.htm
+
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20150912163733
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Waiting 30 second(s) before retrying.
+INFO:waybackpack.session: Maximum retries reached, skipping.
+INFO:waybackpack.pack: Sleeping 15 seconds
+INFO:waybackpack.pack: Fetching http://www.ice.gov/news/library/factsheets/287g.htm @ 20150929062806
+INFO:waybackpack.pack: Writing to /Users/jimenakiser/Desktop/287g/data/raw/wayback/news_factsheets/2015/20150929062806/www.ice.gov/news/library/factsheets/287g.htm
+

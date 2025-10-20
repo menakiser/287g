@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for year in {2011..2014}; do
+for year in {2010..2015}; do
   outdir="/Users/jimenakiser/Desktop/287g/data/raw/wayback/news_factsheets/$year"
   mkdir -p "$outdir"
   
