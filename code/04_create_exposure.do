@@ -20,7 +20,7 @@ gen temp_countyfips =countyfips1
 drop countyfips*
 merge m:1 statefips placefips using "$oi/xwalk/place_county", nogen keep(1 3)
 drop *4 *5
-reshape long countyfips afact pop10 countypop10, i(LEA supporttype datesigned dateretrieved state statefips placefips ) j(countyorder)
+reshape long countyfips afact pop10 countypop10, i(lea supporttype datesigned dateretrieved state statefips placefips ) j(countyorder)
 drop if countyorder>1 & (placefips==. | countyfips==.)
 replace countyfips = temp_countyfips if countyfips==.
 drop temp_countyfips
@@ -78,13 +78,30 @@ replace exposure = exposure * exposure_weight
 drop exposure_weight
 
 * collapse by year from 2011 (first year of retrieval) to 2019 (last year of sample)
-sort date //start date 01 feb 2005, end on 31 dec 2021 (last date of retrieval)
+sort date //start date 01 feb 2005, end on 21 feb 2025 (last date of retrieval)
 gen year = year(date) 
 collapse (mean) exposure , by(year supporttype statefips countyfips)
 
 keep if year >=2011 & year <=2019
 
+*drop counties with no exposure during this period
 bys statefips countyfips: egen some_exp = max(exposure)
 drop if some_exp == 0
 drop some_exp
+
+gen exp_jail = exposure if strpos(supporttype, "jail")>0
+replace exp_jail = 0 if mi(exp_jail)
+gen exp_task = exposure if strpos(supporttype, "task")>0
+replace exp_task = 0 if mi(exp_task)
+gen exp_warrant = exposure if strpos(supporttype, "warrant")>0
+replace exp_warrant = 0 if mi(exp_warrant)
+
+collapse (sum) exp_any=exposure exp_jail exp_task exp_warrant, by(statefips countyfips year)
+
+tab year 
+//155 unique counties
+//9 years of treatment
+
+compress
+save "$oi/exposure_county_year", replace
 

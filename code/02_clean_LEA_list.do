@@ -2,7 +2,7 @@
 Mena kiser
 10-15-25
 
-Obtain geo codes from LEA participating in 287g 
+Obtain geo codes from lea participating in 287g 
 ---------------------*/
 
 clear all
@@ -20,6 +20,7 @@ rename (StateCodeFIPS CountyCodeFIPS CountySubdivisionCodeFIPS PlaceCodeFIP Cons
 replace geoname = strlower(geoname)
 foreach v of varlist _all {
 	cap destring `v', replace
+	cap replace `v' = strlower(`v')
 }
 drop if statefips==0
 gen state = geoname if countyfips==0 & subcountyfips==0 &  placefips==0 &  cityfips==0
@@ -74,34 +75,36 @@ reshape wide countyfips , i(statefips placename placefips) j(countyorder)
 tempfile places_wcounty
 save `places_wcounty', replace
 
-*-------- PART 2: CLEAN TABLE COMPILATION -----------
+*-------- PART 2: CleaN TABLE COMPILATION -----------
 use "$oi/ice_all_287g", clear
+
+*remove if 287g is pending 
+drop if !mi(meetingdate) //will maybe come back to this later
+drop moaname meetingdate location type
 compress
-rename (LAWENFORCEMENTAGENCY SUPPORTTYPE DATESSIGNED)  (LEA supporttype datesigned)
-foreach var of varlist _all {
+rename (lawenforcementagency supporttype signed)  (lea supporttype datesigned)
+foreach var of varlist _all { 
 	capture replace `var' = trim(`var') 
 }
 * extra vars v2 v3 SIGNED v4
-tab LEA if !mi(v2)
+tab lea if !mi(v2)
 count if  !mi(v2)
-replace LEA = v2 if mi(LEA) & !mi(v2)
+replace lea = v2 if mi(lea) & !mi(v2)
 
 count if  !mi(v2)
-replace LEA = v2 if mi(LEA) & !mi(v2)
+replace lea = v2 if mi(lea) & !mi(v2)
 
 tab supporttype if !mi(v3)
 count if !mi(v3)
 replace supporttype = v3 if mi(supporttype) & !mi(v3)
 
-tab datesigned if !mi(SIGNED)
-count if !mi(SIGNED)
-replace datesigned = SIGNED if mi(datesigned) & !mi(SIGNED)
-
 tab datesigned if !mi(v4)
 count if !mi(v4)
 replace datesigned = v4 if mi(datesigned) & !mi(v4)
 
-drop v2 v3 SIGNED v4
+drop v2 v3 v4
+drop if mi(supporttype) // all of this are in second table, in 2025, assumed to be pending. will maybe come back to this later
+
 
 * inspect missing values and homogenize values
 foreach var of varlist _all {
@@ -110,31 +113,31 @@ foreach var of varlist _all {
 		di in red "`r(N)' missing values for `var'"
 		}
 }
-tab MOA
-drop MOA
-replace STATE = subinstr(STATE, "*", "", .)
-replace supporttype = strupper(supporttype)
-replace supporttype = "JAIL ENFORCEMENT" if supporttype=="JAILENFORCEMENT"
-replace supporttype = "JAIL ENFORCEMENT" if supporttype=="JAIL ENFORCEMENT MODEL" 
-replace supporttype = "WARRANT SERVICE OFFICER" if supporttype=="WARRANTSERVICEOFFICER"
-replace LEA = "Etowah County Sheriff's Office"  if LEA=="EtowahCountySheriff'sOffice"
-replace LEA =  "Department of Corrections"  if LEA == "DepartmentofCorrections" 
-replace LEA = "City of Mesa Police Department" if LEA == "Mesa Police Department"
-replace LEA = "City of Durham Police Department" if LEA == "Durham Police Department"
-replace LEA = "Prince William-Manassas Regional Adult Detention Center" if LEA == "Prince William-Manassas Regional Jail"
-replace LEA = "Massachusetts Department of Corrections" if LEA=="Massachusetts Department of Correction"
-replace LEA = subinstr(LEA, " (Addendum)", "", . )
-replace LEA = subinstr(LEA, " Addendum", "", . )
-* burnet county was mistakenly assigned florida: https://web.archive.org/web/20200606022401/https://www.ice.gov/doclib/287gMOA/287gWSO_BurnetCoTx2019-11-05.pdf
-replace STATE = "TEXAS" if LEA =="Burnet County Sheriff's Office"
-replace LEA = "Harford County Sheriff's Office" if LEA == "Hartford County Sheriff's Office"
-replace LEA = subinstr(LEA, "St Johns", "St. Johns", .)
-replace LEA = subinstr(LEA, "Albermarle", "Albemarle", .) if STATE == "GEORGIA" | STATE == "NORTH CAROLINA"
-replace STATE = "NORTH CAROLINA" if strpos(LEA, "Albemarle")>0
-replace STATE = "NORTH CAROLINA" if strpos(LEA, "Caldwell County") & STATE == "GEORGIA" 
-replace STATE = "TEXAS" if strpos(LEA, "Aransas County")
-replace STATE = "MONTANA" if strpos(LEA, "Gallatin")>0
-replace LEA = subinstr(LEA, "Mantiowoc", "Manitowoc", .)
+tab moa
+drop moa
+replace state = subinstr(state, "*", "", .)
+replace supporttype = "jail enforcement" if supporttype=="jailenforcement"
+replace supporttype = "jail enforcement" if supporttype=="jail enforcement model" 
+replace supporttype = "task force" if supporttype=="task force model" 
+replace supporttype = "warrant service officer" if supporttype=="warrantserviceofficer"
+replace lea = "etowah county sheriff's office"  if lea=="etowahcountysheriff'soffice"
+replace lea =  "department of corrections"  if lea == "departmentofcorrections" 
+replace lea = "city of mesa police department" if lea == "mesa police department"
+replace lea = "city of durham police department" if lea == "durham police department"
+replace lea = "prince william-manassas regional adult detention center" if lea == "prince william-manassas regional jail"
+replace lea = "massachusetts department of corrections" if lea=="massachusetts department of correction"
+replace lea = subinstr(lea, " (addendum)", "", . )
+replace lea = subinstr(lea, " addendum", "", . )
+* burnet county was mistakenly assigned florida: https://web.archive.org/web/20200606022401/https://www.ice.gov/doclib/287gmoa/287gwso_burnetcotx2019-11-05.pdf
+replace state = "texas" if lea =="burnet county sheriff's office"
+replace lea = "harford county sheriff's office" if lea == "hartford county sheriff's office"
+replace lea = subinstr(lea, "st johns", "st. johns", .)
+replace lea = subinstr(lea, "albermarle", "albemarle", .) if state == "georgia" | state == "north carolina"
+replace state = "north carolina" if strpos(lea, "albemarle")>0
+replace state = "north carolina" if strpos(lea, "caldwell county") & state == "georgia" 
+replace state = "texas" if strpos(lea, "aransas county")
+replace state = "montana" if strpos(lea, "gallatin")>0
+replace lea = subinstr(lea, "mantiowoc", "manitowoc", .)
 
 tab supporttype
 
@@ -142,52 +145,52 @@ tab supporttype
 //datesigned = YYYY-MM-DD
 gen dateretrieved = substr(datename, 1, 4) + "-" + substr(datename, 5, 2) + "-" + substr(datename, 7, 2)
 
-duplicates report STATE LEA supporttype datesigned dateretrieved
+duplicates report state lea supporttype datesigned dateretrieved
 destring datename, replace
-bys STATE LEA supporttype datesigned dateretrieved (datename): keep if _n==_N
+bys state lea supporttype datesigned dateretrieved (datename): keep if _n==_N
 
 /*
-bys STATE supporttype LEA datesigned (dateretrieved) : gen firstretrieval = dateretrieved if _n==1
-bys STATE supporttype LEA datesigned (dateretrieved) : ereplace firstretrieval = mode(firstretrieval)
-bys STATE supporttype LEA datesigned (dateretrieved) : gen lastretrieval = dateretrieved if _n==_N
-bys STATE supporttype LEA datesigned (dateretrieved) : ereplace lastretrieval = mode(lastretrieval)
+bys STATE supporttype lea datesigned (dateretrieved) : gen firstretrieval = dateretrieved if _n==1
+bys STATE supporttype lea datesigned (dateretrieved) : ereplace firstretrieval = mode(firstretrieval)
+bys STATE supporttype lea datesigned (dateretrieved) : gen lastretrieval = dateretrieved if _n==_N
+bys STATE supporttype lea datesigned (dateretrieved) : ereplace lastretrieval = mode(lastretrieval)
 
-bys STATE supporttype LEA datesigned (dateretrieved) : keep if _n==_N
+bys STATE supporttype lea datesigned (dateretrieved) : keep if _n==_N
 */
 
 drop link1 link2 information1 information2 filename
-sort dateretrieved STATE supporttype LEA 
+sort dateretrieved state supporttype lea 
 
-sort STATE supporttype LEA
+sort state supporttype lea
 
 drop datename table_order norder total_tables
 
 
 * Find localities
-gen jurisdiction  = "county" if strpos(strlower(LEA), "county")>0
-replace jurisdiction  = "city" if strpos(strlower(LEA), "city")>0 & mi(jurisdiction)
-replace jurisdiction  = "parish" if strpos(strlower(LEA), "parish")>0 & mi(jurisdiction)
-replace jurisdiction  = "state" if strpos(strupper(LEA), STATE)>0 & mi(jurisdiction)
-replace jurisdiction = "corrections" if strpos(strlower(LEA), "jail")>0 | strpos(strlower(LEA), "correction")>0 | strpos(strlower(LEA), "detention")>0
+gen jurisdiction  = "county" if strpos(strlower(lea), "county")>0
+replace jurisdiction  = "city" if strpos(strlower(lea), "city")>0 & mi(jurisdiction)
+replace jurisdiction  = "parish" if strpos(strlower(lea), "parish")>0 & mi(jurisdiction)
+replace jurisdiction  = "state" if strpos(strupper(lea), state)>0 & mi(jurisdiction)
+replace jurisdiction = "corrections" if strpos(strlower(lea), "jail")>0 | strpos(strlower(lea), "correction")>0 | strpos(strlower(lea), "detention")>0
 
-* examine LEA's with missing jurisdictions
-egen unique_lea = tag(STATE LEA)
+* examine lea's with missing jurisdictions
+egen unique_lea = tag(state lea)
 count if  unique_lea==1 & mi(jurisdiction) //only 10, hardcode it
 
-* 17 LEA with missing jurisdiction info
-replace jurisdiction = "county" if LEA=="Kodiak Police Department"
-replace jurisdiction = "town" if LEA=="Florence Police Department"
-replace jurisdiction = "city" if LEA=="Rogers Police Department"
-replace jurisdiction = "city" if LEA=="Jacksonville Sheriff's Office"
-replace jurisdiction = "city" if LEA=="Carrollton Police Department"
-replace jurisdiction = "city" if LEA=="Farmers Branch Police Department"
-replace jurisdiction = "city" if LEA=="Las Vegas Metropolitan Police Department"
-replace jurisdiction = "town" if LEA=="Herndon Police Department"
-replace jurisdiction = "city" if LEA=="Manassas Park Police Department"
-replace jurisdiction = "city" if LEA=="Manassas Police Department"
+* 17 lea with missing jurisdiction info
+replace jurisdiction = "county" if lea=="kodiak police department"
+replace jurisdiction = "town" if lea=="florence police department"
+replace jurisdiction = "city" if lea=="rogers police department"
+replace jurisdiction = "city" if lea=="jacksonville sheriff's office"
+replace jurisdiction = "city" if lea=="carrollton police department"
+replace jurisdiction = "city" if lea=="farmers branch police department"
+replace jurisdiction = "city" if lea=="las vegas metropolitan police department"
+replace jurisdiction = "town" if lea=="herndon police department"
+replace jurisdiction = "city" if lea=="manassas park police department"
+replace jurisdiction = "city" if lea=="manassas police department"
 
 * obtain geography
-gen geoname = LEA 
+gen geoname = lea 
 replace geoname = "" if jurisdiction=="state"
 local lea_keywords `" "sheriff's" "sheriff’s" "sheriffs" "sheriff"  "office" "department of" "department" "public safety" "district jail" "jail" "corrections" "police" "state" "regional adult detention center" "criminal justice authority" "'
 local nkwords: word count `lea_keywords'
@@ -205,17 +208,16 @@ replace geoname = "kodiak island borough" if strpos(strlower(geoname), "kodiak")
 replace geoname = "las vegas city" if strpos(strlower(geoname), "las vegas")>0
 replace geoname = "albemarle city" if geoname=="albemarle"
 
-expand 2 if LEA=="Prince William-Manassas Regional Adult Detention Center", gen(dup)
-replace geoname = "prince william county" if LEA=="Prince William-Manassas Regional Adult Detention Center" & dup==0
-replace geoname = "manassas city" if LEA=="Prince William-Manassas Regional Adult Detention Center" & dup==1
+expand 2 if lea=="prince william-manassas regional adult detention center", gen(dup)
+replace geoname = "prince william county" if lea=="prince william-manassas regional adult detention center" & dup==0
+replace geoname = "manassas city" if lea=="prince william-manassas regional adult detention center" & dup==1
 drop dup
+
 *simplify jurisdiction
 replace jurisdiction = "county" if jurisdiction=="parish" //county or equivalent
 replace jurisdiction = "city" if jurisdiction=="town" //anything smaller than county
 
-gen state = strlower(STATE)
-
-* state level correction facilities
+* drop state level agreements and state level correction facilities
 replace geoname = "" if jurisdiction=="state" | geoname==state
 
 ***** MERGE WITH GEOCODES
@@ -240,7 +242,7 @@ replace geolevel = "county" if !mi(countyfips)
 replace geolevel = "place" if !mi(placefips)
 
 replace geoname = state if mi(geoname)
-drop countyname placename STATE unique_lea countyfips
+drop countyname placename unique_lea countyfips
 
 compress 
 save  "$oi/ice_all_287g_clean", replace
