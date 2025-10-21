@@ -52,6 +52,10 @@ foreach v of varlist _all {
 	cap destring `v', replace
 }
 rename (county state puma12) (countyfips statefips puma10) //puma corresponds to '2010 definition' which was used starting 2012, confusing right?
+tostring countyfips statefips, replace
+replace countyfips = subinstr(countyfips, statefip, "", 1)
+destring countyfips statefips, replace
+
 isid countyfips statefips puma10
 * add migpuma variable
 merge m:1 statefips puma10 using "$oi/xwalk/puma10_migpuma10" , nogen keep(1 3) //dropping PR
@@ -68,6 +72,9 @@ isid statefips countyfips
 bys statefips migpuma10: egen migpop10 = sum(pop10)
 gen afact = pop10/migpop10 //share of county pop corresponding to the migpuma
 
+tostring countyfips statefips, replace
+replace countyfips = subinstr(countyfips, statefip, "", 1)
+destring countyfips statefips, replace
 compress 
 save "$oi/xwalk/county_migpuma10", replace 
 
@@ -123,12 +130,19 @@ foreach v of varlist _all {
 rename (placefp state county) (placefips statefips countyfips) //puma corresponds to '2010 definition' which was used starting 2012
 isid placefips statefips countyfips
 drop afact placenm cntyname stab
+
+tostring countyfips statefips, replace
+replace countyfips = subinstr(countyfips, statefip, "", 1)
+destring countyfips statefips, replace
+
 * county fips to migpuma 
 drop if placefips == 99999
 bys statefips countyfips: egen countypop10 = sum(pop10)
 gen afact = pop10/countypop10 //share of place pop in county
 bys statefips placefips : gen countyorder = _n
 reshape wide afact countyfips pop10 countypop10, i(statefips placefips) j(countyorder)
+
+
 
 compress 
 save "$oi/xwalk/place_county", replace 

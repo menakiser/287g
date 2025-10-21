@@ -12,8 +12,9 @@ global or "$wd/data/raw"
 global oi "$wd/data/int"
 
 
+
 *-------- PART 1: OBTAIN OF GEOCODES -----------
-import excel using "$or/xwalk/all-geocodes-v2020", cellrange(A5:G43823) clear firstrow
+import excel using "$or/xwalk/all-geocodes-v2018", cellrange(A5:G43823) clear firstrow
 gen ogorder = _n
 rename (StateCodeFIPS CountyCodeFIPS CountySubdivisionCodeFIPS PlaceCodeFIP ConsolidtatedCityCodeFIPS AreaName) ///
 (statefips countyfips subcountyfips placefips cityfips geoname)
@@ -138,6 +139,7 @@ replace state = "north carolina" if strpos(lea, "caldwell county") & state == "g
 replace state = "texas" if strpos(lea, "aransas county")
 replace state = "montana" if strpos(lea, "gallatin")>0
 replace lea = subinstr(lea, "mantiowoc", "manitowoc", .)
+replace lea = "owyhee county sheriff's office" if lea=="owyhee couny sheriff's office" 
 
 tab supporttype
 
@@ -226,7 +228,7 @@ merge m:1 state using `states', nogen keep(1 3) keepusing(state statefips )
 
 *obtain county codes
 gen countyname = geoname if jurisdiction=="county" | strpos(geoname, "county")>0
-merge m:1 statefips countyname using `counties', keep(1 3) keepusing(statefips countyfips countyname) nogen
+merge m:1 statefips countyname using `counties', keep(1 3) keepusing(statefips countyfips countyname) nogen //waria-labelon county sheriff's office
 *obtain city/town codes
 gen placename = geoname if countyfips==.
 merge m:1 statefips placename using `places', keep(1 3) keepusing(placename statefips countyfips subcountyfips placefips cityfips) nogen
