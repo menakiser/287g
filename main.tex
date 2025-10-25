@@ -1,0 +1,78 @@
+
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+% Document dependencies
+\usepackage[utf8]{inputenc}
+\usepackage[square,sort,comma,numbers]{natbib}
+\bibliographystyle{agsm}
+\bibpunct{(}{)}{;}{a}{,}{,}
+\usepackage{graphicx, adjustbox, rotating}
+\usepackage{booktabs, url}
+\usepackage{comment}
+\usepackage{float}
+\usepackage{pdflscape}
+\usepackage{caption, subcaption}
+\usepackage[margin=1in]{geometry} %margins
+\usepackage[colorlinks = true, urlcolor = blue, linkcolor = blue, citecolor = blue]{hyperref}
+\usepackage[parfill]{parskip} % first line skip 
+\setlength{\parindent}{15pt} %for paragraph indent
+\usepackage{indentfirst} %for first paragraph indent
+\usepackage{setspace} %line spacing
+ \usepackage{pdfpages}
+ \usepackage{graphicx}
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+\pdfgentounicode=1
+
+\title{The Effects of 287(g) Agreements on Immigrant's Mobility Decisions}
+\author{Mena Kiser}
+\date{\today}
+
+\begin{document}
+\doublespacing
+\maketitle
+
+\begin{abstract}
+    287(g) agreements create partnerships between state and local agencies and ICE, allowing for deputized officers to perform some of ICE duties; this program led to deportations of immigrants of Hispanic origin burgeoning between 2011-2014. Out of fear of racial discrimination, Hispanic non-citizens may be more prone to moving out of counties with active 287(g) agreements. I explore this through a staggered difference-in-difference design evaluating the effect of living in a county with an active 287(g) agreement and being part of the population targeted by this policy compared to similar citizens in similar areas (identified through propensity score matching) without an active agreement. 
+\end{abstract}
+
+\section{Introduction}
+
+\section{287(g) Agreements}
+The 287(g) program establishes partnerships between state and local enforcement agencies (LEAs) and ICE for local officers to exercise ICE duties to some extent. LEAs can voluntarily request participation in the program and ICE ultimately decides which agencie are included in the program and enters negotiation for a Memorandum of Agreement (MOA). MOAs are negotiated between DHS and LEAs and supervised by ICE; they establish delegation of authority to a determined number of officers. After an agreement expires, DHS is not obligated to renew it. Not all agreements include a specific expiration date, and once an agreement is entered into, it may be terminated at any time by either party.
+
+This policy was officially enacted in 1996 as part of the Illegal Immigration Reform and Immigrant Responsibility Act (IIRIRA); however, no agencies joined the program until 2002 (XX INSERT CITATION TO TIMELINE). In 2008, ICE created a standard template for MOA, simplifying the process for LEAs to enroll. Between 2006 and 2009, at least 56 agencies joined the program (XX verify this). In September of 2025, DHS reported over 1,000 current MOAs, most of which were entered starting 2019.
+
+This program can take three different models (and hybrids of these) based on the needs, capacity, and interest of the agency and ICE: 
+\begin{enumerate}
+    \item Jail Enforcement: LEA officers can interrogate and place detainers (requests to maintain in custody for up to 48 hours) for suspected noncitizens who have been arrested. This model has been available since its first enactment.
+    \item Task Force: LEA officers can interrogate and arrest suspected noncitizens that they encountered in their daily activities. This model was available from its enactment until rescinded in December 2012, after which jail enforcement contracts were not renewed. In January 2025, this model was reinstated.  %https://www.ice.gov/news/releases/fy-2012-ice-announces-year-end-removal-numbers-highlights-focus-key-priorities-and
+    \item Warrant Service Officer (WSO): LEA officers receive ICE training to execute immigration warrants. This model was first introduced in May 2019.
+\end{enumerate}
+
+Though this program has been in effect since its first enactment, changes in recruiting, funding, and DHS priorities for identifying undocumented immigrants may change the program's intensity.
+
+While 287(g) agreements were in effect, other enforcement or (deferrement of enforcement) programs were enacted:
+\begin{itemize}
+    \item[a.] \textit{Secure Communities (SC)}
+\end{itemize}
+
+
+The most closely related program was Secure Communities, first effective in 2008. This policy established biometric information sharing between local LEAs and federal agencies for the detection of undocumented immigrants upon local detention. The program rolled out on a county-by-county basis from 2008 to 2014—the staggered release was due to technology barriers—until all U.S. counties were covered. Counties could not opt-in/out but LEAs had discretion to determine which detainers to honor. Currently, all counties should have access to this biometric information sharing system. On November 2014, the Secure Communities program was replaced by the Priority Enforcement Program (PEP). Under PEP, detainers, requests for transfer, or requests for notifications are issued to immigrants of immigration enforcement priority, who have participated in gang activity, or who pose a danger to national security. In January 2017, the Secure Communities program was reinstated. East et al. (\citeyear{east2023}) exploits the staggered nature of SC rollout identifying a decrease in employment and income levels for the likely undocumented male immigrants from X year to Y year. This study also evaluates the effect of 287(g) agreements in the localities of interest finding negative effects in labor market outcomes. This policy most closely resembles the jail enforcement modality of 287(g) agreements. To separate county differential effect of 287(g) program from SC, I include controls for SC during the years it rolled out, extracted from \cite{east2023}.
+
+
+\begin{itemize}
+    \item[b.] \textit{Deferred Action for Childhood Arrivals (DACA)}
+\end{itemize}
+
+In June 2012, Deferred Action for Childhood Arrivals (DACA) was introduced providing legal status to unauthorized immigrants who had arrived in the United States as children. DACA provided deportation deferral and Employment Authorization Document, which allowed them to legally work in the US. Eligibility for DACA was determined by five main criteria:  1) U.S. arrival before their sixteenth birthday; 2) continuously lived in the U.S. since June 2007; 3) under age of 31 by June 2012; 4) high school (or equivalent) completion of or current enrollment in school; and 5) they have not been convicted of a a felony or significant misdemeanor. The take-up of DACA was both large and immediate. Kiser and Wilson (2025) provide evidence of the positive effect of DACA eligibility on the likelihood of moving relative to those barely ineligible upon its enactment, as the policy provided them with tools to make longer-lasting economic decisions. To rule out mobility differentials, I restrict the sample to immigrants that arrived in the U.S. after 2007, making them ineligible for DACA.
+
+
+\section{Data}
+The main datasets used in this paper come from the ICE (through \hyperlink{https://www.ice.gov}{ice.gov} and Syracus University \hyperlink{https://tracreports.org/immigration/tools/}{TRAC}) and from the American Community Survey (ACS). XX
+
+Through the Wayback Machine XX I can extract snapshots from lists of LEAs with current 287(g) agreements starting in 2011. For each year, I can obtain at least 3 snapshots from different dates 
+
+\bibliography{bib_287.bib}
+
+
+\end{document}
