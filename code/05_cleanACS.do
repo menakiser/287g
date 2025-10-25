@@ -40,15 +40,16 @@ replace inteduc = 5 if (educd>=110 & educd<999 ) //over 4 years of college
 gen lowskill = inteduc>=1 & inteduc<=2  //high school or less
 
 * identify immigrants
-gen imm = bpld>= 1500 & bpld!=90011 & bpld!=90021 //born outside of the us and territories
-replace imm = 0 if citizen==1 //exclude born abroad to american parents, naturalized citizens and non-citizens are included
+gen imm = bpld>= 15000 & bpld!=90011 & bpld<90021 //born outside of the us and territories
+replace imm = 0 if citizen==1| citizen==2 //exclude citizens and naturalized citizens
 
-gen us = bpld<=1500 | bpld==90011 | bpld==90021
+gen us = bpld<=15000 | bpld==90011 | bpld==90021
 
 gen young = age>=18 & age<=39
 
 *define affected population (presumably undocumented) as male, low-skill (High School or less), Hispanic, foreign-born, noncitizens of ages 18-39, and
-gen targetpop = sex==1 & lowskill==1 & hispan!=0 & imm==1 & young==1
+gen targetpop = sex==1 & lowskill==1 & hispan!=0 & imm==1 & young==1 & yrimmig<2007
+gen nottargetpop = sex==1 & lowskill==1 & hispan!=0 & (bpld<15000 | bpld==90011 | bpld==90021 | citizen==1| citizen==2 ) & young==1
 
 *clean variables
 replace incwage=. if incwage==999999 | incwage==0 
@@ -86,7 +87,6 @@ gen employed = empstat==1
 
 sum age exp_any nchild wkswork1 uhrswork incwage rent mortamt1
 
-gen nottargetpop = sex==1 & lowskill==1 & hispan!=0 & (bpld<=1500 | bpld==90011 | bpld==90021) & young==1
 replace exp_any = 1 if exp_any>1
 gen move_any = migrate1>1
 

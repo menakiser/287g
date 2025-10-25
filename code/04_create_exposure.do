@@ -15,20 +15,6 @@ global oi "$wd/data/int"
 *--------------- exposure at the COUNTY LEVEL ------------------*
 use "$oi/ice_all_287g_clean", clear 
 
-*frequency of retrieval
-preserve 
-keep dateretrieved
-gen dateretrieved_d = date(dateretrieved, "YMD")
-duplicates drop 
-gen year = year(dateretrieved_d)
-gen month = month(dateretrieved_d)
-egen gt = group( year month )
-bys gt : gen size = _N 
-sum gt size
-label var size "Retrieval dates per month"
-hist size , frequency ysize(6) xsize(6)
-restore 
-
 * obtaining county shares for cities/towns
 gen temp_countyfips =countyfips1
 drop countyfips*
