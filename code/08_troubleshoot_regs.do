@@ -60,21 +60,7 @@ cap drop targetpop*
 gen targetpop = sex==1 & lowskill==1 & hispan!=0 & imm==1 & young==1 & yrimmig>2007 & inlist(yrsusa2 , 1 ,2) & marst>=3 & nchild==0 //any, county, state
 
 * in migration
-xtlogit move_any target_exp_any targetpop exp_any_cap SC_any [pw=perwt], vce(cluster geoid year) absorb(geoid year) 
-reghdfe move_any target_exp_any targetpop exp_any_cap SC_any [pw=perwt_wt], vce(cluster geoid year) absorb(geoid year) 
-
-reghdfe move_any target_exp_any targetpop exp_any_cap SC_any [pw=perwt] if phat>=0 &  phat<.2 & year>=2011 & year<=2019, vce(cluster geoid year) absorb(geoid year) 
-reghdfe move_any target_exp_any targetpop exp_any_cap SC_any [pw=perwt_wt] if phat>=0 & phat<.2 & year>=2011 & year<=2019, vce(cluster geoid year) absorb(geoid year) 
-
-reghdfe move_any target_exp_any targetpop exp_any_cap SC_any [pw=perwt] if phat>=.2 &  phat<.4 & year>=2011 & year<=2019, vce(cluster geoid year) absorb(geoid year) 
-reghdfe move_any target_exp_any targetpop exp_any_cap SC_any [pw=perwt_wt] if phat>=.2 & phat<.4 & year>=2011 & year<=2019, vce(cluster geoid year) absorb(geoid year) 
-
-reghdfe move_any target_exp_any targetpop exp_any_cap SC_any [pw=perwt] if phat>=.4 &  phat<.6 & year>=2011 & year<=2019, vce(cluster geoid year) absorb(geoid year) 
-reghdfe move_any target_exp_any targetpop exp_any_cap SC_any [pw=perwt_wt] if phat>=.4 & phat<.6 & year>=2011 & year<=2019, vce(cluster geoid year) absorb(geoid year) 
-
-reghdfe move_any target_exp_any targetpop exp_any_cap SC_any [pw=perwt] if phat>=.5 & year>=2011 & year<=2019, vce(cluster geoid year) absorb(geoid year) 
-reghdfe move_any target_exp_any targetpop exp_any_cap SC_any [pw=perwt_wt] if phat>=.5 & year>=2011 & year<=2019, vce(cluster geoid year) absorb(geoid year) 
-
+reghdfe move_state exp_any  [pw=perwt_wt]  if targetpop==1 , vce(cluster fe_group) absorb(geoid year)
 
 *out migration
 
