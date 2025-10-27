@@ -31,24 +31,24 @@ keep if year>=2010 & year <=2020
 ** individual variables
 *education levels for internal use, combining educd and higraded
 gen inteduc = 0 //left as zero if no answer
-replace inteduc = 1 if (educd>=1 & educd<=50 )| educd==61  //less than high school (post1980) or less than grade 12 (pre1980)
-replace inteduc = 2 if (educd>=62 & educd<=65) //high school or ged or completed 12th grade (pre1980)
-replace inteduc = 3 if (educd>=70 & educd<= 90)  //some college but no degree 
-replace inteduc = 4 if (educd==101)  //bachelors or completed 4th year of college
-replace inteduc = 5 if (educd>=110 & educd<999 ) //over 4 years of college
+replace inteduc = 1 if educ <=5  //less than high school (post1980) or less than grade 12 (pre1980)
+replace inteduc = 2 if educ==6 //high school or ged or completed 12th grade (pre1980)
+replace inteduc = 3 if educ>=7 & educ <=9 //some college but no degree 
+replace inteduc = 3 if educd==65 & year>=2000 //counting some college but less than one year as some college, followinf educreq https://usa.ipums.org/usa/revisions.shtml
+replace inteduc = 4 if educ==10 //bachelors or completed 4th year of college
+replace inteduc = 5 if educ==11 //over 4 years of college
 
-gen lowskill = inteduc>=1 & inteduc<=2  //high school or less
+gen lowskill = inteduc<=2  //high school or less
 
 * identify immigrants
-gen imm = bpld>= 15000 & bpld!=90011 & bpld<90021 //born outside of the us and territories
-replace imm = 0 if citizen==1| citizen==2 //exclude citizens and naturalized citizens
-
-gen us = bpld<=15000 | bpld==90011 | bpld==90021
+gen imm = inlist(citizen, 2, 3)
+replace imm = 1 if bpld>= 15000 & bpld!=90011 & bpld<90021 & year==1960
+replace imm = 0 if mi(imm)
 
 gen young = age>=18 & age<=39
 
 *define affected population (presumably undocumented) as male, low-skill (High School or less), Hispanic, foreign-born, noncitizens of ages 18-39, and
-gen targetpop = sex==1 & lowskill==1 & hispan!=0 & imm==1 & young==1 & yrimmig<2007
+gen targetpop = sex==1 & lowskill==1 & hispan!=0 & imm==1 & young==1 & yrimmig>2007
 gen nottargetpop = sex==1 & lowskill==1 & hispan!=0 & (bpld<15000 | bpld==90011 | bpld==90021 | citizen==1| citizen==2 ) & young==1
 
 *clean variables
@@ -87,12 +87,10 @@ gen employed = empstat==1
 
 sum age exp_any nchild wkswork1 uhrswork incwage rent mortamt1
 
-replace exp_any = 1 if exp_any>1
+*define mobility variables
 gen move_any = migrate1>1
-
 replace migplac1 = statefip if migrate1d<=24 //fill in current year state if they didn't move states
 replace migcounty1 = countyfip if migrate1d<=10 //fill in current county if they didn't move counties
-
 gen move_county = migcounty1 != countyfip & migrate1d>10
 gen move_state = migplac1 != statefip  & migrate1d>24
 

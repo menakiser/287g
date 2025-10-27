@@ -30,7 +30,7 @@ duplicates drop
 gen dates = 1
 egen months = tag(year month)
 collapse (sum) dates months (first) leas, by(year)
-keep if year<=2019
+//keep if year<=2019
 sort year
 label var year "Year"
 label var dates "Dates"
