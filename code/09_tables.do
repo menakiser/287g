@@ -67,9 +67,10 @@ Table 2: Summary Statistics
 
 * import clean ACS data ready for regressions
 use "$oi/acs_w_propensity_weights", clear 
-
+gen rentprice = rent if ownhome==0
+gen mortprice = mortamt1 if ownhome==1
 cap mat drop sumstat
-foreach v in male age exp_any hs move_any move_county move_state married never_married nchild employed wkswork1 uhrswork incwage ownhome rent mortamt1 {
+foreach v in male age exp_any hs move_any move_county move_state married never_married nchild employed wkswork1 uhrswork incwage ownhome rentprice mortprice {
     
     * targeted population
     qui reg `v' targetpop [pw=perwt] if exp_any==0 , nocons 
