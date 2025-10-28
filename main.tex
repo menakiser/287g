@@ -138,7 +138,7 @@ out migration
 \newpage
 \begin{landscape}
 \begin{table}[h]
-
+\centering
 \caption{Summary statistics by exposure and target group}
 \label{tab:sumstat}
 \adjustbox{ width=\linewidth}{
@@ -159,14 +159,19 @@ out migration
 
 \newpage
 \begin{table}[h]
-
-\caption{Regression analysis on targeted population}
+\centering
+\caption{Exposure to 287(g)  on targeted and placebo populations}
 \label{tab:sumstat}
-\adjustbox{ width=\linewidth}{
+\adjustbox{ width=0.7\linewidth}{
     \input{output/t3_inmigtarget}
 }
 \end{table}
 
-
+\justifying
+\begin{spacing}{1}
+\begin{footnotesize}
+\noindent \textit{Notes:} This table compares the effect of exposure to a 287(g) program across targeted population and a placebo population defined by those who meet all criteria of targeted population except they are US-born citizens. Each cell represents a different regression. 
+\end{footnotesize}
+\end{spacing}
 
 \end{document}
