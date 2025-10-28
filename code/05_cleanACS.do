@@ -41,15 +41,11 @@ replace inteduc = 5 if educ==11 //over 4 years of college
 gen lowskill = inteduc<=2  //high school or less
 
 * identify immigrants
-gen imm = inlist(citizen, 2, 3)
-replace imm = 1 if bpld>= 15000 & bpld!=90011 & bpld<90021 & year==1960
+gen born_abroad = bpld>= 15000 & bpld!=90011 & bpld!=90021  & bpld!=90022 
+gen imm = born_abroad & citizen==3 //immigrants are defined as born abroad and currently not a citizen 
 replace imm = 0 if mi(imm)
 
 gen young = age>=18 & age<=39
-
-*define affected population (presumably undocumented) as male, low-skill (High School or less), Hispanic, foreign-born, noncitizens of ages 18-39, and
-gen targetpop = sex==1 & lowskill==1 & hispan!=0 & imm==1 & young==1 & yrimmig>2007
-gen nottargetpop = sex==1 & lowskill==1 & hispan!=0 & (bpld<15000 | bpld==90011 | bpld==90021 | citizen==1| citizen==2 ) & young==1
 
 *clean variables
 replace incwage=. if incwage==999999 | incwage==0 
