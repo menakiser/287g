@@ -220,7 +220,6 @@ forval i = 1/3 {
 	file write sumstat " \textit{F-stat} & `f1' & `f2' & `f3' & `f4'  \\" _n 
 	file write sumstat "\\" _n 
 }
-file write sumstat "\\" _n 
 file write sumstat "Sample Size "
 forval i = 1/4 {
 	local n`i' = string(inmig1[6,1], "%12.0fc" )
