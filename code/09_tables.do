@@ -125,7 +125,7 @@ file write sumstat "\midrule " _n
 
 global varnames `"  "Male" "Age" "Exposure" "High School" "Any move" "Moved county" "Moved state" "Married" "Never married" "Number of children" "Employed" "Weeks worked" "Usual weekly hours worked" "Wage income" "Owns a home" "Rent price" "Mortgage price" "'
 forval r = 1/18 {
-	local varname : word `r' of $varnamess
+	local varname : word `r' of $varnames
 	file write sumstat " `varname' "
 	di "Writing row `r'"
 	forval c = 1/8 {
