@@ -199,8 +199,8 @@ file write sumstat "\begin{tabular}{lcccc}" _n
 file write sumstat "\toprule" _n
 file write sumstat "\toprule" _n
 file write sumstat " & & & \multicolumn{2}{c}{Propensity weighting}  \\" _n
-file write sumstat " & Targeted Pop. & Placebo & Targeted Pop. & Placebo \\" _n
-file write sumstat " & (1) & (2)  \\" _n
+file write sumstat " & Targeted & Placebo & Targeted & Placebo \\" _n
+file write sumstat " & (1) & (2)  & (3) & (4)  \\" _n
 file write sumstat "\midrule " _n
 
 global varnames `"  "Any move" "Move county" "Move state"  "'
