@@ -15,6 +15,12 @@ global oi "$wd/data/int"
 use "$oi/acs_w_propensity_weights", clear 
 keep if year >=2013 & year<=2019 //rule out SC areas
 
+preserve 
+egen treatedgeo = tag(statefip countyfip ever_treated)
+tab treatedgeo if ever_treated==1
+restore
+
+
 /**************************************************************
  troubleshoot target populations 
 **************************************************************/
