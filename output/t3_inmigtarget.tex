@@ -1,19 +1,27 @@
-\begin{tabular}{lcccccc}
+\begin{tabular}{lcccc}
 \toprule
 \toprule
- & & Propensity Weights  \\
+ & & & \multicolumn{2}{c}{Propensity weighting}  \\
+ & Targeted Pop. & Placebo & Targeted Pop. & Placebo \\
  & (1) & (2)  \\
 \midrule 
- Any move & 0.0653** & 0.0889*** \\
- \textit{SE} & (0.0279) & (0.0251) \\
- \textit{F-stat} & 5.4634 & 12.5047 \\
- Move county & 0.0592*** & 0.0776*** \\
- \textit{SE} & (0.0206) & (0.0192) \\
- \textit{F-stat} & 8.2512 & 16.3491 \\
- Move state & 0.0450** & 0.0572*** \\
- \textit{SE} & (0.0190) & (0.0194) \\
- \textit{F-stat} & 5.5966 & 8.6672 \\
-Sample Size & 11,925 & 11,925  \\
+ Any move & 0.0653** & -0.0088 & 0.0889*** & -0.0062 \\
+ \textit{SE} & (0.0279) & (0.0081) & (0.0251) & (0.0071) \\
+ \textit{R2} & 0.0781 & 0.0400 & 0.0679 & 0.0295  \\
+ \textit{F-stat} & 5.4634 & 1.1810 & 12.5047 & 0.7519  \\
+\\
+ Move county & 0.0592*** & -0.0054 & 0.0776*** & -0.0011 \\
+ \textit{SE} & (0.0206) & (0.0047) & (0.0192) & (0.0035) \\
+ \textit{R2} & 0.0732 & 0.0352 & 0.0625 & 0.0221  \\
+ \textit{F-stat} & 8.2512 & 1.3422 & 16.3491 & 0.1036  \\
+\\
+ Move state & 0.0450** & -0.0008 & 0.0572*** & 0.0016 \\
+ \textit{SE} & (0.0190) & (0.0025) & (0.0194) & (0.0023) \\
+ \textit{R2} & 0.0715 & 0.0287 & 0.0580 & 0.0153  \\
+ \textit{F-stat} & 5.5966 & 0.1104 & 8.6672 & 0.4564  \\
+\\
+\\
+Sample Size  & 11,925  & 11,925  & 11,925  & 11,925 \\
 \bottomrule
 \bottomrule
 \end{tabular}

@@ -159,57 +159,76 @@ use "$oi/acs_w_propensity_weights", clear
 cap mat drop inmig1
 reghdfe move_any exp_any  [pw=perwt]  if targetpop==1 , vce(cluster group_id) absorb(geoid year)
 reg_to_mat, depvar(move_any ) indvars(exp_any ) mat(inmig1)
+reghdfe move_any exp_any  [pw=perwt]  if placebo1==1 , vce(cluster group_id) absorb(geoid year)
+reg_to_mat, depvar(move_any ) indvars(exp_any ) mat(inmig1)
+
 reghdfe move_any exp_any  [pw=perwt_wt]  if targetpop==1 , vce(cluster group_id) absorb(geoid year)
 reg_to_mat, depvar(move_any) indvars(exp_any ) mat(inmig1)
+reghdfe move_any exp_any  [pw=perwt_wt]  if placebo1==1 , vce(cluster group_id) absorb(geoid year)
+reg_to_mat, depvar(move_any) indvars(exp_any ) mat(inmig1)
+
 
 cap mat drop inmig2
 reghdfe move_county exp_any  [pw=perwt]  if targetpop==1 , vce(cluster group_id) absorb(geoid year)
 reg_to_mat, depvar( move_county ) indvars( exp_any ) mat(inmig2)
+reghdfe move_county exp_any  [pw=perwt]  if placebo1==1 , vce(cluster group_id) absorb(geoid year)
+reg_to_mat, depvar( move_county ) indvars( exp_any ) mat(inmig2)
+
 reghdfe move_county exp_any  [pw=perwt_wt]  if targetpop==1 , vce(cluster group_id) absorb(geoid year)
 reg_to_mat, depvar( move_county ) indvars( exp_any ) mat(inmig2)
+reghdfe move_county exp_any  [pw=perwt_wt]  if placebo1==1 , vce(cluster group_id) absorb(geoid year)
+reg_to_mat, depvar( move_county ) indvars( exp_any ) mat(inmig2)
+
 
 cap mat drop inmig3
 reghdfe move_state exp_any  [pw=perwt]  if targetpop==1 , vce(cluster group_id) absorb(geoid year)
 reg_to_mat, depvar(move_state) indvars(exp_any) mat(inmig3)
+reghdfe move_state exp_any  [pw=perwt]  if placebo1==1 , vce(cluster group_id) absorb(geoid year)
+reg_to_mat, depvar(move_state) indvars(exp_any) mat(inmig3)
+
 reghdfe move_state exp_any  [pw=perwt_wt]  if targetpop==1 , vce(cluster group_id) absorb(geoid year)
+reg_to_mat, depvar(move_state) indvars(exp_any) mat(inmig3)
+reghdfe move_state exp_any  [pw=perwt_wt]  if placebo1==1 , vce(cluster group_id) absorb(geoid year)
 reg_to_mat, depvar(move_state) indvars(exp_any) mat(inmig3)
 
 
 * Create table
 cap file close sumstat
 file open sumstat using "$wd/output/t3_inmigtarget.tex", write replace
-file write sumstat "\begin{tabular}{lcccccc}" _n
+file write sumstat "\begin{tabular}{lcccc}" _n
 file write sumstat "\toprule" _n
 file write sumstat "\toprule" _n
-file write sumstat " & & Propensity Weights  \\" _n
+file write sumstat " & & & \multicolumn{2}{c}{Propensity weighting}  \\" _n
+file write sumstat " & Targeted Pop. & Placebo & Targeted Pop. & Placebo \\" _n
 file write sumstat " & (1) & (2)  \\" _n
 file write sumstat "\midrule " _n
 
 global varnames `"  "Any move" "Move county" "Move state"  "'
 forval i = 1/3 {
 	local varname : word `i' of $varnames
-
-	local b = string(inmig`i'[1,1], "%12.4fc" )
-	local p = inmig`i'[2,1]
-	local stars_abs = cond(`p' < 0.01, "***", cond(`p' < 0.05, "**", cond(`p' < 0.1, "*", "")))
-	local sd = string(inmig`i'[3,1], "%12.4fc" )
-	local f = string(inmig`i'[7,1], "%12.4fc" )
-
-	local bp = string(inmig`i'[1,2], "%12.4fc" )
-	local pp = inmig`i'[2,2]
-	local stars_absp = cond(`pp' < 0.01, "***", cond(`pp' < 0.05, "**", cond(`pp' < 0.1, "*", "")))
-	local sdp = string(inmig`i'[3,2], "%12.4fc" )
-	local fp = string(inmig`i'[7,2], "%12.4fc" )
-
-	file write sumstat " `varname' & `b'`stars_abs' & `bp'`stars_absp' \\" _n 
-	file write sumstat " \textit{SE} & (`sd') & (`sdp') \\" _n 
-	file write sumstat " \textit{F-stat} & `f' & `fp' \\" _n 
+	forval c = 1/4  {
+		local b`c' = string(inmig`i'[1,`c'], "%12.4fc" )
+		local p`c' = inmig`i'[2,`c']
+		local stars_abs`c' = cond(`p`c'' < 0.01, "***", cond(`p`c'' < 0.05, "**", cond(`p`c'' < 0.1, "*", "")))
+		local sd`c' = string(inmig`i'[3,`c'], "%12.4fc" )
+		local f`c' = string(inmig`i'[7,`c'], "%12.4fc" )
+		local r`c' = string(inmig`i'[4,`c'], "%12.4fc" )
+	}
+	file write sumstat " `varname' & `b1'`stars_abs1' & `b2'`stars_abs2' & `b3'`stars_abs3' & `b4'`stars_abs4' \\" _n 
+	file write sumstat " \textit{SE} & (`sd1') & (`sd2') & (`sd3') & (`sd4') \\" _n 
+	file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4'  \\" _n 
+	file write sumstat " \textit{F-stat} & `f1' & `f2' & `f3' & `f4'  \\" _n 
+	file write sumstat "\\" _n 
 }
-local n1 = string(inmig1[6,1], "%12.0fc" )
-local n2 = string(inmig1[6,2], "%12.0fc" )
-file write sumstat "Sample Size	& `n1' & `n2'  \\" _n 
-
+file write sumstat "\\" _n 
+file write sumstat "Sample Size "
+forval i = 1/4 {
+	local n`i' = string(inmig1[6,1], "%12.0fc" )
+	file write sumstat " & `n`i'' "
+}
+file write sumstat "\\" _n 
 file write sumstat "\bottomrule" _n
 file write sumstat "\bottomrule" _n
 file write sumstat "\end{tabular}"
 file close sumstat
+
