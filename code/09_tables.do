@@ -123,7 +123,7 @@ file write sumstat " & Exposure=0 & Exposure>0 & Exposure=0 & Exposure>0 & Expos
 file write sumstat " & (1) & (2) & (3) & (4) & (5) & (6) & (7) & (8) \\" _n
 file write sumstat "\midrule " _n
 
-global varnames `"  "Male" "Age" "Exposure" "High School" "Any move" "Moved county" "Moved state" "Married" "Never married" "Number of children" "Employed" "Weeks worked" "Usual weekly hours worked" "Wage income" "Owns a home" "Rent price" "Mortgage price" "'
+global varnames `"  "Male" "Age" "Exposure" "High School" "Any move" "Moved county" "Moved state" "Married" "Never married" "Number of children" "Employed" "Weeks worked" "Usual weekly hours worked" "Wage income" "Owns a home" "Rent price" "Mortgage price" "Sample size" "'
 forval r = 1/18 {
 	local varname : word `r' of $varnames
 	file write sumstat " `varname' "
