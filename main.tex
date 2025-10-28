@@ -1,5 +1,6 @@
 
 \documentclass{article}
+\usepackage{ragged2e} 
 \usepackage{graphicx} % Required for inserting images
 % Document dependencies
 \usepackage[utf8]{inputenc}
@@ -35,7 +36,7 @@
     287(g) agreements create partnerships between state and local agencies and ICE, allowing for deputized officers to perform some of ICE duties; this program led to deportations of immigrants of Hispanic origin burgeoning between 2011-2014. Out of fear of racial discrimination, Hispanic non-citizens may be more prone to moving out of counties with active 287(g) agreements. I explore this through a staggered difference-in-difference design evaluating the effect of living in a county with an active 287(g) agreement and being part of the population targeted by this policy compared to similar citizens in similar areas (identified through propensity score matching) without an active agreement. 
 \end{abstract}
 
-\section{Introduction}
+%\section{Introduction}
 
 \section{287(g) Agreements}
 The 287(g) program establishes partnerships between state and local enforcement agencies (LEAs) and ICE for local officers to exercise ICE duties to some extent. LEAs can voluntarily request participation in the program and ICE ultimately decides which agencie are included in the program and enters negotiation for a Memorandum of Agreement (MOA). MOAs are negotiated between DHS and LEAs and supervised by ICE; they establish delegation of authority to a determined number of officers. After an agreement expires, DHS is not obligated to renew it. Not all agreements include a specific expiration date, and once an agreement is entered into, it may be terminated at any time by either party.
@@ -68,22 +69,33 @@ In June 2012, Deferred Action for Childhood Arrivals (DACA) was introduced provi
 
 
 \section{Data}
-The main datasets used in this paper come from the ICE (through \hyperlink{https://www.ice.gov}{ice.gov} and Syracus University \hyperlink{https://tracreports.org/immigration/tools/}{TRAC}) and from the American Community Survey (ACS). XX
+The main datasets used in this paper come from the ICE websites,  Syracus University Transactional Records Access Clearinghouse (TRAC), and from the American Community Survey (ACS). 
 
-Through the Wayback Machine XX I can extract snapshots from lists of LEAs with current 287(g) agreements starting in 2011. All lists include the name of the agency, the date it was signed, and the type of agreement entered. For each year, I can obtain at least 3 snapshots from different days in different months, as seen in Table \ref{tab:retrievals}. Having access to multiple dates in a year allows us to identify dates when agreements were terminated--proxied by not registered in my retrievals. I then match agencies to their local geographic area using the name of the agency, e.g. Jackson County Sheriff’s Office (KS) is assigned Jackson County, KS. \footnote{I'm in the process of assigning geographic areas using Law Enforcement Agency Identifiers Crosswalk (2012).} I can identify 155 distinct counties with some agreement active at any point between 2011 and 2019. Using this source assumes that we can effectively evaluate changes in active agreements throughout the year as updated by ICE and they impact the localities matched to each agency.
+Through the Internet Archive's Wayback Machine, I can extract snapshots from ICE websites listing LEAs with current 287(g) agreements starting. These lists are retrievable starting in 2011. All lists include the name of the agency, the date it was signed, and the type of agreement entered. For each year, I can obtain a minimum of 3 snapshots from different days in different months, as seen in Table \ref{tab:retrievals}. Having access to multiple observations within a year allows me to identify the dates when agreements were terminated, as indicated by their absence from subsequent retrievals. I match agencies to their local geographic area using the name of the agency, e.g. Jackson County Sheriff’s Office (KS) is assigned Jackson County, KS. \footnote{I'm in the process of assigning geographic areas using Law Enforcement Agency Identifiers Crosswalk (2012).} From 2013 to 2019, I can identify 123 distinct agencies with some active agreement mapping to 70 distinct counties. at any point between 2014 and 2019. 
 
-Exposure is then defined based on the number of months a county had some active agreement and the coverage of the agreement (calculated using population). In other words, as shown in Equation \ref{eq:exposure} exposure for a county ($c$) in year ($y$) is defined by the yearly average of MOA in a jurisdiction ($j$) active on days ($d$) weighted by coverage of jurisdiction to county using 2010 population estimates.
+Exposure is defined based on the number of months a county had some active agreement and the coverage of the agreement (calculated using population). In other words, as shown in Equation \ref{eq:exposure} exposure for a county ($c$) in year ($y$) is defined by the yearly average of MOA in a jurisdiction ($j$) active on days ($d$) weighted by coverage of jurisdiction to county using 2010 population estimates.
 
 \begin{equation}
 \label{eq:exposure}
     exposure_{cy} = \sum_{d=1}^{365} \sum_{j=1} ^{J} \frac{MOA_{dj}}{365} * \frac{pop_{j}}{pop_{c}}
 \end{equation}
 
-Exposure can span from 0-3 based on the number of agencies with active agreements in a locality. In a given year, an exposure of 0, signals there was no active 287(g) agreement during year. An exposure between 0 and 1, signals there was an agreement at some point during the year that was not active during the whole month or did not cover the full county. An exposure of 1, signals there is an active agreement during the whole year and covering the whole county. A exposure over 1, means there are multiple agreements in the area, for instance, the county jail and the sheriff's department can both have active agreements. This setup assumes a county with multiple agreements is different from counties with only one agreement.
+Exposure can span from 0-1 based on the number of agencies with active agreements in a locality. In a given year, an exposure of 0, signals there was no active 287(g) agreement during year. An exposure between 0 and 1, signals there was an agreement at some point during the year that was not active during the whole month or did not cover the full county. An exposure of 1, signals there is an active agreement during the whole year and covering the whole county. A exposure over 1, means there are multiple agreements in the area, for instance, the county jail and the sheriff's department can both have active agreements; however, we do not observe exposure greater than 1 during this sample. This setup assumes a county with multiple agreements is different from counties with only one agreement.
 
-Missing data section about ACS
+I obtain details on the demographics of those targeted by 287(g) from the Transactional Records Access Clearinghouse \citep{trac24}, an organization founded by the Syracuse University that gathers and distributes immigration statistics obtained from government agencies through the Freedom of Information Act (FOIA). From reports on ICE removals initiated with a 287(g) Program apprehension, we can see that 67\% of the deportees were of ages 18--39, 97\% had citizenship in a Latin American country, and 96\% were male. 
+
+Individual characteristics are extracted from the 2013-2019 American Community Survey (ACS), obtained through the Integrated Public Use Microdata Series (IPUMS) \citep{data:acs}. The ACS is a yearly cross-sectional, one percent, annual survey of households in the United States. Through this survey we can identify foreign-born respondents using place of birth and citizenship status; however, this survey does not ask about current legal status or status at entry. Following existing work imputing a citizenship status, I define the population targeted by this program as those fitting the predominant demographics of removed immigrants and those likely to be undocumented: ages 18-29, Hispanic, foreign-born, non-citizen, male, low-skill (high school degree or less). I further restrict to those with US arrival after 2007 to rule out DACA eligibility and those not currently married to rule out citizenship eligibility through their spouse and as the unmarried may be more responsive to policy shocks.\footnote{A more elegant design would use evidence from a survey describing characteristics of the undocumented.} I also restrict to those with 10 years or less in the country as they may also be more responsive. In Table \ref{tab:sumstat}, we can observe characteristics of the targeted population across level of exposure.
+
+The ACS includes an individual's state and county of current residence and previous year residence. This source also provides  place of work county, commuting time, current occupation, industry, earnings, and more which will help us understand other effects of this policy.
+
 
 \section{Empirical design}
+To identify the effects of this policy, I use a difference-in-difference design interacting being part of the target population and exposure. However, as treatment is quite unbalanced, I use a propensity score matching to re-weight untreated counties. I first predict exposure through a logit estimation regressing on a county's share of targeted population, low skill population, foreign population, young population, total population, mean income, house price (either rent or mortgage), and being a predominantly red state. The predicted exposure score along with the original non-zero scores are applied to the untreated. In Table \ref{tab:sumstat}, we can observe how relevant characteristics for the treated and untreated groups changes when applying the propensity score weights.
+
+I first evaluate the effects of the policy on the targeted population. In Table
+
+
+
 
 \begin{comment}
 
@@ -104,6 +116,7 @@ out migration
 \newpage
 \section{Tables and Figures}
 
+
 \begin{table}[h]
 \centering
 \caption{Retrievals of active Memorandum of Agreements}
@@ -113,16 +126,34 @@ out migration
 }
 \end{table}
 
+\justifying
+\
+\begin{spacing}{1}
+\begin{footnotesize}
+\noindent \textit{Notes:} This table quantifies the number of retrievals from distinctive days, months, and pertaining different Local Enforcement Agencies (LEAs).
+\end{footnotesize}
+\end{spacing}
+
+
 \newpage
 \begin{landscape}
-\begin{table}[H]
-\centering
+\begin{table}[h]
+
 \caption{Summary statistics by exposure and target group}
-\label{tab:retrievals}
+\label{tab:sumstat}
 \adjustbox{ width=\linewidth}{
     \input{output/t2_sumstat}
 }
 \end{table}
+
+\justifying
+\begin{spacing}{1}
+\begin{footnotesize}
+\noindent \textit{Notes:} This table summarizes main characteristics by exposure and population type. Columns 1-2 and 5-6 restrict the sample to immigrants likely targeted by 287(g) agreements: foreign-born non-citizen, Hispanic, male, of ages 18-39, with High School degree or less, that immigrated after 2007, have been in the US for 10 years or less, and are not currently married. Columns 3-4 and 7-8 restricts the sample to comparable individuals, meeting all criteria from the targeted sample except they must be US-born citizens (thus no immigration time requirements). Odd-numbered columns restrict the sample to (untreated) zero exposure counties and even-numbered columns restrict the sample to non-zero exposure counties. Columns 1-4 apply probability weights as extracted from ACS, while columns 5-8 apply weights obtained from propensity score matching.
+\end{footnotesize}
+\end{spacing}
 \end{landscape}
+
+
 
 \end{document}
