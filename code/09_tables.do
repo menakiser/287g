@@ -222,7 +222,7 @@ forval i = 1/3 {
 }
 file write sumstat "Sample Size "
 forval i = 1/4 {
-	local n`i' = string(inmig1[6,1], "%12.0fc" )
+	local n`i' = string(inmig1[6,`i'], "%12.0fc" )
 	file write sumstat " & `n`i'' "
 }
 file write sumstat "\\" _n 
