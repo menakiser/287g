@@ -20,7 +20,7 @@
 \usepackage{indentfirst} %for first paragraph indent
 \usepackage{setspace} %line spacing
  \usepackage{pdfpages}
- \usepackage{graphicx}
+
 \DeclareGraphicsExtensions{.pdf,.png,.jpg}
 \pdfgentounicode=1
 
@@ -41,7 +41,7 @@
 \section{287(g) Agreements}
 The 287(g) program establishes partnerships between state and local enforcement agencies (LEAs) and ICE for local officers to exercise ICE duties to some extent. LEAs can voluntarily request participation in the program and ICE ultimately decides which agencie are included in the program and enters negotiation for a Memorandum of Agreement (MOA). MOAs are negotiated between DHS and LEAs and supervised by ICE; they establish delegation of authority to a determined number of officers. After an agreement expires, DHS is not obligated to renew it. Not all agreements include a specific expiration date, and once an agreement is entered into, it may be terminated at any time by either party.
 
-This policy was officially enacted in 1996 as part of the Illegal Immigration Reform and Immigrant Responsibility Act (IIRIRA); however, no agencies joined the program until 2002 (XX INSERT CITATION TO TIMELINE). In 2008, ICE created a standard template for MOA, simplifying the process for LEAs to enroll. Between 2006 and 2009, at least 56 agencies joined the program (XX verify this). In September of 2025, DHS reported over 1,000 current MOAs, most of which were entered starting 2019.
+This policy was officially enacted in 1996 as part of the Illegal Immigration Reform and Immigrant Responsibility Act (IIRIRA); however, no agencies joined the program until 2002 (Figure \ref{fig:timeline}). In 2008, ICE created a standard template for MOA, simplifying the process for LEAs to enroll. Between 2006 and 2009, at least 56 agencies joined the program. In September of 2025, DHS reported over 1,000 current MOAs, most of which were entered starting 2019.
 
 This program can take three different models (and hybrids of these) based on the needs, capacity, and interest of the agency and ICE: 
 \begin{enumerate}
@@ -58,7 +58,7 @@ While 287(g) agreements were in effect, other enforcement or (deferrement of enf
 \end{itemize}
 
 
-The most closely related program was Secure Communities, first effective in 2008. This policy established biometric information sharing between local LEAs and federal agencies for the detection of undocumented immigrants upon local detention. The program rolled out on a county-by-county basis from 2008 to 2014—the staggered release was due to technology barriers—until all U.S. counties were covered. Counties could not opt-in/out but LEAs had discretion to determine which detainers to honor. Currently, all counties should have access to this biometric information sharing system. On November 2014, the Secure Communities program was replaced by the Priority Enforcement Program (PEP). Under PEP, detainers, requests for transfer, or requests for notifications are issued to immigrants of immigration enforcement priority, who have participated in gang activity, or who pose a danger to national security. In January 2017, the Secure Communities program was reinstated. East et al. (\citeyear{east2023}) exploits the staggered nature of SC rollout identifying a decrease in employment and income levels for the likely undocumented male immigrants from X year to Y year. This study also evaluates the effect of 287(g) agreements in the localities of interest finding negative effects in labor market outcomes. This policy most closely resembles the jail enforcement modality of 287(g) agreements. To separate county differential effect of 287(g) program from SC, I include controls for SC during the years it rolled out, extracted from \cite{east2023}.
+The most closely related program was Secure Communities, first effective in 2008. This policy established biometric information sharing between local LEAs and federal agencies for the detection of undocumented immigrants upon local detention. The program rolled out on a county-by-county basis from 2008 to 2014—the staggered release was due to technology barriers—until all U.S. counties were covered. Counties could not opt-in/out but LEAs had discretion to determine which detainers to honor. Currently, all counties should have access to this biometric information sharing system. On November 2014, the Secure Communities program was replaced by the Priority Enforcement Program (PEP). Under PEP, detainers, requests for transfer, or requests for notifications are issued to immigrants of immigration enforcement priority, who have participated in gang activity, or who pose a danger to national security. In January 2017, the Secure Communities program was reinstated. East et al. (\citeyear{east2023}) exploits the staggered nature of SC rollout identifying a decrease in employment and income levels for the likely undocumented male immigrants from X year to Y year. This study also evaluates the effect of 287(g) agreements in the localities of interest finding negative effects in labor market outcomes. This policy most closely resembles the jail enforcement modality of 287(g) agreements. To separate county differential effect of 287(g) program from SC, we focus on the 2013-2019 period avoiding overlapping with the SC rollout.
 
 
 \begin{itemize}
@@ -90,12 +90,20 @@ The ACS includes an individual's state and county of current residence and previ
 
 
 \section{Empirical design}
-To identify the effects of this policy, I use a difference-in-difference design interacting being part of the target population and exposure. However, as treatment is quite unbalanced, I use a propensity score matching to re-weight untreated counties. I first predict exposure through a logit estimation regressing on a county's share of targeted population, low skill population, foreign population, young population, total population, mean income, house price (either rent or mortgage), and being a predominantly red state. The predicted exposure score along with the original non-zero scores are applied to the untreated. In Table \ref{tab:sumstat}, we can observe how relevant characteristics for the treated and untreated groups changes when applying the propensity score weights.
+To identify the effects of this policy, I use a difference-in-difference design interacting being part of the target population and exposure, as shown in Equation \ref{eq:did}. However, as treatment is quite unbalanced, I use a propensity score matching to re-weight untreated counties. Through a logit estimation regressing on a county's share of targeted population, low skill population, foreign population, young population, total population, mean income, house price (either rent or mortgage), and being a predominantly red state. The predicted exposure score along with the original non-zero scores are applied to the untreated. 
+As the cross-sectional data from ACS uses probability weights, I multiply these by the propensity score obtained and apply this for all analysis. In Table \ref{tab:sumstat}, we can observe how relevant characteristics for the treated and untreated groups changes when applying the propensity score weights.
+\begin{equation}
+    \label{eq:did}
+    in-migration_{icy} = \beta_{0} + \beta_{1}exposure_{cy}*targeted_{i} +  \beta_{2}exposure_{cy} + \beta_{3}targeted_{i} + \beta_{42}W_{y} + \beta_{53}Z_{c} + \epsilon_{cy} 
+\end{equation}
 
-I first evaluate the effects of the policy on the targeted population. In Table
+To first test the parallel trends assumption, we can evaluate the effect of exposure on migration decisions, following Equation \ref{eq:reg1}, in which in--migration can take any move (including within county), moving counties, and moving states. I include the results for this estimation in Table \ref{tab:regtp}. We can see that in the targeted population, 287(g) exposure increases mobility within county, across counties, and across states, with a higher significance level at county level. These results become stronger and more significant when applying propensity weights. In the placebo population, we observe mostly negative effects and not-statistically significant effects of 287(g) programs in mobility.
+\begin{equation}
+    \label{eq:reg1}
+    in-migration_{icy} = \beta_{0} + \beta_{1}exposure_{cy} +  \beta_{42}W_{y} + \beta_{53}Z_{c} + \epsilon_{cy} 
+\end{equation}
 
-
-
+These results suggest there are differential effects in migration for the non-citizen targeted population, distinct from similar citizens. However, the direction of the effect has the opposite of the sign expected. I initially hypothesized that areas in which 287(g) is currently enacted, targeted immigrants would be less likely to move to areas where these agreements have been recently enacted. We are seeing that areas with active MOAs are more likely to have newcomers from the targeted population. A possible explanation for this, is that deporting immigrants in this group creates job vacancies and may potentially increase wages if demand for low-skilled Hispanic workers is not met, thus immigrants move to these areas in pursue of better economic opportunities. To validate this new hypothesis we must also check economic outcomes.
 
 \begin{comment}
 
@@ -110,12 +118,10 @@ out migration
 \end{equation}
 \end{comment}
 
-\newpage
 \bibliography{bib_287.bib}
 
 \newpage
 \section{Tables and Figures}
-
 
 \begin{table}[h]
 \centering
@@ -140,7 +146,7 @@ out migration
 \begin{table}[h]
 \centering
 \caption{Summary statistics by exposure and target group}
-\label{tab:sumstat}
+\label{fig:timeline}
 \adjustbox{ width=\linewidth}{
     \input{output/t2_sumstat}
 }
@@ -161,7 +167,7 @@ out migration
 \begin{table}[h]
 \centering
 \caption{Exposure to 287(g)  on targeted and placebo populations}
-\label{tab:sumstat}
+\label{tab:regtp}
 \adjustbox{ width=0.7\linewidth}{
     \input{output/t3_inmigtarget}
 }
@@ -170,8 +176,33 @@ out migration
 \justifying
 \begin{spacing}{1}
 \begin{footnotesize}
-\noindent \textit{Notes:} This table compares the effect of exposure to a 287(g) program across targeted population and a placebo population defined by those who meet all criteria of targeted population except they are US-born citizens. Each cell represents a different regression. 
+\noindent \textit{Notes:} This table compares the effect of exposure to a 287(g) program across targeted population and a placebo population defined by those who meet all criteria of targeted population except they are US-born citizens. Columns 3-4 adjust the ACS weights by the propensity score. Each cell represents a different regression. Standard errors are set at the county-year level and county and year fixed effects are absorbed. p $<$ 0.01 ***, p $<$ 0.05 **, p $<$0.1 *. 
+
 \end{footnotesize}
 \end{spacing}
+
+
+
+\newpage
+\begin{landscape}
+    
+\begin{figure}[h]
+\centering
+\caption{Timeline of the evolution of 287(g) agreements}
+\label{tab:regtp}
+\adjustbox{ width=\linewidth}{
+    \includegraphics{output/timeline.png}
+}
+\end{figure}
+
+\justifying
+\begin{spacing}{1}
+\begin{footnotesize}
+\noindent \textit{Notes: This timeline includes events relevant to the current panorama of the 287(g) program.}
+
+\end{footnotesize}
+\end{spacing}
+
+\end{landscape}
 
 \end{document}
