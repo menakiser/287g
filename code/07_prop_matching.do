@@ -16,7 +16,7 @@ global oi "$wd/data/int"
 use "$oi/working_acs", clear 
 
 *define affected population (presumably undocumented) as male, low-skill (High School or less), Hispanic, foreign-born, noncitizens of ages 18-39, and
-gen targetpop = sex==1 & lowskill==1 & hispan!=0 & imm==1 /*born abroad and not a citizen*/ & young==1 & a>2007 & inlist(yrsusa2 , 1 ,2) & marst>=3
+gen targetpop = sex==1 & lowskill==1 & hispan!=0 & imm==1 /*born abroad and not a citizen*/ & young==1 & yrimmig>2007 & inlist(yrsusa2 , 1 ,2) & marst>=3
 
 * create county variables that may predict exposure
 gen red_state = inlist(statefip, 1, 2, 4, 5, 13, 16, 20, 21, 22, 28, 29, 30, 31, 38, 40, 45, 46, 47, 48, 49, 54, 56) //https://www.worldatlas.com/articles/states-that-have-voted-republican-in-the-most-consecutive-u-s-presidential-elections.html
@@ -30,7 +30,7 @@ collapse (sum) total_pop foreign_pop=imm young_pop=young hispan_pop=hispan lowsk
 keep if year>=2013 & year<=2019
 
 /* get propensity score for county exposure */
-logit exp_any targetpop_sh lowskill_pop red_state total_pop foreign_pop young_pop avg_income hprice 
+logit exp_any targetpop_sh lowskill_pop red_state total_pop foreign_pop young_pop 
 cap drop phat
 predict phat
 
