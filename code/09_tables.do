@@ -126,7 +126,7 @@ file write sumstat "\begin{tabular}{lcccccccc}" _n
 file write sumstat "\toprule" _n
 file write sumstat "\toprule" _n
 file write sumstat " & & & & & \multicolumn{4}{c}{Propensity score weighting} \\" _n
-file write sumstat " & \multicolumn{2}{c}{Targeted population} & \multicolumn{2}{c}{Hispanic citizens} & \multicolumn{2}{c}{Targeted population} & \multicolumn{2}{c}{Hispanic citizens}  \\" _n
+file write sumstat " & \multicolumn{2}{c}{Targeted population} & \multicolumn{2}{c}{Placebo} & \multicolumn{2}{c}{Targeted population} & \multicolumn{2}{c}{Placebo}  \\" _n
 file write sumstat " & Exposure=0 & Exposure$>$0 & Exposure=0 & Exposure$>$0 & Exposure=0 & Exposure$>$0 & Exposure=0 & Exposure$>$0 \\" _n
 file write sumstat " & (1) & (2) & (3) & (4) & (5) & (6) & (7) & (8) \\" _n
 file write sumstat "\midrule " _n
