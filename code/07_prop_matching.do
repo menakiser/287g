@@ -85,7 +85,10 @@ restore
 merge m:1 geoid1 year1 using `prevexp', nogen keep(1 3)
 
 gen perwt_wt = perwt*wt
+
+* create exposure
 gen targetpop = sex==1 & lowskill==1 & hispan!=0 & imm==1 /*born abroad and not a citizen*/ & young==1 & yrimmig>2007 & inlist(yrsusa2 , 1 ,2) & marst>=3 
+gen binary_exp_any = exp_any >0
 
 compress
 save "$oi/acs_w_propensity_weights", replace

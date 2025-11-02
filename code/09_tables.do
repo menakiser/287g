@@ -154,7 +154,7 @@ file close sumstat
 Table 3: Regressions
 **************************************************************/
 use "$oi/acs_w_propensity_weights", clear 
-
+replace exp_any = binary_exp_any
 * in migration
 cap mat drop inmig1
 reghdfe move_any exp_any  [pw=perwt]  if targetpop==1 , vce(cluster group_id) absorb(geoid year)
