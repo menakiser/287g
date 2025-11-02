@@ -10,6 +10,7 @@ clear all
 global wd "/Users/jimenakiser/Desktop/287g/"
 global or "$wd/data/raw"
 global oi "$wd/data/int"
+global oo "$wd/output/"
 
 
 * import ACS data 
@@ -21,10 +22,10 @@ gen targetpop = sex==1 & lowskill==1 & hispan!=0 & imm==1 /*born abroad and not 
 * create county variables that may predict exposure
 gen red_state = inlist(statefip, 1, 2, 4, 5, 13, 16, 20, 21, 22, 28, 29, 30, 31, 38, 40, 45, 46, 47, 48, 49, 54, 56) //https://www.worldatlas.com/articles/states-that-have-voted-republican-in-the-most-consecutive-u-s-presidential-elections.html
 gen total_pop = age>17 
+keep if year>=2013 & year<=2019
 bys statefip countyfip: egen ever_treated = max( exp_any>0)
-
-//keep if year>=2013 & year<=2019
 keep if year == 2013
+
 collapse (sum) total_pop foreign_pop=imm young_pop=young hispan_pop=hispan lowskill_pop=lowskill  ///
 	(mean) targetpop_sh=targetpop exp* red_state ///
 	(max) ever_treated ///
@@ -90,6 +91,23 @@ gen perwt_wt = perwt*wt
 gen targetpop = sex==1 & lowskill==1 & hispan!=0 & imm==1 /*born abroad and not a citizen*/ & young==1 & yrimmig>2007 & inlist(yrsusa2 , 1 ,2) & marst>=3 
 gen exp_any_binary = exp_any >0
 rename exp_any og_exp_any
+
+* Identify counties that lose treatment
+preserve
+collapse (mean) exp_any_binary ever_treated, by(statefip countyfip year)
+gen lost_treatment = 0
+bys statefip countyfip (year): replace lost_treatment = 1 if ever_treated==1 & exp_any_binary[_n-1]==1 & exp_any_binary==0
+bys statefip countyfip year: ereplace lost_treatment = max(lost_treatment)
+* Get the year of loss
+bys statefip countyfip (year): egen year_lost = min(cond(lost_treatment==1, year, .))
+collapse (max) lost_treatment ever_treated year_lost (sum) treat_length = exp_any_binary, by(statefip countyfip) 
+tempfile losttreat 
+save `losttreat'
+/* info
+21% of ever treated counties lose treatment at some point -- 15/74
+*/
+restore
+merge m:1 statefip countyfip using `losttreat', nogen keep(1 3)
 
 compress
 save "$oi/acs_w_propensity_weights", replace

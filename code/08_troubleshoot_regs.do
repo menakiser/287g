@@ -129,4 +129,5 @@ forval i = 1/5 {
 	reghdfe move_state exp_any1  [pw=perwt_wt]  if placebo`i'==1 & year>=2014 , vce(cluster group_id1) absorb(geoid1 year1)
 }
 
+compress
 save  "$oi/acs_w_propensity_weights", replace
