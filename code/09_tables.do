@@ -77,43 +77,43 @@ use "$oi/acs_w_propensity_weights", clear
 gen rentprice = rent if ownhome==0
 gen mortprice = mortamt1 if ownhome==1
 cap mat drop sumstat
-foreach v in male age exp_any hs move_any move_county move_state married never_married nchild employed wkswork1 uhrswork incwage ownhome rentprice mortprice {
+foreach v in male age exp_any_binary hs move_any move_county move_state married never_married nchild employed wkswork1 uhrswork incwage ownhome rentprice mortprice {
     
     * targeted population
-    qui reg `v' targetpop [pw=perwt] if exp_any==0 , nocons 
+    qui reg `v' targetpop [pw=perwt] if exp_any_binary==0 , nocons 
     local m1 = _b[targetpop]
-    qui reg `v' targetpop [pw=perwt] if  exp_any>0 , nocons 
+    qui reg `v' targetpop [pw=perwt] if  exp_any_binary>0 , nocons 
     local m2 = _b[targetpop]
 
     * citizens
-    qui reg `v' placebo5 [pw=perwt] if exp_any==0 , nocons 
+    qui reg `v' placebo5 [pw=perwt] if exp_any_binary==0 , nocons 
     local m3 = _b[placebo5]
-    qui reg `v' placebo5 [pw=perwt] if exp_any>0 , nocons 
+    qui reg `v' placebo5 [pw=perwt] if exp_any_binary>0 , nocons 
     local m4 = _b[placebo5]
 
 	* propensity score matched
 	* targeted population
-    qui reg `v' targetpop [pw=perwt_wt] if exp_any==0 , nocons 
+    qui reg `v' targetpop [pw=perwt_wt] if exp_any_binary==0 , nocons 
     local m5 = _b[targetpop]
-    qui reg `v' targetpop [pw=perwt_wt] if  exp_any>0 , nocons 
+    qui reg `v' targetpop [pw=perwt_wt] if  exp_any_binary>0 , nocons 
     local m6 = _b[targetpop]
 
     * citizens
-    qui reg `v' placebo5 [pw=perwt_wt] if exp_any==0 , nocons 
+    qui reg `v' placebo5 [pw=perwt_wt] if exp_any_binary==0 , nocons 
     local m7 = _b[placebo5]
-    qui reg `v' placebo5 [pw=perwt_wt] if exp_any>0 , nocons 
+    qui reg `v' placebo5 [pw=perwt_wt] if exp_any_binary>0 , nocons 
     local m8 = _b[placebo5]
 
     mat sumstat = nullmat(sumstat) \ (`m1', `m2', `m3', `m4', `m5', `m6', `m7', `m8' )
 }
 
-qui count if targetpop==1 & exp_any==0 
+qui count if targetpop==1 & exp_any_binary==0 
 local m1 = r(N)
-qui count if targetpop==1 & exp_any>0
+qui count if targetpop==1 & exp_any_binary>0
 local m2 = r(N)
-qui count if placebo5==1 & exp_any==0
+qui count if placebo5==1 & exp_any_binary==0
 local m3 = r(N)
-qui count if placebo5==1 & exp_any>0 
+qui count if placebo5==1 & exp_any_binary>0 
 local m4 = r(N)
 
 mat sumstat = nullmat(sumstat) \ (`m1', `m2', `m3', `m4', `m1', `m2', `m3', `m4')
@@ -127,7 +127,7 @@ file write sumstat "\toprule" _n
 file write sumstat "\toprule" _n
 file write sumstat " & & & & & \multicolumn{4}{c}{Propensity score weighting} \\" _n
 file write sumstat " & \multicolumn{2}{c}{Targeted population} & \multicolumn{2}{c}{Placebo} & \multicolumn{2}{c}{Targeted population} & \multicolumn{2}{c}{Placebo}  \\" _n
-file write sumstat " & Exposure=0 & Exposure$>$0 & Exposure=0 & Exposure$>$0 & Exposure=0 & Exposure$>$0 & Exposure=0 & Exposure$>$0 \\" _n
+file write sumstat " & Exposure=0 & Exposure$>$0 & Exposure=0 & Exposure=1 & Exposure=0 & Exposure=1 & Exposure=0 & Exposure=1 \\" _n
 file write sumstat " & (1) & (2) & (3) & (4) & (5) & (6) & (7) & (8) \\" _n
 file write sumstat "\midrule " _n
 
@@ -154,42 +154,42 @@ file close sumstat
 Table 3: Regressions
 **************************************************************/
 use "$oi/acs_w_propensity_weights", clear 
-replace exp_any = binary_exp_any
+
 * in migration
 cap mat drop inmig1
-reghdfe move_any exp_any  [pw=perwt]  if targetpop==1 , vce(cluster group_id) absorb(geoid year)
-reg_to_mat, depvar(move_any ) indvars(exp_any ) mat(inmig1)
-reghdfe move_any exp_any  [pw=perwt]  if placebo5==1 , vce(cluster group_id) absorb(geoid year)
-reg_to_mat, depvar(move_any ) indvars(exp_any ) mat(inmig1)
+reghdfe move_any exp_any_binary  [pw=perwt]  if targetpop==1 , vce(cluster group_id) absorb(geoid year)
+reg_to_mat, depvar(move_any ) indvars(exp_any_binary ) mat(inmig1)
+reghdfe move_any exp_any_binary  [pw=perwt]  if placebo5==1 , vce(cluster group_id) absorb(geoid year)
+reg_to_mat, depvar(move_any ) indvars(exp_any_binary ) mat(inmig1)
 
-reghdfe move_any exp_any  [pw=perwt_wt]  if targetpop==1 , vce(cluster group_id) absorb(geoid year)
-reg_to_mat, depvar(move_any) indvars(exp_any ) mat(inmig1)
-reghdfe move_any exp_any  [pw=perwt_wt]  if placebo5==1 , vce(cluster group_id) absorb(geoid year)
-reg_to_mat, depvar(move_any) indvars(exp_any ) mat(inmig1)
+reghdfe move_any exp_any_binary  [pw=perwt_wt]  if targetpop==1 , vce(cluster group_id) absorb(geoid year)
+reg_to_mat, depvar(move_any) indvars(exp_any_binary ) mat(inmig1)
+reghdfe move_any exp_any_binary  [pw=perwt_wt]  if placebo5==1 , vce(cluster group_id) absorb(geoid year)
+reg_to_mat, depvar(move_any) indvars(exp_any_binary ) mat(inmig1)
 
 
 cap mat drop inmig2
-reghdfe move_county exp_any  [pw=perwt]  if targetpop==1 , vce(cluster group_id) absorb(geoid year)
-reg_to_mat, depvar( move_county ) indvars( exp_any ) mat(inmig2)
-reghdfe move_county exp_any  [pw=perwt]  if placebo5==1 , vce(cluster group_id) absorb(geoid year)
-reg_to_mat, depvar( move_county ) indvars( exp_any ) mat(inmig2)
+reghdfe move_county exp_any_binary  [pw=perwt]  if targetpop==1 , vce(cluster group_id) absorb(geoid year)
+reg_to_mat, depvar( move_county ) indvars( exp_any_binary ) mat(inmig2)
+reghdfe move_county exp_any_binary  [pw=perwt]  if placebo5==1 , vce(cluster group_id) absorb(geoid year)
+reg_to_mat, depvar( move_county ) indvars( exp_any_binary ) mat(inmig2)
 
-reghdfe move_county exp_any  [pw=perwt_wt]  if targetpop==1 , vce(cluster group_id) absorb(geoid year)
-reg_to_mat, depvar( move_county ) indvars( exp_any ) mat(inmig2)
-reghdfe move_county exp_any  [pw=perwt_wt]  if placebo5==1 , vce(cluster group_id) absorb(geoid year)
-reg_to_mat, depvar( move_county ) indvars( exp_any ) mat(inmig2)
+reghdfe move_county exp_any_binary  [pw=perwt_wt]  if targetpop==1 , vce(cluster group_id) absorb(geoid year)
+reg_to_mat, depvar( move_county ) indvars( exp_any_binary ) mat(inmig2)
+reghdfe move_county exp_any_binary  [pw=perwt_wt]  if placebo5==1 , vce(cluster group_id) absorb(geoid year)
+reg_to_mat, depvar( move_county ) indvars( exp_any_binary ) mat(inmig2)
 
 
 cap mat drop inmig3
-reghdfe move_state exp_any  [pw=perwt]  if targetpop==1 , vce(cluster group_id) absorb(geoid year)
-reg_to_mat, depvar(move_state) indvars(exp_any) mat(inmig3)
-reghdfe move_state exp_any  [pw=perwt]  if placebo5==1 , vce(cluster group_id) absorb(geoid year)
-reg_to_mat, depvar(move_state) indvars(exp_any) mat(inmig3)
+reghdfe move_state exp_any_binary  [pw=perwt]  if targetpop==1 , vce(cluster group_id) absorb(geoid year)
+reg_to_mat, depvar(move_state) indvars(exp_any_binary) mat(inmig3)
+reghdfe move_state exp_any_binary  [pw=perwt]  if placebo5==1 , vce(cluster group_id) absorb(geoid year)
+reg_to_mat, depvar(move_state) indvars(exp_any_binary) mat(inmig3)
 
-reghdfe move_state exp_any  [pw=perwt_wt]  if targetpop==1 , vce(cluster group_id) absorb(geoid year)
-reg_to_mat, depvar(move_state) indvars(exp_any) mat(inmig3)
-reghdfe move_state exp_any  [pw=perwt_wt]  if placebo5==1 , vce(cluster group_id) absorb(geoid year)
-reg_to_mat, depvar(move_state) indvars(exp_any) mat(inmig3)
+reghdfe move_state exp_any_binary  [pw=perwt_wt]  if targetpop==1 , vce(cluster group_id) absorb(geoid year)
+reg_to_mat, depvar(move_state) indvars(exp_any_binary) mat(inmig3)
+reghdfe move_state exp_any_binary  [pw=perwt_wt]  if placebo5==1 , vce(cluster group_id) absorb(geoid year)
+reg_to_mat, depvar(move_state) indvars(exp_any_binary) mat(inmig3)
 
 
 * Create table

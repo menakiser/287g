@@ -88,7 +88,8 @@ gen perwt_wt = perwt*wt
 
 * create exposure
 gen targetpop = sex==1 & lowskill==1 & hispan!=0 & imm==1 /*born abroad and not a citizen*/ & young==1 & yrimmig>2007 & inlist(yrsusa2 , 1 ,2) & marst>=3 
-gen binary_exp_any = exp_any >0
+gen exp_any_binary = exp_any >0
+rename exp_any og_exp_any
 
 compress
 save "$oi/acs_w_propensity_weights", replace

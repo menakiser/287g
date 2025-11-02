@@ -27,12 +27,12 @@ graph export "$oo/prop_score.pdf", replace
 /**************************************************************
 Figure 2: Event study for mobility
 **************************************************************/
-
 use "$oi/acs_w_propensity_weights", clear 
-
-* identify counties that lose 287g status
-gen year_treated year
-bys statefip countyfip ever_treated: egen firstyear = year 
+* Identify counties that lose treatment
+gen lost_treatment = 0
+bys statefip countyfip (year): replace lost_treatment = 1 if ever_treated==1 & exp_any_binary[_n-1]==1 & exp_any_binary==0
+* Get the year of loss
+bys statefip countyfip (year): egen year_lost = min(cond(lost_treatment==1, year, .))
 
 
 * in migration
