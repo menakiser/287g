@@ -57,3 +57,14 @@ waybackpack http://www.ice.gov/news/library/factsheets/287g.htm -d /Users/jimena
 https://www.ice.gov/doclib/about/offices/ero/287g/
 
 Install waybackpack terminal tool https://github.com/wabarc/wayback
+
+
+
+
+FROM TALKING WITH DOUG
+* USE propensity at the county level not time, maybe even use a shift share from a different period 
+* Evaluate the dynamics when you lose treatment? effect of losing treatment --- backsliders....
+* Event study ---- drop obs who stop treatment......
+
+
+
