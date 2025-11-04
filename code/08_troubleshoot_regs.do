@@ -131,3 +131,18 @@ forval i = 1/5 {
 
 compress
 save  "$oi/acs_w_propensity_weights", replace
+
+
+/**************************************************************
+Table 3: DiD
+**************************************************************/
+use "$oi/acs_w_propensity_weights", clear 
+forval i =1/5 {
+	cap drop allpop exp_pop
+	gen allpop = placebo`i'==1 | targetpop==1
+	gen exp_pop =  exp_any_binary*targetpop
+	di in red "placebo `i', unweighted "
+	reghdfe move_county exp_pop exp_any_binary targetpop  [pw=perwt] if allpop==1, vce(cluster group_id) absorb(geoid year)
+	di in red "placebo `i', weighted "
+	reghdfe move_county exp_pop exp_any_binary targetpop  [pw=perwt_wt] if allpop==1, vce(cluster group_id) absorb(geoid year)
+}

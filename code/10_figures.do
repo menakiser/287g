@@ -5,6 +5,7 @@ Mena kiser
 Figures in research proposal
 ---------------------*/
 
+
 clear all
 
 global wd "/Users/jimenakiser/Desktop/287g/"
@@ -29,82 +30,113 @@ Figure 2: Event study for mobility
 **************************************************************/
 use "$oi/acs_w_propensity_weights", clear 
 
-eventdd 
+* drop 15 counties that lost treatment at some point 
+drop if lost_treatment==1
+* define exposure and target population interaction
+//gen targetpop = sex==1 & lowskill==1 & hispan!=0 & imm==1 & young==1 & yrimmig>2007 & inlist(yrsusa2 , 1 ,2) & marst>=3
+gen allpop = placebo1==1 | targetpop==1
+gen exp_pop =  exp_any_binary*targetpop
 
-
-* in migration
-cap mat drop inmig1
-reghdfe move_any exp_any  [pw=perwt]  if targetpop==1 , vce(cluster group_id) absorb(geoid year)
-reg_to_mat, depvar(move_any ) indvars(exp_any ) mat(inmig1)
-reghdfe move_any exp_any  [pw=perwt]  if placebo5==1 , vce(cluster group_id) absorb(geoid year)
-reg_to_mat, depvar(move_any ) indvars(exp_any ) mat(inmig1)
-
-reghdfe move_any exp_any  [pw=perwt_wt]  if targetpop==1 , vce(cluster group_id) absorb(geoid year)
-reg_to_mat, depvar(move_any) indvars(exp_any ) mat(inmig1)
-reghdfe move_any exp_any  [pw=perwt_wt]  if placebo5==1 , vce(cluster group_id) absorb(geoid year)
-reg_to_mat, depvar(move_any) indvars(exp_any ) mat(inmig1)
-
-
-cap mat drop inmig2
-reghdfe move_county exp_any  [pw=perwt]  if targetpop==1 , vce(cluster group_id) absorb(geoid year)
-reg_to_mat, depvar( move_county ) indvars( exp_any ) mat(inmig2)
-reghdfe move_county exp_any  [pw=perwt]  if placebo5==1 , vce(cluster group_id) absorb(geoid year)
-reg_to_mat, depvar( move_county ) indvars( exp_any ) mat(inmig2)
-
-reghdfe move_county exp_any  [pw=perwt_wt]  if targetpop==1 , vce(cluster group_id) absorb(geoid year)
-reg_to_mat, depvar( move_county ) indvars( exp_any ) mat(inmig2)
-reghdfe move_county exp_any  [pw=perwt_wt]  if placebo5==1 , vce(cluster group_id) absorb(geoid year)
-reg_to_mat, depvar( move_county ) indvars( exp_any ) mat(inmig2)
-
-
-cap mat drop inmig3
-reghdfe move_state exp_any  [pw=perwt]  if targetpop==1 , vce(cluster group_id) absorb(geoid year)
-reg_to_mat, depvar(move_state) indvars(exp_any) mat(inmig3)
-reghdfe move_state exp_any  [pw=perwt]  if placebo5==1 , vce(cluster group_id) absorb(geoid year)
-reg_to_mat, depvar(move_state) indvars(exp_any) mat(inmig3)
-
-reghdfe move_state exp_any  [pw=perwt_wt]  if targetpop==1 , vce(cluster group_id) absorb(geoid year)
-reg_to_mat, depvar(move_state) indvars(exp_any) mat(inmig3)
-reghdfe move_state exp_any  [pw=perwt_wt]  if placebo5==1 , vce(cluster group_id) absorb(geoid year)
-reg_to_mat, depvar(move_state) indvars(exp_any) mat(inmig3)
-
-
-* Create table
-cap file close sumstat
-file open sumstat using "$wd/output/t3_inmigtarget.tex", write replace
-file write sumstat "\begin{tabular}{lcccc}" _n
-file write sumstat "\toprule" _n
-file write sumstat "\toprule" _n
-file write sumstat " & & & \multicolumn{2}{c}{Propensity weighting}  \\" _n
-file write sumstat " & Targeted & Placebo & Targeted & Placebo \\" _n
-file write sumstat " & (1) & (2)  & (3) & (4)  \\" _n
-file write sumstat "\midrule " _n
-
-global varnames `"  "Any move" "Move county" "Move state"  "'
-forval i = 1/3 {
-	local varname : word `i' of $varnames
-	forval c = 1/4  {
-		local b`c' = string(inmig`i'[1,`c'], "%12.4fc" )
-		local p`c' = inmig`i'[2,`c']
-		local stars_abs`c' = cond(`p`c'' < 0.01, "***", cond(`p`c'' < 0.05, "**", cond(`p`c'' < 0.1, "*", "")))
-		local sd`c' = string(inmig`i'[3,`c'], "%12.4fc" )
-		local f`c' = string(inmig`i'[7,`c'], "%12.4fc" )
-		local r`c' = string(inmig`i'[4,`c'], "%12.4fc" )
-	}
-	file write sumstat " `varname' & `b1'`stars_abs1' & `b2'`stars_abs2' & `b3'`stars_abs3' & `b4'`stars_abs4' \\" _n 
-	file write sumstat " \textit{SE} & (`sd1') & (`sd2') & (`sd3') & (`sd4') \\" _n 
-	file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4'  \\" _n 
-	file write sumstat " \textit{F-stat} & `f1' & `f2' & `f3' & `f4'  \\" _n 
-	file write sumstat "\\" _n 
+* define event year dummies
+gen event_year = year if exp_any_binary==1
+bys statefip countyfip : ereplace event_year = min(event_year)
+replace event_year = 0 if ever_treated==0
+gen relative_year = (year-event_year)*ever_treated
+replace relative_year = . if ever_treated==0
+gen targ_relative_year = targetpop*relative_year
+gen ry0 = relative_year==0  
+gen targ_ry0 = targetpop*ry0
+gen ever_ry0 = ever_treated*ry0
+forval i=1/6 {
+	gen rym`i' = relative_year==-`i'
+	gen targ_rym`i' = targetpop*rym`i'
+	gen ryp`i' = relative_year==`i'
+	gen targ_ryp`i' = targetpop*ryp`i'
 }
-file write sumstat "Sample Size "
-forval i = 1/4 {
-	local n`i' = string(inmig1[6,`i'], "%12.0fc" )
-	file write sumstat " & `n`i'' "
+
+forval i=1/6 {
+	gen ever_rym`i' = ever_treated*rym`i'
 }
-file write sumstat "\\" _n 
-file write sumstat "\bottomrule" _n
-file write sumstat "\bottomrule" _n
-file write sumstat "\end{tabular}"
-file close sumstat
+forval i=1/6 {
+	gen ever_ryp`i' = ever_treated*ryp`i'
+}
+
+*any move
+reghdfe move_any rym6 rym5 rym4 rym3 rym2 o.rym1 ry0 ///
+	ryp1 ryp2 ryp3 ryp4 ryp5 ryp6 exp_any_binary  ///
+	[pw=perwt_wt] if allpop==1, vce(cluster group_id) absorb(geoid year)
+est store e_any
+		
+coefplot (e_any, label("Target population relative to placebo")  mcolor(navy) ciopts(lcolor(navy) recast(rcap))) ///
+	, nooffsets keep(rym* o.rym1 ry0 ryp*) yline(0, lcolor(black)) xline(6, lcolor(black) ) omit vertical ///
+	ytitle("Probability of Any Move") ///
+	rename(rym6 = "-6" rym5 = "-5" rym4 = "-4" rym3 = "-3" rym2 = "-2" rym1 = "-1" ///
+	ry0 = "0"  ryp1 = "+1" ryp2 = "+2" ryp3 = "+3" ryp4 = "+4" ryp5 ="+5" ryp6 ="+6" ) ///
+	xtitle("Years") graphregion(color(white)) egend(off) xlabel(,labsize(*.8)) ylabel(-.2(.1).6)
+
+* move county
+reghdfe move_county rym6 rym5 rym4 rym3 rym2 o.rym1 ry0 ///
+	ryp1 ryp2 ryp3 ryp4 ryp5 ryp6 exp_any_binary  ///
+	[pw=perwt_wt] if allpop==1, vce(cluster group_id) absorb(geoid year)
+est store e_county
+		
+coefplot (e_county, label("Target population relative to placebo")  mcolor(navy) ciopts(lcolor(navy) recast(rcap))) ///
+	, nooffsets keep(rym* o.rym1 ry0 ryp*) yline(0, lcolor(black)) xline(6, lcolor(black) ) omit vertical ///
+	ytitle("Probability of County Move") ///
+	rename(rym6 = "-6" rym5 = "-5" rym4 = "-4" rym3 = "-3" rym2 = "-2" rym1 = "-1" ///
+	ry0 = "0"  ryp1 = "+1" ryp2 = "+2" ryp3 = "+3" ryp4 = "+4" ryp5 ="+5" ryp6 ="+6" ) ///
+	xtitle("Years") graphregion(color(white)) legend(off) ylabel(-.2(.1).6)
+
+* move state
+reghdfe move_state rym6 rym5 rym4 rym3 rym2 o.rym1 ry0 ///
+	ryp1 ryp2 ryp3 ryp4 ryp5 ryp6 exp_any_binary  ///
+	[pw=perwt_wt] if allpop==1, vce(cluster group_id) absorb(geoid year)
+est store e_state
+		
+coefplot (e_state, label("Target population relative to placebo")  mcolor(navy) ciopts(lcolor(navy) recast(rcap))) ///
+	, nooffsets keep(rym* o.rym1 ry0 ryp*) yline(0, lcolor(black)) xline(6, lcolor(black) ) omit vertical ///
+	ytitle("Probability of State Move") ///
+	rename(rym6 = "-6" rym5 = "-5" rym4 = "-4" rym3 = "-3" rym2 = "-2" rym1 = "-1" ///
+	ry0 = "0"  ryp1 = "+1" ryp2 = "+2" ryp3 = "+3" ryp4 = "+4" ryp5 ="+5" ryp6 ="+6" ) ///
+	xtitle("Years") graphregion(color(white)) legend(off) ylabel(-.2(.1).6)
+
+**** reg
+*any move
+reghdfe move_any ever_rym6 ever_rym5 ever_rym4 ever_rym3 ever_rym2 o.ever_rym1 ever_ry0 ///
+	ever_ryp1 ever_ryp2 ever_ryp3 ever_ryp4 ever_ryp5 ever_ryp6 exp_any_binary  ///
+	[pw=perwt_wt] if targetpop==1, vce(cluster group_id) absorb(geoid year)
+est store e_any
+		
+coefplot (e_any, label("Target population relative to placebo")  mcolor(navy) ciopts(lcolor(navy) recast(rcap))) ///
+	, nooffsets keep(ever_rym* o.ever_rym1 ever_ry0 ever_ryp*) yline(0, lcolor(black)) xline(6, lcolor(black) ) omit vertical ///
+	ytitle("Probability of Any Move") ///
+	rename(ever_rym6 = "-6" ever_rym5 = "-5" ever_rym4 = "-4" ever_rym3 = "-3" ever_rym2 = "-2" ever_rym1 = "-1" ///
+	ever_ry0 = "0"  ever_ryp1 = "+1" ever_ryp2 = "+2" ever_ryp3 = "+3" ever_ryp4 = "+4" ever_ryp5 ="+5" ever_ryp6 ="+6" ) ///
+	xtitle("Years") graphregion(color(white)) legend(off) xlabel(,labsize(*.8)) ylabel(-.4(.2).6)
+
+* move county
+reghdfe move_county ever_rym6 ever_rym5 ever_rym4 ever_rym3 ever_rym2 o.ever_rym1 ever_ry0 ///
+	ever_ryp1 ever_ryp2 ever_ryp3 ever_ryp4 ever_ryp5 ever_ryp6 exp_any_binary  ///
+	[pw=perwt_wt] if targetpop==1, vce(cluster group_id) absorb(geoid year)
+est store e_county
+		
+coefplot (e_county, label("Target population relative to placebo")  mcolor(navy) ciopts(lcolor(navy) recast(rcap))) ///
+	, nooffsets keep(ever_rym* o.ever_rym1 ry0 ever_ryp*) yline(0, lcolor(black)) xline(6, lcolor(black) ) omit vertical ///
+	ytitle("Probability of County Move") ///
+	rename(ever_rym6 = "-6" ever_rym5 = "-5" ever_rym4 = "-4" ever_rym3 = "-3" ever_rym2 = "-2" ever_rym1 = "-1" ///
+	ever_ry0 = "0"  ever_ryp1 = "+1" ever_ryp2 = "+2" ever_ryp3 = "+3" ever_ryp4 = "+4" ever_ryp5 ="+5" ever_ryp6 ="+6" ) ///
+	xtitle("Years") graphregion(color(white)) legend(off) ylabel(-.2(.1).6)
+
+* move state
+reghdfe move_state ever_rym6 ever_rym5 ever_rym4 ever_rym3 ever_rym2 o.ever_rym1 ever_ry0 ///
+	ever_ryp1 ever_ryp2 ever_ryp3 ever_ryp4 ever_ryp5 ever_ryp6 exp_any_binary  ///
+	[pw=perwt_wt] if targetpop==1, vce(cluster group_id) absorb(geoid year)
+est store e_state
+		
+coefplot (e_state, label("Target population relative to placebo")  mcolor(navy) ciopts(lcolor(navy) recast(rcap))) ///
+	, nooffsets keep(ever_rym* o.ever_rym1 ever_ry0 ever_ryp*) yline(0, lcolor(black)) xline(6, lcolor(black) ) omit vertical ///
+	ytitle("Probability of State Move") ///
+	rename(ever_rym6 = "-6" ever_rym5 = "-5" ever_rym4 = "-4" ever_rym3 = "-3" ever_rym2 = "-2" ever_rym1 = "-1" ///
+	ever_ry0 = "0"  ever_ryp1 = "+1" ever_ryp2 = "+2" ever_ryp3 = "+3" ever_ryp4 = "+4" ever_ryp5 ="+5" ever_ryp6 ="+6" ) ///
+	xtitle("Years") graphregion(color(white)) legend(off) ylabel(-.2(.1).6)
 
