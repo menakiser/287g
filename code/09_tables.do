@@ -212,13 +212,11 @@ forval i = 1/3 {
 		local p`c' = inmig`i'[2,`c']
 		local stars_abs`c' = cond(`p`c'' < 0.01, "***", cond(`p`c'' < 0.05, "**", cond(`p`c'' < 0.1, "*", "")))
 		local sd`c' = string(inmig`i'[3,`c'], "%12.4fc" )
-		local f`c' = string(inmig`i'[7,`c'], "%12.4fc" )
 		local r`c' = string(inmig`i'[4,`c'], "%12.4fc" )
 	}
 	file write sumstat " `varname' & `b1'`stars_abs1' & `b2'`stars_abs2' & `b3'`stars_abs3' & `b4'`stars_abs4' \\" _n 
 	file write sumstat " \textit{SE} & (`sd1') & (`sd2') & (`sd3') & (`sd4') \\" _n 
 	file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4'  \\" _n 
-	file write sumstat " \textit{F-stat} & `f1' & `f2' & `f3' & `f4'  \\" _n 
 	file write sumstat "\\" _n 
 }
 file write sumstat "Sample Size "
