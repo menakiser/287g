@@ -68,3 +68,4 @@ FROM TALKING WITH DOUG
 
 
 
+United States. Bureau of Justice Statistics. Law Enforcement Agency Identifiers Crosswalk, United States,  2012. Inter-university Consortium for Political and Social Research [distributor], 2018-09-18. https://doi.org/10.3886/ICPSR35158.v2

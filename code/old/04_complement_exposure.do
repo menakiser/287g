@@ -3,6 +3,7 @@ Mena kiser
 10-19-25
 
 Validate treatment using ICE FOIA list exposure level variable matching migration level codes: county and puma
+
 ---------------------*/
 
 clear all
@@ -11,6 +12,40 @@ global wd "/Users/jimenakiser/Desktop/287g/"
 global or "$wd/data/raw"
 global oi "$wd/data/int"
 
+
+*-------- PART 1: OBTAIN OF GEOCODES -----------
+import excel using "$or/xwalk/all-geocodes-v2018", cellrange(A5:G43823) clear firstrow
+gen ogorder = _n
+rename (StateCodeFIPS CountyCodeFIPS CountySubdivisionCodeFIPS PlaceCodeFIP ConsolidtatedCityCodeFIPS AreaName) ///
+(statefips countyfips subcountyfips placefips cityfips geoname)
+replace geoname = strlower(geoname)
+foreach v of varlist _all {
+	cap destring `v', replace
+	cap replace `v' = strlower(`v')
+}
+drop if statefips==0
+gen state = geoname if countyfips==0 & subcountyfips==0 &  placefips==0 &  cityfips==0
+bys statefips: ereplace state = mode(state)
+
+*obtain state names
+preserve 
+keep state statefips
+duplicates drop 
+tempfile states 
+save `states'
+restore 
+
+* obtain county names 
+preserve
+drop if countyfips==0
+bys statefips countyfips (ogorder): keep if _n==1
+gen countyname = geoname
+tempfile counties
+save `counties'
+restore 
+
+
+*-------- PART 2: OBTAIN FOIA LEA AND COUNTIES -----------
 * OBTAIN FOIA lists
 import excel using "$or/foia/287gCommunities2009-2017", clear 
 
@@ -55,8 +90,22 @@ replace lea = subinstr(lea , "sheriff's department", "sheriff's office", .)
 replace lea = subinstr(lea, "city of manassas", "manassas city", .)
 replace lea = subinstr(lea, "prince william-manassas adult detention center", "prince william-manassas regional adult detention center", .)
 replace lea = subinstr(lea, "sheriff’s", "sheriff's", .)
+replace lea = subinstr(lea, "." , "" , .)
+replace lea = subinstr(lea, "  " , " " , .)
+replace lea = subinstr(lea, "’" , `"'"' , .)
+replace lea = subinstr(lea, "sheriffs" , "sheriff's" , .)
+replace lea = subinstr(lea, "sheriff's department" , "sheriff's office" , .)
+replace lea = subinstr(lea, "city of " , "" , .)
+replace lea = subinstr(lea, "sheriff office" , "sheriff's office", .)
+replace lea = subinstr(lea, "colunty" , "county", .)
+
 rename state ST2digitcode  
 merge m:1 ST2digitcode  using "/Users/jimenakiser/liegroup Dropbox/Jimena Villanueva Kiser/handy crosswalks/state_crosswalk.dta", keepusing(state) nogen keep(1 3)
+
+replace lea = "manassas police department" if lea=="manassas city police department" & state=="virginia"
+replace lea = "maricopa county sheriff's office" if lea == "maricopa county az sheriff's office" & state=="arizona"
+replace lea = "prince william county sheriff's office" if lea == "prince william sheriff's office" & state=="virginia"
+
 duplicates drop
 isid lea year state
 
@@ -65,8 +114,23 @@ tempfile icefoia
 save `icefoia'
 
 
+
 *------------------*
-use "$oi/ice_all_287g_clean", clear 
+keep geoname state
+duplicates drop
+
+
+
+
+
+merge 1:m lea state using "$oi/ice_all_287g_clean"
+
+
+
+
+
+
+
 gen dateretrieved_d = date(dateretrieved, "YMD")
 
 anne arundel anne arundel county detention facilities

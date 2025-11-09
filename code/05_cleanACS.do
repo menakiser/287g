@@ -19,7 +19,7 @@ global oi "$wd/data/int"
 * import ACS data 
 use "$or/usa_00048.dta", clear 
 
-** Sample restrictions
+**** Sample restrictions
 *50 US states and DC
 keep if statefip<=56
 drop if countyfip==000 //not identifiable
@@ -28,7 +28,7 @@ drop if inlist(gq, 0, 3, 4)
 *restrict census year 
 keep if year>=2010 & year <=2020
 
-** individual variables
+**** individual variables
 *education levels for internal use, combining educd and higraded
 gen inteduc = 0 //left as zero if no answer
 replace inteduc = 1 if educ <=5  //less than high school (post1980) or less than grade 12 (pre1980)
@@ -45,33 +45,24 @@ gen born_abroad = bpld>= 15000 & bpld!=90011 & bpld!=90021  & bpld!=90022
 gen imm = born_abroad & citizen==3 //immigrants are defined as born abroad and currently not a citizen 
 replace imm = 0 if mi(imm)
 
+* identify young people
 gen young = age>=18 & age<=39
 
-*clean variables
+*clean income variables
 replace incwage=. if incwage==999999 | incwage==0 
 
 * obtain exposure var 
 rename (statefip countyfip) (statefips countyfips)
-merge m:1 countyfips statefips year using "$oi/exposure_county_year" , nogen keep(1 3)
-foreach v in exp_any exp_jail exp_task exp_warrant {
+merge m:1 countyfips statefips year using "$oi/exposure_county_year" , nogen keep(1 3) keepusing(exp_any_county exp_jail_county exp_task_county exp_warrant_county)
+foreach v in exp_any_county exp_jail_county exp_task_county exp_warrant_county {
+	replace `v' = 0 if mi(`v')
+}
+
+merge m:1 statefips year using "$oi/exposure_state_year" , nogen keep(1 3) keepusing(exp_any_state exp_jail_state exp_task_state exp_warrant_state)
+foreach v in exp_any_state exp_jail_state exp_task_state exp_warrant_state {
 	replace `v' = 0 if mi(`v')
 }
 rename  (statefips countyfips) (statefip countyfip)
-bys statefip: egen st_exp = max(exp_any>0)
-
-* obtain list of SC
-preserve 
-use  "$or/287g_SC_EVerify_5_13_22", clear 
-collapse (mean) SC_sh=SC (max) SC_any=SC , by(countyfip statefip year )
-keep if year>=2010
-tempfile sclist 
-save `sclist'
-restore 
-
-merge m:1 countyfip statefip year using `sclist', nogen keep( 1 3)
-foreach v in SC_sh SC_any {
-	replace `v' = 0 if mi(`v')
-}
 
 * other ind vars 
 gen male = sex==1 
@@ -81,7 +72,7 @@ gen never_married = inlist(marst, 6)
 gen ownhome = ownershp==1
 gen employed = empstat==1
 
-sum age exp_any nchild wkswork1 uhrswork incwage rent mortamt1
+sum age exp_any* nchild wkswork1 uhrswork incwage rent mortamt1
 
 *define mobility variables
 gen move_any = migrate1>1

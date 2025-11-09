@@ -15,18 +15,6 @@ global oi "$wd/data/int"
 *--------------- exposure at the COUNTY LEVEL ------------------*
 use "$oi/ice_all_287g_clean", clear 
 
-* obtaining county shares for cities/towns
-gen temp_countyfips =countyfips1
-drop countyfips*
-merge m:1 statefips placefips using "$oi/xwalk/place_county", nogen keep(1 3)
-drop *4 *5
-reshape long countyfips afact pop10 countypop10, i(lea supporttype datesigned dateretrieved state statefips placefips ) j(countyorder)
-drop if countyorder>1 & (placefips==. | countyfips==.)
-replace countyfips = temp_countyfips if countyfips==.
-drop temp_countyfips
-replace afact= 1 if mi(afact)
-
-
 *register date signed as the first date retrieved
 sort dateretrieved //first observed year 2011-02-20, all date signed in 2011 were pre 2010-08-19
 expand 2 if dateretrieved!=datesigned, gen(dup)
@@ -39,10 +27,13 @@ format dateretrieved_d  %td
 drop dateretrieved 
 
 * exclude state and state-level corrections
-drop if jurisdiction=="state" | geolevel=="state" 
+gen county_exp = !(jurisdiction=="state" | agctype==5)
+gen state_exp = jurisdiction=="state" | agctype==5
+bys statefips dateretrieved supporttype: ereplace state_exp = max(state_exp)
 
 * obtain county level exposure at date of retrieval
-collapse (sum) afact (max) signing_date, by(dateretrieved supporttype statefips countyfips)
+collapse (max) county_exp state_exp signing_date, by(dateretrieved supporttype statefips countyfips)
+replace countyfips = 99999 if mi(countyfips)
 egen authority = group(supporttype statefips countyfips)
 
 * obtain authority by date panel for treatment
@@ -53,7 +44,7 @@ foreach v in supporttype statefips countyfips {
 }
 
 * flag exposure
-gen observed = !mi(afact)
+gen observed = !mi(county_exp) | !mi(state_exp)
 bys dateretrieved: egen any_observed = max(observed)
 tab observed any_observed
 * used CHATGPT for lines 59 to 74
@@ -67,44 +58,59 @@ bys authority (date): replace exposure = toggle if toggle < .
 bys authority (date): replace exposure = exposure[_n-1] if missing(exposure)
 bys authority: replace exposure = 0 if missing(exposure)
 
-* weight exposure
-cap drop exposure_weight
+* county exposure
+cap drop exposure_county
 sort authority date
-by authority (date): gen exposure_weight = afact if !missing(afact)
-by authority (date): replace exposure_weight = exposure_weight[_n-1] if missing(exposure_weight)  & exposure==1
-replace exposure_weight = 0 if exposure == 0
+by authority (date): gen exposure_county = county_exp if !missing(county_exp)
+by authority (date): replace exposure_county = exposure_county[_n-1] if missing(exposure_county)  & exposure==1
+replace exposure_county = 0 if exposure == 0
 
-replace exposure = exposure * exposure_weight
-drop exposure_weight
+* state exposure
+cap drop exposure_state
+sort authority date
+by authority (date): gen exposure_state = state_exp if !missing(state_exp)
+by authority (date): replace exposure_state = exposure_state[_n-1] if missing(exposure_state)  & exposure==1
+replace exposure_state = 0 if exposure == 0
 
 * collapse by year from 2011 (first year of retrieval) to 2019 (last year of sample)
 sort date //start date 01 feb 2005, end on 21 feb 2025 (last date of retrieval)
 gen year = year(date) 
-collapse (mean) exposure , by(year supporttype statefips countyfips)
+collapse (max) exposure_state  exposure_county  , by(year supporttype statefips countyfips) 
 
 keep if year >=2011 & year <=2019
 
 *drop counties with no exposure during this period
-bys statefips countyfips: egen some_exp = max(exposure)
+bys statefips countyfips: egen some_exp = max(exposure_state>0 | exposure_county>0)
 drop if some_exp == 0
 drop some_exp
 
-gen exp_jail = exposure if strpos(supporttype, "jail")>0
-replace exp_jail = 0 if mi(exp_jail)
-gen exp_task = exposure if strpos(supporttype, "task")>0
-replace exp_task = 0 if mi(exp_task)
-gen exp_warrant = exposure if strpos(supporttype, "warrant")>0
-replace exp_warrant = 0 if mi(exp_warrant)
+foreach t in jail task warrant {
+	foreach j in state county {
+		gen exp_`t'_`j' = exposure_`j' if strpos(supporttype, "`t'")>0
+		replace exp_`t'_`j' = 0 if mi(exp_`t'_`j')	
+	}
+}
 
-collapse (sum) exp_any=exposure exp_jail exp_task exp_warrant, by(statefips countyfips year)
+collapse (max) exp_any_state=exposure_state exp_any_county=exposure_county ///
+	exp_jail_state exp_jail_county ///
+	exp_task_state exp_task_county ///
+	exp_warrant_state exp_warrant_county, by(statefips countyfips year)
 
-tab year
-drop if countyfips==0
-
-
-//155 unique counties
+* store county exposure
+preserve
+drop if countyfips==99999
+drop *_state
+tab year if countyfips<99999
+//177 unique counties
 //9 years of treatment
 
 compress
 save "$oi/exposure_county_year", replace
+restore 
 
+* store state exposure
+collapse (max) exp_any_state exp_jail_state exp_task_state exp_warrant_state, by(statefips year)
+
+
+compress
+save "$oi/exposure_state_year", replace
