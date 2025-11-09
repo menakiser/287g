@@ -29,7 +29,7 @@ gen ogorder = _n
 reshape long char val, i(ogorder) j(year)
 
 * restrict to focus years
-keep if year>=2011 & year<=2019
+keep if year>=2013 & year<=2019
 collapse (sum) val, by(char group)
 sort group val
 drop if val==0
@@ -64,44 +64,41 @@ bys group: replace torder = _n if group!="Age group"
 replace group = "Seriousness Level of Conviction" if group=="Seriousness Level of MSCC Conviction"
 sort group torder
 
-
 cap file close sumstat
 file open sumstat using "$oo/removaltable.tex", write replace
-file write sumstat "\begin{tabular}{rrrll}" _n
-file write sumstat "\toprule" _n
-file write sumstat "\toprule" _n
-file write sumstat "\multicolumn{1}{l}{Characteristics}                         & Removals & Share  &  &  \\"
-file write sumstat "\midrule " _n
-file write sumstat "\multicolumn{1}{l}{Gender}                                  &          &        &  &  \\"
-file write sumstat "Male  & 87,923   & 0.9587 &  &  \\"
-file write sumstat "Female & 3,790    & 0.0413 &  &  \\"
-file write sumstat "\multicolumn{1}{l}{Age group}                               &          &        &  &  \\"
-file write sumstat "0-17  & 82       & 0.0009 &  &  \\"
-file write sumstat "18-24 & 17,911   & 0.1953 &  &  \\"
-file write sumstat "25-29 & 21,588   & 0.2354 &  &  \\"
-file write sumstat "30-34 & 19,568   & 0.2134 &  &  \\"
-file write sumstat "35-39 & 14,631   & 0.1595 &  &  \\"
-file write sumstat "40-44 & 9,040    & 0.0986 &  &  \\"
-file write sumstat "45-49 & 4,985    & 0.0544 &  &  \\"
-file write sumstat "50-54 & 2,384    & 0.0260 &  &  \\"
-file write sumstat "55-59 & 1,004    & 0.0109 &  &  \\"
-file write sumstat "60-64 & 365      & 0.0040 &  &  \\"
-file write sumstat "65-69 & 115      & 0.0013 &  &  \\"
-file write sumstat "70-74 & 32       & 0.0003 &  &  \\"
-file write sumstat "75+   & 9        & 0.0001 &  &  \\"
-file write sumstat "\multicolumn{1}{l}{Latin American} & 90,235   & 0.9839 &  &  \\"
-file write sumstat "\multicolumn{1}{l}{Citizenship}                             &          &        &  &  \\"
-file write sumstat "Mexico & 68,038   & 0.7418 &  &  \\"
-file write sumstat "Guatemala & 8,042    & 0.0877 &  &  \\"
-file write sumstat "Honduras & 6,618    & 0.0722 &  &  \\"
-file write sumstat "El Salvador & 5,300    & 0.0578 &  &  \\"
-file write sumstat "Nicaragua & 329      & 0.0036 &  &  \\"
-file write sumstat "Brazil & 306      & 0.0033 &  &  \\"
-file write sumstat "\multicolumn{1}{l}{Level of Conviction}         &          &        &  &  \\"
-file write sumstat "No Conviction & 16,270   & 0.1774 &  &  \\"
-file write sumstat "Level 1 Crime & 25,620   & 0.2793 &  &  \\"
-file write sumstat "Level 2 Crime & 9,065    & 0.0988 &  &  \\"
-file write sumstat "Level 3 Crime & 40,759   & 0.4444 &  & \\"
+file write sumstat "\begin{table}[]" _n
+file write sumstat "\begin{tabular}{rllll}" _n
+file write sumstat "\multicolumn{1}{l}{Characteristics} & \multicolumn{1}{r}{Removals} & \multicolumn{1}{r}{Share ($\%$)}   \\" _n
+file write sumstat "\multicolumn{1}{l}{Gender} & &   \\" _n
+file write sumstat "Male & 87923 & 95.87   \\" _n
+file write sumstat "Female & 3790 & 4.13   \\" _n
+file write sumstat "\multicolumn{1}{l}{Age group} & &   \\" _n
+file write sumstat "0-17 & 82 & 0.09   \\" _n
+file write sumstat "18-24 & 17911 & 19.53   \\" _n
+file write sumstat "25-29 & 21588 & 23.54   \\" _n
+file write sumstat "30-34 & 19568 & 21.34   \\" _n
+file write sumstat "35-39 & 14631 & 15.95   \\" _n
+file write sumstat "40-44 & 9040 & 9.86   \\" _n
+file write sumstat "45-49 & 4985 & 5.44   \\" _n
+file write sumstat "50-54 & 2384 & 2.60   \\" _n
+file write sumstat "55-59 & 1004 & 1.09   \\" _n
+file write sumstat "60-64 & 365 & 0.40   \\" _n
+file write sumstat "65-69 & 115 & 0.13   \\" _n
+file write sumstat "70-74 & 32 & 0.03   \\" _n
+file write sumstat "75+ & 9 & 0.01   \\" _n
+file write sumstat "\multicolumn{1}{l}{Latin American or Caribbean Citizenship} & 90235 & 98.39   \\" _n
+file write sumstat "\multicolumn{1}{l}{Citizenship} & &   \\" _n
+file write sumstat "Mexico & 68038 & 74.18   \\" _n
+file write sumstat "Guatemala & 8042 & 8.77   \\" _n
+file write sumstat "Honduras & 6618 & 7.22   \\" _n
+file write sumstat "El Salvador & 5300 & 5.78   \\" _n
+file write sumstat "Nicaragua & 329 & 0.36   \\" _n
+file write sumstat "Brazil & 306 & 0.33   \\" _n
+file write sumstat "\multicolumn{1}{l}{Seriousness Level of Conviction} & &   \\" _n
+file write sumstat "No Conviction & 16270 & 17.74   \\" _n
+file write sumstat "Level 1 Crime & 25620 & 27.93   \\" _n
+file write sumstat "Level 2 Crime & 9065 & 9.88   \\" _n
+file write sumstat "Level 3 Crime & 40759 & 44.44   \\" _n
 file write sumstat "\bottomrule" _n
 file write sumstat "\bottomrule" _n
 file write sumstat "\end{tabular}"
