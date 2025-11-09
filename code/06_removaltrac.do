@@ -88,7 +88,7 @@ file write sumstat "60-64 & 365 & 0.40   \\" _n
 file write sumstat "65-69 & 115 & 0.13   \\" _n
 file write sumstat "70-74 & 32 & 0.03   \\" _n
 file write sumstat "75+ & 9 & 0.01   \\" _n
-file write sumstat "\multicolumn{1}{l}{Latin American or Caribbean Citizenship} & 90235 & 98.39   \\" _n
+file write sumstat "\multicolumn{1}{l}{Latin American Citizen} & 90235 & 98.39   \\" _n
 file write sumstat "\multicolumn{1}{l}{Citizenship} & &   \\" _n
 file write sumstat "Mexico & 68038 & 74.18   \\" _n
 file write sumstat "Guatemala & 8042 & 8.77   \\" _n
@@ -96,7 +96,7 @@ file write sumstat "Honduras & 6618 & 7.22   \\" _n
 file write sumstat "El Salvador & 5300 & 5.78   \\" _n
 file write sumstat "Nicaragua & 329 & 0.36   \\" _n
 file write sumstat "Brazil & 306 & 0.33   \\" _n
-file write sumstat "\multicolumn{1}{l}{Seriousness Level of Conviction} & &   \\" _n
+file write sumstat "\multicolumn{1}{l}{Level of Conviction} & &   \\" _n
 file write sumstat "No Conviction & 16270 & 17.74   \\" _n
 file write sumstat "Level 1 Crime & 25620 & 27.93   \\" _n
 file write sumstat "Level 2 Crime & 9065 & 9.88   \\" _n
