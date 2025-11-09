@@ -67,7 +67,10 @@ sort group torder
 cap file close sumstat
 file open sumstat using "$oo/removaltable.tex", write replace
 file write sumstat "\begin{tabular}{rllll}" _n
+file write sumstat "\toprule" _n
+file write sumstat "\toprule" _n
 file write sumstat "\multicolumn{1}{l}{Characteristics} & \multicolumn{1}{r}{Removals} & \multicolumn{1}{r}{Share ($\%$)}   \\" _n
+file write sumstat "\midrule" _n
 file write sumstat "\multicolumn{1}{l}{Gender} & &   \\" _n
 file write sumstat "Male & 87923 & 95.87   \\" _n
 file write sumstat "Female & 3790 & 4.13   \\" _n
