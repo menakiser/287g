@@ -101,10 +101,9 @@ file write sumstat "\multicolumn{1}{l}{Level of Conviction}         &          &
 file write sumstat "No Conviction & 16,270   & 0.1774 &  &  \\"
 file write sumstat "Level 1 Crime & 25,620   & 0.2793 &  &  \\"
 file write sumstat "Level 2 Crime & 9,065    & 0.0988 &  &  \\"
-file write sumstat "Level 3 Crime & 40,759   & 0.4444 &  & "
+file write sumstat "Level 3 Crime & 40,759   & 0.4444 &  & \\"
 file write sumstat "\bottomrule" _n
 file write sumstat "\bottomrule" _n
 file write sumstat "\end{tabular}"
 file close sumstat
-
 
