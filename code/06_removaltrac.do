@@ -72,37 +72,36 @@ file write sumstat "\toprule" _n
 file write sumstat "\multicolumn{1}{l}{Characteristics} & \multicolumn{1}{r}{Removals} & \multicolumn{1}{r}{Share ($\%$)}   \\" _n
 file write sumstat "\midrule" _n
 file write sumstat "\multicolumn{1}{l}{Gender} & &   \\" _n
-file write sumstat "Male & 87923 & 95.87   \\" _n
-file write sumstat "Female & 3790 & 4.13   \\" _n
+file write sumstat "Male & 87,923 & 95.87   \\" _n
+file write sumstat "Female & 3,790 & 4.13   \\" _n
 file write sumstat "\multicolumn{1}{l}{Age group} & &   \\" _n
 file write sumstat "0-17 & 82 & 0.09   \\" _n
-file write sumstat "18-24 & 17911 & 19.53   \\" _n
-file write sumstat "25-29 & 21588 & 23.54   \\" _n
-file write sumstat "30-34 & 19568 & 21.34   \\" _n
-file write sumstat "35-39 & 14631 & 15.95   \\" _n
-file write sumstat "40-44 & 9040 & 9.86   \\" _n
-file write sumstat "45-49 & 4985 & 5.44   \\" _n
-file write sumstat "50-54 & 2384 & 2.60   \\" _n
-file write sumstat "55-59 & 1004 & 1.09   \\" _n
+file write sumstat "18-24 & 17,911 & 19.53   \\" _n
+file write sumstat "25-29 & 21,588 & 23.54   \\" _n
+file write sumstat "30-34 & 19,568 & 21.34   \\" _n
+file write sumstat "35-39 & 14,631 & 15.95   \\" _n
+file write sumstat "40-44 & 9,040 & 9.86   \\" _n
+file write sumstat "45-49 & 4,985 & 5.44   \\" _n
+file write sumstat "50-54 & 2,384 & 2.60   \\" _n
+file write sumstat "55-59 & 1,004 & 1.09   \\" _n
 file write sumstat "60-64 & 365 & 0.40   \\" _n
 file write sumstat "65-69 & 115 & 0.13   \\" _n
 file write sumstat "70-74 & 32 & 0.03   \\" _n
 file write sumstat "75+ & 9 & 0.01   \\" _n
-file write sumstat "\multicolumn{1}{l}{Latin American Citizen} & 90235 & 98.39   \\" _n
+file write sumstat "\multicolumn{1}{l}{Latin American Citizen} & 90,235 & 98.39   \\" _n
 file write sumstat "\multicolumn{1}{l}{Citizenship} & &   \\" _n
-file write sumstat "Mexico & 68038 & 74.18   \\" _n
-file write sumstat "Guatemala & 8042 & 8.77   \\" _n
-file write sumstat "Honduras & 6618 & 7.22   \\" _n
-file write sumstat "El Salvador & 5300 & 5.78   \\" _n
+file write sumstat "Mexico & 68,038 & 74.18   \\" _n
+file write sumstat "Guatemala & 8,042 & 8.77   \\" _n
+file write sumstat "Honduras & 6,618 & 7.22   \\" _n
+file write sumstat "El Salvador & 5,300 & 5.78   \\" _n
 file write sumstat "Nicaragua & 329 & 0.36   \\" _n
 file write sumstat "Brazil & 306 & 0.33   \\" _n
 file write sumstat "\multicolumn{1}{l}{Level of Conviction} & &   \\" _n
-file write sumstat "No Conviction & 16270 & 17.74   \\" _n
-file write sumstat "Level 1 Crime & 25620 & 27.93   \\" _n
-file write sumstat "Level 2 Crime & 9065 & 9.88   \\" _n
-file write sumstat "Level 3 Crime & 40759 & 44.44   \\" _n
+file write sumstat "No Conviction & 16,270 & 17.74   \\" _n
+file write sumstat "Level 1 Crime & 25,620 & 27.93   \\" _n
+file write sumstat "Level 2 Crime & 9,065 & 9.88   \\" _n
+file write sumstat "Level 3 Crime & 40,759 & 44.44   \\" _n
 file write sumstat "\bottomrule" _n
 file write sumstat "\bottomrule" _n
 file write sumstat "\end{tabular}"
 file close sumstat
-
