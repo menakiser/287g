@@ -22,7 +22,7 @@ twoway (line d_1 x_1, sort  lpattern(solid) lcolor(midblue) lwidth(0.3)  ) ///
 	 (line d_0w x_0w, sort lpattern(shortdash) lcolor(dkgreen) lwidth(0.5) ) ///
 	 , legend(pos(6)  rows(1) order( 1 "Treatment group" 2 "Control group, unweighted" 3 "Control group, weighted" ) ) ///
 	 xtitle("Pr(County is ever exposed)") ytitle("Density")
-graph export "$oo/prop_score.pdf", replace
+graph export "$oo/prop_score.png", replace
 
 
 /**************************************************************
@@ -54,13 +54,13 @@ replace prev_relative_year = . if prev_ever_treated_migpuma == 0
 
 * in migration
 eventdd move_any $covars i.year i.geoid [pw=perwt_wt]  if targetpop==1 , timevar(relative_year) method(ols, cluster(group_id)) graph_op(ytitle("Any move") xtitle("Relative year") xlabel(-6(1)6) legend(off)) //leads(6) lags(6) accum
-	graph export "$oo/es_in_any.pdf", replace
+	graph export "$oo/es_in_any.png", replace
 
 eventdd move_migpuma $covars i.year i.geoid [pw=perwt_wt]  if targetpop==1 , timevar(relative_year) method(ols, cluster(group_id)) graph_op(ytitle("Move migpuma") xtitle("Relative year") xlabel(-6(1)6) legend(off)) //leads(6) lags(6) accum
-	graph export "$oo/es_in_migpuma.pdf", replace
+	graph export "$oo/es_in_migpuma.png", replace
 
 eventdd move_state $covars i.year i.geoid [pw=perwt_wt]  if targetpop==1 , timevar(relative_year) method(ols, cluster(group_id)) graph_op(ytitle("Move state") xtitle("Relative year") xlabel(-6(1)6) legend(off)) //leads(6) lags(6) accum
-	graph export "$oo/es_in_state.pdf", replace
+	graph export "$oo/es_in_state.png", replace
 
 * out migration
 eventdd move_any $covars i.year i.prev_geoid [pw=perwt_wt]  if targetpop==1 & year>=2014, timevar(prev_relative_year) method(ols, cluster(group_id)) graph_op(ytitle("Any move") xtitle("Relative year") xlabel(-5(1)6) legend(off)) //leads(6) lags(6) accum
