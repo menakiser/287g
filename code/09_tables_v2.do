@@ -158,6 +158,21 @@ Table 3: Regressions
 use "$oi/acs_w_propensity_weights", clear 
 global covars "age i.race i.educ i.speakeng i.hcovany i.school ownhome" 
 
+* obtain list of SC
+preserve
+use  "$or/287g_SC_EVerify_5_13_22", clear 
+collapse (mean) SC_sh=SC (max) SC_any=SC , by(countyfip statefip year )
+keep if year>=2010
+tempfile sclist 
+save `sclist'
+restore
+
+merge m:1 countyfip statefip year using `sclist', nogen keep( 1 3)
+foreach v in SC_sh SC_any {
+	replace `v' = 0 if mi(`v')
+}
+bys statefip current_migpuma year: ereplace SC_any = max(SC_any)
+
 * in migration
 cap mat drop inmig1
 reghdfe move_any exp_any_migpuma  $covars [pw=perwt]  if targetpop==1 , vce(cluster group_id) absorb(geoid year)

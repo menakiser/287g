@@ -26,7 +26,7 @@ keep if statefip<=56
 *Eliminate people living in group quarters (military or convicts): those with the gq variable equal to 0, 3 or 4.
 drop if inlist(gq, 0, 3, 4)
 *restrict census year 
-keep if year>=2012 & year <=2019
+keep if year>=2011 & year <=2019
 
 **** individual variables
 *education levels for internal use, combining educd and higraded
@@ -60,27 +60,26 @@ gen ownhome = ownershp==1
 gen employed = empstat==1
 
 **** location variables: obtaining current migpuma
-rename (statefip puma) (statefips puma10)
-merge m:1 statefips puma10 using "$oi/xwalk/puma10_migpuma10" , nogen keep(1 3)
+rename ( puma) ( puma10)
+merge m:1 statefip puma10 using "$oi/xwalk/puma10_migpuma10" , nogen keep(1 3)
 rename (puma10) ( current_puma ) 
 
 * obtain exposure variables at the migpuma level
 /* All migpumas match with some exposure, missing matches arise from years that do not observe these pumas
-keep statefips migpuma10
+keep statefip migpuma10
 duplicates drop 
-merge 1:m statefips migpuma10  using "$oi/exposure_migpuma10_year"
+merge 1:m statefip migpuma10  using "$oi/exposure_migpuma10_year"
 */
-merge m:1 statefips migpuma10 year using "$oi/exposure_migpuma10_year" , keepusing(exp_any_migpuma exp_jail_migpuma exp_task_migpuma exp_warrant_migpuma) nogen keep(1 3) //all 2012-2020 match
+merge m:1 statefip migpuma10 year using "$oi/exposure_migpuma10_year" , keepusing(exp_any_migpuma exp_jail_migpuma exp_task_migpuma exp_warrant_migpuma) nogen keep(1 3) //all 2012-2020 match
 foreach v in exp_any_migpuma exp_jail_migpuma exp_task_migpuma exp_warrant_migpuma {
 	replace `v' = 0 if mi(`v')
 }
 rename migpuma10 current_migpuma
 * obtain exposure variables at the migpuma level
-merge m:1 statefips year using "$oi/exposure_state_year" , nogen keep(1 3) keepusing(exp_any_state exp_jail_state exp_task_state exp_warrant_state)
+merge m:1 statefip year using "$oi/exposure_state_year" , nogen keep(1 3) keepusing(exp_any_state exp_jail_state exp_task_state exp_warrant_state)
 foreach v in exp_any_state exp_jail_state exp_task_state exp_warrant_state {
 	replace `v' = 0 if mi(`v')
 }
-rename  (statefips ) (statefip )
 
 *****define mobility variables
 gen move_any = migrate1>1
@@ -96,13 +95,13 @@ gen move_abroad = migpuma1==1 // move from outside of the US
 **** obtain exposure from the previous year
 * rename vars from previous year for merge
 rename statefip current_statefip
-rename (migplac1 migpuma1) (statefips migpuma10)
+rename (migplac1 migpuma1) (statefip migpuma10)
 
 * obtain exposure variables at the migpuma level
 foreach v in exp_any_migpuma exp_jail_migpuma exp_task_migpuma exp_warrant_migpuma {
 	rename `v' current_`v'
 }
-merge m:1 statefips migpuma10 year using "$oi/exposure_migpuma10_year" , nogen keep(1 3) keepusing(exp_any_migpuma exp_jail_migpuma exp_task_migpuma exp_warrant_migpuma)
+merge m:1 statefip migpuma10 year using "$oi/exposure_migpuma10_year" , nogen keep(1 3) keepusing(exp_any_migpuma exp_jail_migpuma exp_task_migpuma exp_warrant_migpuma)
 foreach v in exp_any_migpuma exp_jail_migpuma exp_task_migpuma exp_warrant_migpuma {
 	replace `v' = 0 if mi(`v')
 	rename `v' prev_`v'
@@ -113,14 +112,27 @@ rename migpuma10 prev_migpuma
 foreach v in exp_any_state exp_jail_state exp_task_state exp_warrant_state {
 	rename `v' current_`v'
 }
-merge m:1 statefips year using "$oi/exposure_state_year" , nogen keep(1 3) keepusing(exp_any_state exp_jail_state exp_task_state exp_warrant_state)
+merge m:1 statefip year using "$oi/exposure_state_year" , nogen keep(1 3) keepusing(exp_any_state exp_jail_state exp_task_state exp_warrant_state)
 foreach v in exp_any_state exp_jail_state exp_task_state exp_warrant_state {
 	replace `v' = 0 if mi(`v')
 	rename `v' prev_`v'
 	rename current_`v'  `v'
 }
-rename statefips prev_statefip 
+rename statefip prev_statefip 
 rename migcounty1 prev_county
 rename current_statefip statefip
+
+
+* add list of secure communities
+rename (current_migpuma ) (migpuma10 )
+merge m:1 migpuma10 statefip year using "$oi/migpuma10_SC" , nogen keep( 1 3) 
+replace SC= 0 if mi(SC)
+
+replace SC_any = 1 if year==2013 | year==2014
+replace SC_any = 0 if year>=2015
+bys statefip current_migpuma year: ereplace SC_any = max(SC_any)
+
+
+
 compress 
 save "$oi/working_acs", replace
