@@ -114,3 +114,11 @@ collapse (max) exp_any_state exp_jail_state exp_task_state exp_warrant_state, by
 
 compress
 save "$oi/exposure_state_year", replace
+
+
+* migpuma exposure
+use "$oi/exposure_county_year" , clear
+merge m:1 statefips countyfips using "$oi/xwalk/county_migpuma10", nogen keep(1 3)
+collapse (max) exp_any_migpuma=exp_any_county exp_jail_migpuma=exp_jail_county exp_task_migpuma=exp_task_county exp_warrant_migpuma=exp_warrant_county, by(statefips migpuma10 year)
+compress
+save "$oi/exposure_migpuma10_year", replace

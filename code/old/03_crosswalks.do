@@ -72,12 +72,8 @@ isid statefips countyfips
 bys statefips migpuma10: egen migpop10 = sum(pop10)
 gen afact = pop10/migpop10 //share of county pop corresponding to the migpuma
 
-tostring countyfips statefips, replace
-replace countyfips = subinstr(countyfips, statefip, "", 1)
-destring countyfips statefips, replace
 compress 
-save "$oi/xwalk/county_migpuma10", replace 
-
+save "$oi/xwalk/county_migpuma10", replace
 
 *--------------- PLACE FIPS to MIGPUMA ------------------*
 *using geocorr county to puma crosswalk then puma to migpuma crosswalk

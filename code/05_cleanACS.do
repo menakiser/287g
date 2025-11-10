@@ -22,11 +22,11 @@ use "$or/usa_00048.dta", clear
 **** Sample restrictions
 *50 US states and DC
 keep if statefip<=56
-drop if countyfip==000 //not identifiable
+//drop if countyfip==000 //not identifiable
 *Eliminate people living in group quarters (military or convicts): those with the gq variable equal to 0, 3 or 4.
 drop if inlist(gq, 0, 3, 4)
 *restrict census year 
-keep if year>=2010 & year <=2020
+keep if year>=2012 & year <=2019
 
 **** individual variables
 *education levels for internal use, combining educd and higraded
@@ -51,19 +51,6 @@ gen young = age>=18 & age<=39
 *clean income variables
 replace incwage=. if incwage==999999 | incwage==0 
 
-* obtain exposure var 
-rename (statefip countyfip) (statefips countyfips)
-merge m:1 countyfips statefips year using "$oi/exposure_county_year" , nogen keep(1 3) keepusing(exp_any_county exp_jail_county exp_task_county exp_warrant_county)
-foreach v in exp_any_county exp_jail_county exp_task_county exp_warrant_county {
-	replace `v' = 0 if mi(`v')
-}
-
-merge m:1 statefips year using "$oi/exposure_state_year" , nogen keep(1 3) keepusing(exp_any_state exp_jail_state exp_task_state exp_warrant_state)
-foreach v in exp_any_state exp_jail_state exp_task_state exp_warrant_state {
-	replace `v' = 0 if mi(`v')
-}
-rename  (statefips countyfips) (statefip countyfip)
-
 * other ind vars 
 gen male = sex==1 
 gen hs = inteduc == 2
@@ -72,16 +59,68 @@ gen never_married = inlist(marst, 6)
 gen ownhome = ownershp==1
 gen employed = empstat==1
 
-sum age exp_any* nchild wkswork1 uhrswork incwage rent mortamt1
+**** location variables: obtaining current migpuma
+rename (statefip puma) (statefips puma10)
+merge m:1 statefips puma10 using "$oi/xwalk/puma10_migpuma10" , nogen keep(1 3)
+rename (puma10) ( current_puma ) 
 
-*define mobility variables
+* obtain exposure variables at the migpuma level
+/* All migpumas match with some exposure, missing matches arise from years that do not observe these pumas
+keep statefips migpuma10
+duplicates drop 
+merge 1:m statefips migpuma10  using "$oi/exposure_migpuma10_year"
+*/
+merge m:1 statefips migpuma10 year using "$oi/exposure_migpuma10_year" , keepusing(exp_any_migpuma exp_jail_migpuma exp_task_migpuma exp_warrant_migpuma) nogen keep(1 3) //all 2012-2020 match
+foreach v in exp_any_migpuma exp_jail_migpuma exp_task_migpuma exp_warrant_migpuma {
+	replace `v' = 0 if mi(`v')
+}
+rename migpuma10 current_migpuma
+* obtain exposure variables at the migpuma level
+merge m:1 statefips year using "$oi/exposure_state_year" , nogen keep(1 3) keepusing(exp_any_state exp_jail_state exp_task_state exp_warrant_state)
+foreach v in exp_any_state exp_jail_state exp_task_state exp_warrant_state {
+	replace `v' = 0 if mi(`v')
+}
+rename  (statefips ) (statefip )
+
+*****define mobility variables
 gen move_any = migrate1>1
 replace migplac1 = statefip if migrate1d<=24 //fill in current year state if they didn't move states
-replace migcounty1 = countyfip if migrate1d<=10 //fill in current county if they didn't move counties
+replace migcounty1 = countyfip if migcounty1==0 //fill in current county if they didn't move counties
+replace migpuma1 = current_migpuma if migpuma1==0 //fill in current migpuma if they didn't move migpumas, note migpuma==1 lived abroad, migpuma==2 lived in PR but currently in US
+
 gen move_county = migcounty1 != countyfip & migrate1d>10
+gen move_migpuma = migpuma1 != current_migpuma & migrate1d>=24 //verify this
 gen move_state = migplac1 != statefip  & migrate1d>24
+gen move_abroad = migpuma1==1 // move from outside of the US
 
+**** obtain exposure from the previous year
+* rename vars from previous year for merge
+rename statefip current_statefip
+rename (migplac1 migpuma1) (statefips migpuma10)
 
-
+* obtain exposure variables at the migpuma level
+foreach v in exp_any_migpuma exp_jail_migpuma exp_task_migpuma exp_warrant_migpuma {
+	rename `v' current_`v'
+}
+merge m:1 statefips migpuma10 year using "$oi/exposure_migpuma10_year" , nogen keep(1 3) keepusing(exp_any_migpuma exp_jail_migpuma exp_task_migpuma exp_warrant_migpuma)
+foreach v in exp_any_migpuma exp_jail_migpuma exp_task_migpuma exp_warrant_migpuma {
+	replace `v' = 0 if mi(`v')
+	rename `v' prev_`v'
+	rename current_`v'  `v'
+}
+rename migpuma10 prev_migpuma
+* obtain exposure variables at the migpuma level
+foreach v in exp_any_state exp_jail_state exp_task_state exp_warrant_state {
+	rename `v' current_`v'
+}
+merge m:1 statefips year using "$oi/exposure_state_year" , nogen keep(1 3) keepusing(exp_any_state exp_jail_state exp_task_state exp_warrant_state)
+foreach v in exp_any_state exp_jail_state exp_task_state exp_warrant_state {
+	replace `v' = 0 if mi(`v')
+	rename `v' prev_`v'
+	rename current_`v'  `v'
+}
+rename statefips prev_statefip 
+rename migcounty1 prev_county
+rename current_statefip statefip
 compress 
 save "$oi/working_acs", replace
