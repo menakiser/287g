@@ -22,10 +22,9 @@ gen targetpop = sex==1 & lowskill==1 & hispan!=0 & imm==1 /*born abroad and not 
 * create county variables that may predict exposure
 gen red_state = inlist(statefip, 1, 2, 4, 5, 13, 16, 20, 21, 22, 28, 29, 30, 31, 38, 40, 45, 46, 47, 48, 49, 54, 56) //https://www.worldatlas.com/articles/states-that-have-voted-republican-in-the-most-consecutive-u-s-presidential-elections.html
 gen total_pop = age>=18 & age<=65
-keep if year>=2012 & year<=2019
 bys statefip current_migpuma: egen ever_treated_migpuma = max( exp_any_migpuma>0)
 bys statefip: egen ever_treated_state = max( exp_any_state>0)
-keep if year == 2012
+keep if year == 2011
 gen ishispanic = hispan!=0 & hispan!=2 //hispanic origin of any kind excluding PR
 gen istexas = statefip==48
 
@@ -69,7 +68,6 @@ save "$oi/propensity_weights", replace
 
 *run regressions using weights
 use "$oi/working_acs", clear 
-keep if year >=2012 & year<=2019
 merge m:1 statefip current_migpuma using  "$oi/propensity_weights" , nogen keep(1 3) keepusing(ever_treated_migpuma phat wt)
 
 //move_any move_county move_state
@@ -101,7 +99,6 @@ save `losttreat'
 restore
 merge m:1 statefip current_migpuma using `losttreat', nogen keep(1 3)
 
-keep if year >=2013 & year<=2019
 
 
 * define FE and SE

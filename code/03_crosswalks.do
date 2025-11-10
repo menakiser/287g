@@ -25,6 +25,20 @@ keep statefip migpuma00 migpuma10 pMigPUMA00_Pop10
 compress 
 save "$oi/xwalk/migpuma_00_10", replace 
 
+*--------------- PUMA 2000 TO PUMA 2010 ------------------*
+import excel using "$or/xwalk/PUMA2000_PUMA2010_crosswalk.xls", clear firstrow
+foreach v of varlist _all {
+	cap destring `v', replace
+}
+rename (State00 PUMA00 State10 PUMA10) (statefip00 puma00 statefip10 puma10)
+keep statefip00 puma00 statefip10 puma10 Part_Pop10 Part_Pop00
+bys statefip00 puma00 (Part_Pop10 Part_Pop00): keep if _n==_N
+
+drop statefip10 Part_Pop00 Part_Pop10
+rename statefip00 statefip
+compress 
+save "$oi/xwalk/puma00_puma10", replace 
+
 *--------------- PUMA TO MIGPUMA ------------------*
 import excel using "$or/xwalk/puma_migpuma1_pwpuma00_2010.xls", clear firstrow cellrange(A3:D2381)
 foreach v of varlist _all {

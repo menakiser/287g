@@ -60,9 +60,13 @@ gen ownhome = ownershp==1
 gen employed = empstat==1
 
 **** location variables: obtaining current migpuma
-rename ( puma) ( puma10)
+gen puma00 = puma if year<2012
+//state 22
+merge m:1 statefip puma00 using "$oi/xwalk/puma00_puma10"  , nogen keep(1 3) //louisiana 77777 no matches due to katrina
+
+replace puma10 = puma if year>=2012
 merge m:1 statefip puma10 using "$oi/xwalk/puma10_migpuma10" , nogen keep(1 3)
-rename (puma10) ( current_puma ) 
+rename (puma10 ) ( current_puma  ) 
 
 * obtain exposure variables at the migpuma level
 /* All migpumas match with some exposure, missing matches arise from years that do not observe these pumas
@@ -70,13 +74,17 @@ keep statefip migpuma10
 duplicates drop 
 merge 1:m statefip migpuma10  using "$oi/exposure_migpuma10_year"
 */
+rename statefip statefips
 merge m:1 statefip migpuma10 year using "$oi/exposure_migpuma10_year" , keepusing(exp_any_migpuma exp_jail_migpuma exp_task_migpuma exp_warrant_migpuma) nogen keep(1 3) //all 2012-2020 match
+rename statefips statefip
 foreach v in exp_any_migpuma exp_jail_migpuma exp_task_migpuma exp_warrant_migpuma {
 	replace `v' = 0 if mi(`v')
 }
 rename migpuma10 current_migpuma
 * obtain exposure variables at the migpuma level
+rename statefip statefips
 merge m:1 statefip year using "$oi/exposure_state_year" , nogen keep(1 3) keepusing(exp_any_state exp_jail_state exp_task_state exp_warrant_state)
+rename statefips statefip
 foreach v in exp_any_state exp_jail_state exp_task_state exp_warrant_state {
 	replace `v' = 0 if mi(`v')
 }
@@ -101,7 +109,9 @@ rename (migplac1 migpuma1) (statefip migpuma10)
 foreach v in exp_any_migpuma exp_jail_migpuma exp_task_migpuma exp_warrant_migpuma {
 	rename `v' current_`v'
 }
+rename statefip statefips
 merge m:1 statefip migpuma10 year using "$oi/exposure_migpuma10_year" , nogen keep(1 3) keepusing(exp_any_migpuma exp_jail_migpuma exp_task_migpuma exp_warrant_migpuma)
+rename  statefips statefip
 foreach v in exp_any_migpuma exp_jail_migpuma exp_task_migpuma exp_warrant_migpuma {
 	replace `v' = 0 if mi(`v')
 	rename `v' prev_`v'
@@ -112,7 +122,9 @@ rename migpuma10 prev_migpuma
 foreach v in exp_any_state exp_jail_state exp_task_state exp_warrant_state {
 	rename `v' current_`v'
 }
+rename statefip statefips
 merge m:1 statefip year using "$oi/exposure_state_year" , nogen keep(1 3) keepusing(exp_any_state exp_jail_state exp_task_state exp_warrant_state)
+rename  statefips statefip
 foreach v in exp_any_state exp_jail_state exp_task_state exp_warrant_state {
 	replace `v' = 0 if mi(`v')
 	rename `v' prev_`v'
@@ -130,6 +142,7 @@ replace SC= 0 if mi(SC)
 
 replace SC_any = 1 if year==2013 | year==2014
 replace SC_any = 0 if year>=2015
+rename  (migpuma10 ) (current_migpuma )
 bys statefip current_migpuma year: ereplace SC_any = max(SC_any)
 
 
