@@ -104,12 +104,14 @@ gen move_abroad = migpuma1==1 // move from outside of the US
 * rename vars from previous year for merge
 rename statefip current_statefip
 rename (migplac1 migpuma1) (statefip migpuma10)
+gen current_year = year
+replace year = current_year -1 
 
-* obtain exposure variables at the migpuma level
+* obtain exposure variables at the migpuma level for previous year
 foreach v in exp_any_migpuma exp_jail_migpuma exp_task_migpuma exp_warrant_migpuma {
 	rename `v' current_`v'
 }
-rename statefip statefips
+rename (statefip) (statefips)
 merge m:1 statefip migpuma10 year using "$oi/exposure_migpuma10_year" , nogen keep(1 3) keepusing(exp_any_migpuma exp_jail_migpuma exp_task_migpuma exp_warrant_migpuma)
 rename  statefips statefip
 foreach v in exp_any_migpuma exp_jail_migpuma exp_task_migpuma exp_warrant_migpuma {
@@ -118,7 +120,7 @@ foreach v in exp_any_migpuma exp_jail_migpuma exp_task_migpuma exp_warrant_migpu
 	rename current_`v'  `v'
 }
 rename migpuma10 prev_migpuma
-* obtain exposure variables at the migpuma level
+* obtain exposure variables at the migpuma level for previous yeae
 foreach v in exp_any_state exp_jail_state exp_task_state exp_warrant_state {
 	rename `v' current_`v'
 }
@@ -130,10 +132,9 @@ foreach v in exp_any_state exp_jail_state exp_task_state exp_warrant_state {
 	rename `v' prev_`v'
 	rename current_`v'  `v'
 }
-rename statefip prev_statefip 
-rename migcounty1 prev_county
+rename (statefip migcounty1 ) (prev_statefip prev_county) 
 rename current_statefip statefip
-
+replace year = current_year +1
 
 * add list of secure communities
 rename (current_migpuma ) (migpuma10 )
@@ -146,6 +147,21 @@ rename  (migpuma10 ) (current_migpuma )
 bys statefip current_migpuma year: ereplace SC_any = max(SC_any)
 
 
+* add list of secure communities of previous year
+rename statefip current_statefip
+rename (prev_migpuma prev_statefip) (migpuma10 statefip)
+replace year = current_year - 1
+merge m:1 migpuma10 statefip year using "$oi/migpuma10_SC" , nogen keep( 1 3) 
+replace year = current_year + 1
+replace SC= 0 if mi(SC)
+
+replace SC_any = 1 if year==2013 | year==2014
+replace SC_any = 0 if year>=2015
+rename  (migpuma10 ) (prev_migpuma )
+bys statefip current_migpuma year: ereplace SC_any = max(SC_any)
+
+rename  (migpuma10 statefip) (prev_migpuma prev_statefip)
+rename current_statefip statefip
 
 compress 
 save "$oi/working_acs", replace
