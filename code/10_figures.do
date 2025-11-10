@@ -34,94 +34,40 @@ global covars "age i.race i.educ i.speakeng i.hcovany i.school ownhome"
 * drop 15 counties that lost treatment at some point 
 drop if lost_treatment==1
 
-* define event year dummies
+* define event year dummies for in migration
 gen event_year = year if exp_any_migpuma==1
-bys statefip countyfip : ereplace event_year = min(event_year)
+bys geoid: ereplace event_year = min(event_year)
 replace event_year = . if ever_treated_migpuma==0
 gen relative_year = (year-event_year)*ever_treated_migpuma
 replace relative_year = . if ever_treated_migpuma==0
 
-reghdfe move_any exp_any_migpuma  $covars [pw=perwt_wt]  if targetpop==1 , vce(cluster group_id) absorb(geoid year)
-exp_any_migpuma
+* define event year dummies for out migration
+bys prev_geoid: egen prev_ever_treated_migpuma = max(prev_exp_any_migpuma>0 & year>=2014) 
+gen prev_event_year = year if prev_exp_any_migpuma == 1
+bys prev_geoid: ereplace prev_event_year = min(prev_event_year)
+replace prev_event_year = . if prev_ever_treated_migpuma == 0
+gen prev_relative_year = (year - prev_event_year) * prev_ever_treated_migpuma
+replace prev_relative_year = . if prev_ever_treated_migpuma == 0
 
-*any move
-eventdd move_any $covars i.year i.geoid [pw=perwt_wt]  if targetpop==1 , timevar(relative_year) method(ols, cluster(group_id)) graph_op(ytitle("Any move") xlabel(-6(1)6)) leads(5) lags(5) accum legend(off)
-graph export "$od/es_`var'.png", replace
-reghdfe move_any rym6 rym5 rym4 rym3 rym2 o.rym1 ry0 ///
-	ryp1 ryp2 ryp3 ryp4 ryp5 ryp6 exp_any_migpuma  ///
-	[pw=perwt_wt] if allpop==1, vce(cluster group_id) absorb(geoid year)
-est store e_any
-		
-coefplot (e_any, label("Target population relative to placebo")  mcolor(navy) ciopts(lcolor(navy) recast(rcap))) ///
-	, nooffsets keep(rym* o.rym1 ry0 ryp*) yline(0, lcolor(black)) xline(6, lcolor(black) ) omit vertical ///
-	ytitle("Probability of Any Move") ///
-	rename(rym6 = "-6" rym5 = "-5" rym4 = "-4" rym3 = "-3" rym2 = "-2" rym1 = "-1" ///
-	ry0 = "0"  ryp1 = "+1" ryp2 = "+2" ryp3 = "+3" ryp4 = "+4" ryp5 ="+5" ryp6 ="+6" ) ///
-	xtitle("Years") graphregion(color(white)) egend(off) xlabel(,labsize(*.8)) ylabel(-.2(.1).6)
+* there's twice as much people living in a treated migpuma the year before than currently
+ sum prev_ever_treated_migpuma ever_treated_migpuma
 
-* move county
-reghdfe move_county rym6 rym5 rym4 rym3 rym2 o.rym1 ry0 ///
-	ryp1 ryp2 ryp3 ryp4 ryp5 ryp6 exp_any_migpuma  ///
-	[pw=perwt_wt] if allpop==1, vce(cluster group_id) absorb(geoid year)
-est store e_county
-		
-coefplot (e_county, label("Target population relative to placebo")  mcolor(navy) ciopts(lcolor(navy) recast(rcap))) ///
-	, nooffsets keep(rym* o.rym1 ry0 ryp*) yline(0, lcolor(black)) xline(6, lcolor(black) ) omit vertical ///
-	ytitle("Probability of County Move") ///
-	rename(rym6 = "-6" rym5 = "-5" rym4 = "-4" rym3 = "-3" rym2 = "-2" rym1 = "-1" ///
-	ry0 = "0"  ryp1 = "+1" ryp2 = "+2" ryp3 = "+3" ryp4 = "+4" ryp5 ="+5" ryp6 ="+6" ) ///
-	xtitle("Years") graphregion(color(white)) legend(off) ylabel(-.2(.1).6)
+* in migration
+eventdd move_any $covars i.year i.geoid [pw=perwt_wt]  if targetpop==1 , timevar(relative_year) method(ols, cluster(group_id)) graph_op(ytitle("Any move") xtitle("Relative year") xlabel(-6(1)6) legend(off)) //leads(6) lags(6) accum
+	graph export "$oo/es_in_any.pdf", replace
 
-* move state
-reghdfe move_state rym6 rym5 rym4 rym3 rym2 o.rym1 ry0 ///
-	ryp1 ryp2 ryp3 ryp4 ryp5 ryp6 exp_any_migpuma  ///
-	[pw=perwt_wt] if allpop==1, vce(cluster group_id) absorb(geoid year)
-est store e_state
-		
-coefplot (e_state, label("Target population relative to placebo")  mcolor(navy) ciopts(lcolor(navy) recast(rcap))) ///
-	, nooffsets keep(rym* o.rym1 ry0 ryp*) yline(0, lcolor(black)) xline(6, lcolor(black) ) omit vertical ///
-	ytitle("Probability of State Move") ///
-	rename(rym6 = "-6" rym5 = "-5" rym4 = "-4" rym3 = "-3" rym2 = "-2" rym1 = "-1" ///
-	ry0 = "0"  ryp1 = "+1" ryp2 = "+2" ryp3 = "+3" ryp4 = "+4" ryp5 ="+5" ryp6 ="+6" ) ///
-	xtitle("Years") graphregion(color(white)) legend(off) ylabel(-.2(.1).6)
+eventdd move_migpuma $covars i.year i.geoid [pw=perwt_wt]  if targetpop==1 , timevar(relative_year) method(ols, cluster(group_id)) graph_op(ytitle("Move migpuma") xtitle("Relative year") xlabel(-6(1)6) legend(off)) //leads(6) lags(6) accum
+	graph export "$oo/es_in_migpuma.pdf", replace
 
-**** reg
-*any move
-reghdfe move_any ever_rym6 ever_rym5 ever_rym4 ever_rym3 ever_rym2 o.ever_rym1 ever_ry0 ///
-	ever_ryp1 ever_ryp2 ever_ryp3 ever_ryp4 ever_ryp5 ever_ryp6 exp_any_migpuma  ///
-	[pw=perwt_wt] if targetpop==1, vce(cluster group_id) absorb(geoid year)
-est store e_any
-		
-coefplot (e_any, label("Target population relative to placebo")  mcolor(navy) ciopts(lcolor(navy) recast(rcap))) ///
-	, nooffsets keep(ever_rym* o.ever_rym1 ever_ry0 ever_ryp*) yline(0, lcolor(black)) xline(6, lcolor(black) ) omit vertical ///
-	ytitle("Probability of Any Move") ///
-	rename(ever_rym6 = "-6" ever_rym5 = "-5" ever_rym4 = "-4" ever_rym3 = "-3" ever_rym2 = "-2" ever_rym1 = "-1" ///
-	ever_ry0 = "0"  ever_ryp1 = "+1" ever_ryp2 = "+2" ever_ryp3 = "+3" ever_ryp4 = "+4" ever_ryp5 ="+5" ever_ryp6 ="+6" ) ///
-	xtitle("Years") graphregion(color(white)) legend(off) xlabel(,labsize(*.8)) ylabel(-.4(.2).6)
+eventdd move_state $covars i.year i.geoid [pw=perwt_wt]  if targetpop==1 , timevar(relative_year) method(ols, cluster(group_id)) graph_op(ytitle("Move state") xtitle("Relative year") xlabel(-6(1)6) legend(off)) //leads(6) lags(6) accum
+	graph export "$oo/es_in_state.pdf", replace
 
-* move county
-reghdfe move_county ever_rym6 ever_rym5 ever_rym4 ever_rym3 ever_rym2 o.ever_rym1 ever_ry0 ///
-	ever_ryp1 ever_ryp2 ever_ryp3 ever_ryp4 ever_ryp5 ever_ryp6 exp_any_migpuma  ///
-	[pw=perwt_wt] if targetpop==1, vce(cluster group_id) absorb(geoid year)
-est store e_county
-		
-coefplot (e_county, label("Target population relative to placebo")  mcolor(navy) ciopts(lcolor(navy) recast(rcap))) ///
-	, nooffsets keep(ever_rym* o.ever_rym1 ry0 ever_ryp*) yline(0, lcolor(black)) xline(6, lcolor(black) ) omit vertical ///
-	ytitle("Probability of County Move") ///
-	rename(ever_rym6 = "-6" ever_rym5 = "-5" ever_rym4 = "-4" ever_rym3 = "-3" ever_rym2 = "-2" ever_rym1 = "-1" ///
-	ever_ry0 = "0"  ever_ryp1 = "+1" ever_ryp2 = "+2" ever_ryp3 = "+3" ever_ryp4 = "+4" ever_ryp5 ="+5" ever_ryp6 ="+6" ) ///
-	xtitle("Years") graphregion(color(white)) legend(off) ylabel(-.2(.1).6)
+* out migration
+eventdd move_any $covars i.year i.prev_geoid [pw=perwt_wt]  if targetpop==1 & year>=2014, timevar(prev_relative_year) method(ols, cluster(group_id)) graph_op(ytitle("Any move") xtitle("Relative year") xlabel(-5(1)6) legend(off)) //leads(6) lags(6) accum
+	graph export "$oo/es_out_any.png", replace
 
-* move state
-reghdfe move_state ever_rym6 ever_rym5 ever_rym4 ever_rym3 ever_rym2 o.ever_rym1 ever_ry0 ///
-	ever_ryp1 ever_ryp2 ever_ryp3 ever_ryp4 ever_ryp5 ever_ryp6 exp_any_migpuma  ///
-	[pw=perwt_wt] if targetpop==1, vce(cluster group_id) absorb(geoid year)
-est store e_state
-		
-coefplot (e_state, label("Target population relative to placebo")  mcolor(navy) ciopts(lcolor(navy) recast(rcap))) ///
-	, nooffsets keep(ever_rym* o.ever_rym1 ever_ry0 ever_ryp*) yline(0, lcolor(black)) xline(6, lcolor(black) ) omit vertical ///
-	ytitle("Probability of State Move") ///
-	rename(ever_rym6 = "-6" ever_rym5 = "-5" ever_rym4 = "-4" ever_rym3 = "-3" ever_rym2 = "-2" ever_rym1 = "-1" ///
-	ever_ry0 = "0"  ever_ryp1 = "+1" ever_ryp2 = "+2" ever_ryp3 = "+3" ever_ryp4 = "+4" ever_ryp5 ="+5" ever_ryp6 ="+6" ) ///
-	xtitle("Years") graphregion(color(white)) legend(off) ylabel(-.2(.1).6)
+eventdd move_migpuma $covars i.year i.prev_geoid [pw=perwt_wt]  if targetpop==1 & year>=2014, timevar(prev_relative_year) method(ols, cluster(group_id)) graph_op(ytitle("Move migpuma") xtitle("Relative year") xlabel(-5(1)6) legend(off)) //leads(6) lags(6) accum
+	graph export "$oo/es_out_migpuma.png", replace
 
+eventdd move_state $covars i.year i.prev_geoid [pw=perwt_wt]  if targetpop==1 & year>=2014, timevar(prev_relative_year) method(ols, cluster(group_id)) graph_op(ytitle("Move state") xtitle("Relative year") xlabel(-5(1)6) legend(off)) //leads(6) lags(6) accum
+	graph export "$oo/es_out_state.png", replace

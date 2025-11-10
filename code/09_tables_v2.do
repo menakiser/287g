@@ -58,36 +58,36 @@ reg_to_mat, depvar(move_state) indvars(exp_any_migpuma) mat(inmig3)
 
 * out migration
 cap mat drop outmig1
-reghdfe move_any prev_exp_any_migpuma  $covars [pw=perwt]  if targetpop==1 , vce(cluster group_id) absorb(prev_geoid year)
+reghdfe move_any prev_exp_any_migpuma  $covars [pw=perwt]  if targetpop==1 & year>=2014, vce(cluster group_id) absorb(prev_geoid year)
 reg_to_mat, depvar(move_any ) indvars(prev_exp_any_migpuma ) mat(outmig1)
-reghdfe move_any prev_exp_any_migpuma  $covars [pw=perwt]  if placebo1==1 , vce(cluster group_id) absorb(prev_geoid year)
+reghdfe move_any prev_exp_any_migpuma  $covars [pw=perwt]  if placebo1==1 & year>=2014, vce(cluster group_id) absorb(prev_geoid year)
 reg_to_mat, depvar(move_any ) indvars(prev_exp_any_migpuma ) mat(outmig1)
 
-reghdfe move_any prev_exp_any_migpuma  $covars  [pw=perwt_wt]  if targetpop==1 , vce(cluster group_id) absorb(prev_geoid year)
+reghdfe move_any prev_exp_any_migpuma  $covars  [pw=perwt_wt]  if targetpop==1 & year>=2014, vce(cluster group_id) absorb(prev_geoid year)
 reg_to_mat, depvar(move_any) indvars(prev_exp_any_migpuma ) mat(outmig1)
-reghdfe move_any prev_exp_any_migpuma $covars  [pw=perwt_wt]  if placebo1==1 , vce(cluster group_id) absorb(prev_geoid year)
+reghdfe move_any prev_exp_any_migpuma $covars  [pw=perwt_wt]  if placebo1==1 & year>=2014, vce(cluster group_id) absorb(prev_geoid year)
 reg_to_mat, depvar(move_any) indvars(prev_exp_any_migpuma ) mat(outmig1)
 
 cap mat drop outmig2
-reghdfe move_migpuma prev_exp_any_migpuma  $covars [pw=perwt]  if targetpop==1 , vce(cluster group_id) absorb(prev_geoid year)
+reghdfe move_migpuma prev_exp_any_migpuma  $covars [pw=perwt]  if targetpop==1 & year>=2014, vce(cluster group_id) absorb(prev_geoid year)
 reg_to_mat, depvar( move_migpuma ) indvars( prev_exp_any_migpuma ) mat(outmig2)
-reghdfe move_migpuma prev_exp_any_migpuma  $covars [pw=perwt]  if placebo1==1 , vce(cluster group_id) absorb(prev_geoid year)
+reghdfe move_migpuma prev_exp_any_migpuma  $covars [pw=perwt]  if placebo1==1 & year>=2014, vce(cluster group_id) absorb(prev_geoid year)
 reg_to_mat, depvar( move_migpuma ) indvars( prev_exp_any_migpuma ) mat(outmig2)
 
-reghdfe move_migpuma prev_exp_any_migpuma  $covars [pw=perwt_wt]  if targetpop==1 , vce(cluster group_id) absorb(prev_geoid year)
+reghdfe move_migpuma prev_exp_any_migpuma  $covars [pw=perwt_wt]  if targetpop==1 & year>=2014, vce(cluster group_id) absorb(prev_geoid year)
 reg_to_mat, depvar( move_migpuma ) indvars( prev_exp_any_migpuma ) mat(outmig2)
-reghdfe move_migpuma prev_exp_any_migpuma  $covars [pw=perwt_wt]  if placebo1==1 , vce(cluster group_id) absorb(prev_geoid year)
+reghdfe move_migpuma prev_exp_any_migpuma  $covars [pw=perwt_wt]  if placebo1==1 & year>=2014, vce(cluster group_id) absorb(prev_geoid year)
 reg_to_mat, depvar( move_migpuma ) indvars( prev_exp_any_migpuma ) mat(outmig2)
 
 cap mat drop outmig3
-reghdfe move_state prev_exp_any_migpuma  $covars [pw=perwt]  if targetpop==1 , vce(cluster group_id) absorb(prev_geoid year)
+reghdfe move_state prev_exp_any_migpuma  $covars [pw=perwt]  if targetpop==1 & year>=2014, vce(cluster group_id) absorb(prev_geoid year)
 reg_to_mat, depvar(move_state) indvars(prev_exp_any_migpuma) mat(outmig3)
-reghdfe move_state prev_exp_any_migpuma  $covars [pw=perwt]  if placebo1==1 , vce(cluster group_id) absorb(prev_geoid year)
+reghdfe move_state prev_exp_any_migpuma  $covars [pw=perwt]  if placebo1==1 & year>=2014, vce(cluster group_id) absorb(prev_geoid year)
 reg_to_mat, depvar(move_state) indvars(prev_exp_any_migpuma) mat(outmig3)
 
-reghdfe move_state prev_exp_any_migpuma  $covars [pw=perwt_wt]  if targetpop==1 , vce(cluster group_id) absorb(prev_geoid year)
+reghdfe move_state prev_exp_any_migpuma  $covars [pw=perwt_wt]  if targetpop==1 & year>=2014, vce(cluster group_id) absorb(prev_geoid year)
 reg_to_mat, depvar(move_state) indvars(prev_exp_any_migpuma) mat(outmig3)
-reghdfe move_state prev_exp_any_migpuma  $covars [pw=perwt_wt]  if placebo1==1 , vce(cluster group_id) absorb(prev_geoid year)
+reghdfe move_state prev_exp_any_migpuma  $covars [pw=perwt_wt]  if placebo1==1 & year>=2014, vce(cluster group_id) absorb(prev_geoid year)
 reg_to_mat, depvar(move_state) indvars(prev_exp_any_migpuma) mat(outmig3)
 
 

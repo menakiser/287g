@@ -77,7 +77,7 @@ merge m:1 statefip current_migpuma using  "$oi/propensity_weights" , nogen keep(
 //gen target_exp_any = targetpop*exp_any_cap
 gen geoid = statefip*100000 + current_migpuma //unique county-state group
 gen prev_geoid = prev_statefip*100000 +  prev_migpuma if move_migpuma==1
-replace prev_geoid = geoid if move_county==0
+replace prev_geoid = geoid if move_migpuma==0
 gen prev_year = year-1
 gen perwt_wt = perwt*wt
 
@@ -102,6 +102,31 @@ restore
 merge m:1 statefip current_migpuma using `losttreat', nogen keep(1 3)
 
 keep if year >=2013 & year<=2019
+
+
+* define FE and SE
+egen person_id = group(serial pernum)
+egen group_id = group(geoid year) 
+egen group_id1 = group(prev_geoid prev_year)
+
+global covars "age i.race i.educ i.speakeng i.hcovany i.school ownhome" 
+
+
+*define placebos
+cap drop placebo*
+//gen targetpop = sex==1 & lowskill==1 & hispan!=0 & imm==1 & young==1 & yrimmig>2007 & inlist(yrsusa2 , 1 ,2) & marst>=3
+gen placebo1 = sex==1 & lowskill==1 & hispan!=0 & born_abroad==0 & citizen!=3 & young==1  & marst>=3 & nchild==0 //hispanic citizens born in the usa, 113,260, n 
+gen placebo2 = sex==1 & lowskill==1 & hispan==0 & imm==1 & young==1 & yrimmig>2007 & inlist(yrsusa2 , 1 ,2) & marst>=3 & nchild==0 //same as target but not hispanic, 9,316, p
+gen placebo3 = sex==1 & lowskill==1 & hispan==0 & born_abroad==1 & citizen!=3 & young==1 & yrimmig>2007 & inlist(yrsusa2 , 1 ,2) & marst>=3 & nchild==0 //non-hispanic citizen (born to american parents, naturalized citizen) born abroad,  2,731 n
+gen placebo4 = sex==1 & lowskill==1 & hispan==0 & born_abroad==0 & citizen!=3 & young==1  & marst>=3 & nchild==0 //non-hispanic citizens born in the usa,  532,596 n
+gen placebo5 = sex==1 & lowskill==1 & hispan==0 & race==1 & born_abroad==0 & citizen!=3 & young==1  & marst>=3 & nchild==0 //non-hispanic white citizens born in the usa,  400,003 n
+
+label var placebo1 "hispanic citizen US born"
+label var placebo2 "non-hispanic target"
+label var placebo3 "non-hispanic citizen"
+label var placebo4 "non-hispanic citizen US born"
+label var placebo5 "non-hispanic white citizen US born"
+
 
 compress
 save "$oi/acs_w_propensity_weights", replace
