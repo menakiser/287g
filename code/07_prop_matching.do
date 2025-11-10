@@ -17,7 +17,7 @@ global oo "$wd/output/"
 use "$oi/working_acs", clear 
 
 *define affected population (presumably undocumented) as male, low-skill (High School or less), Hispanic, foreign-born, noncitizens of ages 18-39, and
-gen targetpop = sex==1 & lowskill==1 & hispan!=0 & imm==1 /*born abroad and not a citizen*/ & young==1 & yrimmig>2007 & inlist(yrsusa2 , 1 ,2) & marst>=3 & nchild==0
+gen targetpop = sex==1 & lowskill==1 & bpl==200 & imm==1 /*born abroad and not a citizen*/ & young==1 & yrimmig>2007 & inlist(yrsusa2 , 1 ,2) & marst>=3 & nchild==0
 
 * create county variables that may predict exposure
 gen red_state = inlist(statefip, 1, 2, 4, 5, 13, 16, 20, 21, 22, 28, 29, 30, 31, 38, 40, 45, 46, 47, 48, 49, 54, 56) //https://www.worldatlas.com/articles/states-that-have-voted-republican-in-the-most-consecutive-u-s-presidential-elections.html
@@ -112,7 +112,7 @@ global covars "age i.race i.educ i.speakeng i.hcovany i.school ownhome"
 *define placebos
 cap drop placebo*
 //gen targetpop = sex==1 & lowskill==1 & hispan!=0 & imm==1 & young==1 & yrimmig>2007 & inlist(yrsusa2 , 1 ,2) & marst>=3
-gen placebo1 = sex==1 & lowskill==1 & hispan!=0 & born_abroad==0 & citizen!=3 & young==1  & marst>=3 & nchild==0 //hispanic citizens born in the usa, 113,260, n 
+gen placebo1 = sex==1 & lowskill==1 & hispan!=0 & bpl!=200 & born_abroad==0 & citizen!=3 & young==1  & marst>=3 & nchild==0 //hispanic citizens born in the usa, 113,260, n 
 gen placebo2 = sex==1 & lowskill==1 & hispan==0 & imm==1 & young==1 & yrimmig>2007 & inlist(yrsusa2 , 1 ,2) & marst>=3 & nchild==0 //same as target but not hispanic, 9,316, p
 gen placebo3 = sex==1 & lowskill==1 & hispan==0 & born_abroad==1 & citizen!=3 & young==1 & yrimmig>2007 & inlist(yrsusa2 , 1 ,2) & marst>=3 & nchild==0 //non-hispanic citizen (born to american parents, naturalized citizen) born abroad,  2,731 n
 gen placebo4 = sex==1 & lowskill==1 & hispan==0 & born_abroad==0 & citizen!=3 & young==1  & marst>=3 & nchild==0 //non-hispanic citizens born in the usa,  532,596 n
