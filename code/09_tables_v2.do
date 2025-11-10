@@ -79,43 +79,43 @@ use "$oi/acs_w_propensity_weights", clear
 gen rentprice = rent if ownhome==0
 gen mortprice = mortamt1 if ownhome==1
 cap mat drop sumstat
-foreach v in male age exp_any_binary hs move_any move_county move_state married never_married nchild employed wkswork1 uhrswork incwage ownhome rentprice mortprice {
+foreach v in male age exp_any_migpuma hs move_any move_migpuma move_state married never_married nchild employed wkswork1 uhrswork incwage ownhome rentprice mortprice {
     
     * targeted population
-    qui reg `v' targetpop [pw=perwt] if exp_any_binary==0 , nocons 
+    qui reg `v' targetpop [pw=perwt] if exp_any_migpuma==0 , nocons 
     local m1 = _b[targetpop]
-    qui reg `v' targetpop [pw=perwt] if  exp_any_binary>0 , nocons 
+    qui reg `v' targetpop [pw=perwt] if  exp_any_migpuma>0 , nocons 
     local m2 = _b[targetpop]
 
     * citizens
-    qui reg `v' placebo1 [pw=perwt] if exp_any_binary==0 , nocons 
+    qui reg `v' placebo1 [pw=perwt] if exp_any_migpuma==0 , nocons 
     local m3 = _b[placebo1]
-    qui reg `v' placebo1 [pw=perwt] if exp_any_binary>0 , nocons 
+    qui reg `v' placebo1 [pw=perwt] if exp_any_migpuma>0 , nocons 
     local m4 = _b[placebo1]
 
 	* propensity score matched
 	* targeted population
-    qui reg `v' targetpop [pw=perwt_wt] if exp_any_binary==0 , nocons 
+    qui reg `v' targetpop [pw=perwt_wt] if exp_any_migpuma==0 , nocons 
     local m5 = _b[targetpop]
-    qui reg `v' targetpop [pw=perwt_wt] if  exp_any_binary>0 , nocons 
+    qui reg `v' targetpop [pw=perwt_wt] if  exp_any_migpuma>0 , nocons 
     local m6 = _b[targetpop]
 
     * citizens
-    qui reg `v' placebo1 [pw=perwt_wt] if exp_any_binary==0 , nocons 
+    qui reg `v' placebo1 [pw=perwt_wt] if exp_any_migpuma==0 , nocons 
     local m7 = _b[placebo1]
-    qui reg `v' placebo1 [pw=perwt_wt] if exp_any_binary>0 , nocons 
+    qui reg `v' placebo1 [pw=perwt_wt] if exp_any_migpuma>0 , nocons 
     local m8 = _b[placebo1]
 
     mat sumstat = nullmat(sumstat) \ (`m1', `m2', `m3', `m4', `m5', `m6', `m7', `m8' )
 }
 
-qui count if targetpop==1 & exp_any_binary==0 
+qui count if targetpop==1 & exp_any_migpuma==0 
 local m1 = r(N)
-qui count if targetpop==1 & exp_any_binary>0
+qui count if targetpop==1 & exp_any_migpuma>0
 local m2 = r(N)
-qui count if placebo1==1 & exp_any_binary==0
+qui count if placebo1==1 & exp_any_migpuma==0
 local m3 = r(N)
-qui count if placebo1==1 & exp_any_binary>0 
+qui count if placebo1==1 & exp_any_migpuma>0 
 local m4 = r(N)
 
 mat sumstat = nullmat(sumstat) \ (`m1', `m2', `m3', `m4', `m1', `m2', `m3', `m4')
@@ -133,7 +133,7 @@ file write sumstat " & Exposure=0 & Exposure$>$0 & Exposure=0 & Exposure=1 & Exp
 file write sumstat " & (1) & (2) & (3) & (4) & (5) & (6) & (7) & (8) \\" _n
 file write sumstat "\midrule " _n
 
-global varnames `"  "Male" "Age" "Exposure" "High School" "Any move" "Moved county" "Moved state" "Married" "Never married" "Number of children" "Employed" "Weeks worked" "Usual weekly hours worked" "Wage income" "Owns a home" "Rent price" "Mortgage price" "Sample size" "'
+global varnames `"  "Male" "Age" "Exposure" "High School" "Any move" "Moved migpuma" "Moved state" "Married" "Never married" "Number of children" "Employed" "Weeks worked" "Usual weekly hours worked" "Wage income" "Owns a home" "Rent price" "Mortgage price" "Sample size" "'
 forval r = 1/18 {
 	local varname : word `r' of $varnames
 	file write sumstat " `varname' "
