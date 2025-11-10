@@ -134,34 +134,35 @@ foreach v in exp_any_state exp_jail_state exp_task_state exp_warrant_state {
 }
 rename (statefip migcounty1 ) (prev_statefip prev_county) 
 rename current_statefip statefip
-replace year = current_year +1
+replace year = current_year
 
 * add list of secure communities
 rename (current_migpuma ) (migpuma10 )
 merge m:1 migpuma10 statefip year using "$oi/migpuma10_SC" , nogen keep( 1 3) 
 replace SC= 0 if mi(SC)
-
 replace SC_any = 1 if year==2013 | year==2014
 replace SC_any = 0 if year>=2015
 rename  (migpuma10 ) (current_migpuma )
 bys statefip current_migpuma year: ereplace SC_any = max(SC_any)
-
+rename SC_any current_SC_any
 
 * add list of secure communities of previous year
-rename statefip current_statefip
+rename   statefip current_statefip
 rename (prev_migpuma prev_statefip) (migpuma10 statefip)
 replace year = current_year - 1
 merge m:1 migpuma10 statefip year using "$oi/migpuma10_SC" , nogen keep( 1 3) 
-replace year = current_year + 1
-replace SC= 0 if mi(SC)
-
-replace SC_any = 1 if year==2013 | year==2014
-replace SC_any = 0 if year>=2015
-rename  (migpuma10 ) (prev_migpuma )
-bys statefip current_migpuma year: ereplace SC_any = max(SC_any)
-
-rename  (migpuma10 statefip) (prev_migpuma prev_statefip)
+rename (migpuma10 statefip) (prev_migpuma prev_statefip) 
 rename current_statefip statefip
 
+replace SC_any= 0 if mi(SC_any)
+replace SC_any = 1 if year==2013 | year==2014
+replace SC_any = 0 if year>=2015
+bys prev_statefip prev_migpuma year: ereplace SC_any = max(SC_any)
+
+replace year = current_year
+rename SC_any prev_SC_any
+rename current_SC_any SC_any
+
+drop if puma== 77777
 compress 
 save "$oi/working_acs", replace
