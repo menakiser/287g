@@ -29,41 +29,26 @@ graph export "$oo/prop_score.pdf", replace
 Figure 2: Event study for mobility
 **************************************************************/
 use "$oi/acs_w_propensity_weights", clear 
+global covars "age i.race i.educ i.speakeng i.hcovany i.school ownhome" 
 
 * drop 15 counties that lost treatment at some point 
 drop if lost_treatment==1
-* define exposure and target population interaction
-//gen targetpop = sex==1 & lowskill==1 & hispan!=0 & imm==1 & young==1 & yrimmig>2007 & inlist(yrsusa2 , 1 ,2) & marst>=3
-gen allpop = placebo1==1 | targetpop==1
-gen exp_pop =  exp_any_binary*targetpop
 
 * define event year dummies
-gen event_year = year if exp_any_binary==1
+gen event_year = year if exp_any_migpuma==1
 bys statefip countyfip : ereplace event_year = min(event_year)
-replace event_year = 0 if ever_treated==0
-gen relative_year = (year-event_year)*ever_treated
-replace relative_year = . if ever_treated==0
-gen targ_relative_year = targetpop*relative_year
-gen ry0 = relative_year==0  
-gen targ_ry0 = targetpop*ry0
-gen ever_ry0 = ever_treated*ry0
-forval i=1/6 {
-	gen rym`i' = relative_year==-`i'
-	gen targ_rym`i' = targetpop*rym`i'
-	gen ryp`i' = relative_year==`i'
-	gen targ_ryp`i' = targetpop*ryp`i'
-}
+replace event_year = . if ever_treated_migpuma==0
+gen relative_year = (year-event_year)*ever_treated_migpuma
+replace relative_year = . if ever_treated_migpuma==0
 
-forval i=1/6 {
-	gen ever_rym`i' = ever_treated*rym`i'
-}
-forval i=1/6 {
-	gen ever_ryp`i' = ever_treated*ryp`i'
-}
+reghdfe move_any exp_any_migpuma  $covars [pw=perwt_wt]  if targetpop==1 , vce(cluster group_id) absorb(geoid year)
+exp_any_migpuma
 
 *any move
+eventdd move_any $covars i.year i.geoid [pw=perwt_wt]  if targetpop==1 , timevar(relative_year) method(ols, cluster(group_id)) graph_op(ytitle("Any move") xlabel(-6(1)6)) leads(5) lags(5) accum legend(off)
+graph export "$od/es_`var'.png", replace
 reghdfe move_any rym6 rym5 rym4 rym3 rym2 o.rym1 ry0 ///
-	ryp1 ryp2 ryp3 ryp4 ryp5 ryp6 exp_any_binary  ///
+	ryp1 ryp2 ryp3 ryp4 ryp5 ryp6 exp_any_migpuma  ///
 	[pw=perwt_wt] if allpop==1, vce(cluster group_id) absorb(geoid year)
 est store e_any
 		
@@ -76,7 +61,7 @@ coefplot (e_any, label("Target population relative to placebo")  mcolor(navy) ci
 
 * move county
 reghdfe move_county rym6 rym5 rym4 rym3 rym2 o.rym1 ry0 ///
-	ryp1 ryp2 ryp3 ryp4 ryp5 ryp6 exp_any_binary  ///
+	ryp1 ryp2 ryp3 ryp4 ryp5 ryp6 exp_any_migpuma  ///
 	[pw=perwt_wt] if allpop==1, vce(cluster group_id) absorb(geoid year)
 est store e_county
 		
@@ -89,7 +74,7 @@ coefplot (e_county, label("Target population relative to placebo")  mcolor(navy)
 
 * move state
 reghdfe move_state rym6 rym5 rym4 rym3 rym2 o.rym1 ry0 ///
-	ryp1 ryp2 ryp3 ryp4 ryp5 ryp6 exp_any_binary  ///
+	ryp1 ryp2 ryp3 ryp4 ryp5 ryp6 exp_any_migpuma  ///
 	[pw=perwt_wt] if allpop==1, vce(cluster group_id) absorb(geoid year)
 est store e_state
 		
@@ -103,7 +88,7 @@ coefplot (e_state, label("Target population relative to placebo")  mcolor(navy) 
 **** reg
 *any move
 reghdfe move_any ever_rym6 ever_rym5 ever_rym4 ever_rym3 ever_rym2 o.ever_rym1 ever_ry0 ///
-	ever_ryp1 ever_ryp2 ever_ryp3 ever_ryp4 ever_ryp5 ever_ryp6 exp_any_binary  ///
+	ever_ryp1 ever_ryp2 ever_ryp3 ever_ryp4 ever_ryp5 ever_ryp6 exp_any_migpuma  ///
 	[pw=perwt_wt] if targetpop==1, vce(cluster group_id) absorb(geoid year)
 est store e_any
 		
@@ -116,7 +101,7 @@ coefplot (e_any, label("Target population relative to placebo")  mcolor(navy) ci
 
 * move county
 reghdfe move_county ever_rym6 ever_rym5 ever_rym4 ever_rym3 ever_rym2 o.ever_rym1 ever_ry0 ///
-	ever_ryp1 ever_ryp2 ever_ryp3 ever_ryp4 ever_ryp5 ever_ryp6 exp_any_binary  ///
+	ever_ryp1 ever_ryp2 ever_ryp3 ever_ryp4 ever_ryp5 ever_ryp6 exp_any_migpuma  ///
 	[pw=perwt_wt] if targetpop==1, vce(cluster group_id) absorb(geoid year)
 est store e_county
 		
@@ -129,7 +114,7 @@ coefplot (e_county, label("Target population relative to placebo")  mcolor(navy)
 
 * move state
 reghdfe move_state ever_rym6 ever_rym5 ever_rym4 ever_rym3 ever_rym2 o.ever_rym1 ever_ry0 ///
-	ever_ryp1 ever_ryp2 ever_ryp3 ever_ryp4 ever_ryp5 ever_ryp6 exp_any_binary  ///
+	ever_ryp1 ever_ryp2 ever_ryp3 ever_ryp4 ever_ryp5 ever_ryp6 exp_any_migpuma  ///
 	[pw=perwt_wt] if targetpop==1, vce(cluster group_id) absorb(geoid year)
 est store e_state
 		
