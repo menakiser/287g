@@ -128,7 +128,6 @@ forval i = 1/4 {
 file write sumstat "\\" _n 
 file write sumstat "\midrule" _n
 file write sumstat "\midrule" _n
-file write sumstat "\\" _n 
 
 * out migration
 file write sumstat " \multicolumn{5}{c}{Panel B: Out migration}  \\" _n
