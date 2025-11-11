@@ -317,27 +317,35 @@ global covars "age i.race i.educ i.speakeng i.hcovany i.school ownhome "
 global invars "exp_any_state SC_any"
 global outvars "prev_exp_any_state prev_SC_any"
 
-bys geoid year: egen medinc = median(incwage)
-gen hi_inc = incwage >= medinc if !mi(incwage)
-
-cap mat drop zoom1
 *in migration
+cap mat drop zoom1
 reghdfe move_migpuma exp_any_migpuma  $covars $invars [pw=perwt_wt]  if targetpop==1 , vce(cluster group_id) absorb(geoid year)
 reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma $invars  ) mat(zoom1)
-reghdfe move_migpuma exp_any_migpuma  $covars $invars [pw=perwt_wt]  if targetpop==1 & bpl==200  , vce(cluster group_id) absorb(geoid year) //mexicans
-reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma $invars ) mat(zoom1)
-reghdfe move_migpuma exp_any_migpuma  $covars $invars [pw=perwt_wt]  if targetpop==1 & inlist(speakeng, 1, 6) , vce(cluster group_id) absorb(geoid year) //does not speak english or speaks english but not well
-reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma $invars ) mat(zoom1)
-reghdfe move_migpuma exp_any_migpuma  $covars $invars [pw=perwt_wt]  if targetpop==1 & hi_inc==0, vce(cluster group_id) absorb(geoid year) //does not speak english or speaks english but not well
+
+reghdfe move_migpuma exp_any_migpuma  $covars $invars [pw=perwt_wt]  if targetpop==1 & prev_exp_any_state==1  , vce(cluster group_id) absorb(geoid year) //previous migpuma was treated
+reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma $invars  ) mat(zoom1)
+
+reghdfe move_migpuma exp_any_migpuma  $covars $invars [pw=perwt_wt]  if targetpop==1 & prev_exp_any_state==0  , vce(cluster group_id) absorb(geoid year) //previous migpuma was untreated
 reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma $invars ) mat(zoom1)
 
+reghdfe move_migpuma exp_any_migpuma  $covars $invars [pw=perwt_wt]  if targetpop==1 & inlist(speakeng, 1, 6) , vce(cluster group_id) absorb(geoid year) //does not speak english or speaks english but not well
+reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma $invars ) mat(zoom1)
+
+
 * out migration
+cap mat drop zoom2
 reghdfe move_migpuma prev_exp_any_migpuma  $covars $outvars [pw=perwt_wt]  if targetpop==1 & year>=2012, vce(cluster group_id) absorb(prev_geoid year)
-reg_to_mat, depvar( move_migpuma ) indvars( prev_exp_any_migpuma $outvars) mat(zoom1)
-reghdfe move_migpuma prev_exp_any_migpuma  $covars $outvars [pw=perwt_wt]  if targetpop==1 & year>=2012 & bpl==200,  vce(cluster group_id) absorb(prev_geoid year)
-reg_to_mat, depvar( move_migpuma ) indvars( prev_exp_any_migpuma $outvars) mat(zoom1)
-reghdfe move_migpuma prev_exp_any_migpuma  $covars $outvars [pw=perwt_wt]  if targetpop==1 & year>=2012 & speakeng>=3, vce(cluster group_id) absorb(prev_geoid year)
-reg_to_mat, depvar( move_migpuma ) indvars( prev_exp_any_migpuma $outvars) mat(zoom1)
+reg_to_mat, depvar( move_migpuma ) indvars( prev_exp_any_migpuma $outvars) mat(zoom2)
+
+reghdfe move_migpuma prev_exp_any_migpuma  $covars $outvars [pw=perwt_wt]  if targetpop==1 & year>=2012 & prev_exp_any_state==1,  vce(cluster group_id) absorb(prev_geoid year)
+reg_to_mat, depvar( move_migpuma ) indvars( prev_exp_any_migpuma $outvars) mat(zoom2)
+
+reghdfe move_migpuma prev_exp_any_migpuma  $covars $outvars [pw=perwt_wt]  if targetpop==1 & year>=2012 & prev_exp_any_state==0,  vce(cluster group_id) absorb(prev_geoid year)
+reg_to_mat, depvar( move_migpuma ) indvars( prev_exp_any_migpuma $outvars) mat(zoom2)
+
+reghdfe move_migpuma prev_exp_any_migpuma  $covars $outvars [pw=perwt_wt]  if targetpop==1 & year>=2012 & inlist(speakeng, 1, 6), vce(cluster group_id) absorb(prev_geoid year)
+reg_to_mat, depvar( move_migpuma ) indvars( prev_exp_any_migpuma $outvars) mat(zoom2)
+
 
 
 * Create table
@@ -349,32 +357,30 @@ file write sumstat "\toprule" _n
 
 * in migration
 file write sumstat " \multicolumn{5}{c}{Panel A: In migration}  \\" _n
-file write sumstat " & & & \multicolumn{2}{c}{Propensity weighting}  \\" _n
-file write sumstat " & Targeted & Placebo & Targeted & Placebo \\" _n
+file write sumstat " & Baseline & Treated migpuma t-1 & Untreated migpuma t-1 & Poor English language \\" _n
 file write sumstat " & (1) & (2)  & (3) & (4)  \\" _n
 file write sumstat "\midrule " _n
 
-global varnames `"  "Any move" "Move migpuma" "Move state"  "'
-forval i = 1/3 {
-	local varname : word `i' of $varnames
-	forval c = 1/4  {
-		local b`c' = string(inmig`i'[1,`c'], "%12.4fc" )
-		local p`c' = inmig`i'[2,`c']
-		local stars_abs`c' = cond(`p`c'' < 0.01, "***", cond(`p`c'' < 0.05, "**", cond(`p`c'' < 0.1, "*", "")))
-		local sd`c' = string(inmig`i'[3,`c'], "%12.4fc" )
-		local r`c' = string(inmig`i'[4,`c'], "%12.4fc" )
-	}
-	file write sumstat " `varname' & `b1'`stars_abs1' & `b2'`stars_abs2' & `b3'`stars_abs3' & `b4'`stars_abs4' \\" _n 
-	file write sumstat " \textit{SE} & (`sd1') & (`sd2') & (`sd3') & (`sd4') \\" _n 
-	file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4'  \\" _n 
-	file write sumstat "\\" _n 
+global varnames `"  "Migpuma exposure" "State exposure" "In Secure Community"  "'
+* store coverage results
+local i = 1
+local rowcount = 1
+while `rowcount' < 10 {
+	local varlab: word `i' of $varnames
+	* label
+	file write sumstat " `varlab'  "
+	storecoeff, mat(zoom1) row(`rowcount') cols(1 2 3 4)
+	local rowcount = `rowcount' +3
+	local++ i
 }
-file write sumstat "Sample Size "
-forval i = 1/4 {
-	local n`i' = string(inmig1[6,`i'], "%12.0fc" )
-	file write sumstat " & `n`i'' "
-}
-file write sumstat "\\" _n 
+file write sumstat "\\" _n
+//store sample size
+    forval col = 1/4 {
+        local r2_`col' = string(zoom1[16,`col'], "%12.3fc")
+        local n_`col' = string(zoom1[18,`col'], "%12.0fc")
+    }
+file write sumstat "R-2 & `r2_1' & `r2_2' & `r2_3' & `r2_4' \\" _n
+file write sumstat "Sample size & `n_1' & `n_2' & `n_3' & `n_4' \\" _n
 file write sumstat "\midrule" _n
 file write sumstat "\midrule" _n
 
@@ -385,27 +391,26 @@ file write sumstat " & Targeted & Placebo & Targeted & Placebo \\" _n
 file write sumstat " & (5) & (6)  & (7) & (8)  \\" _n
 file write sumstat "\midrule " _n
 
-global varnames `"  "Any move" "Move migpuma" "Move state"  "'
-forval i = 1/3 {
-	local varname : word `i' of $varnames
-	forval c = 1/4  {
-		local b`c' = string(outmig`i'[1,`c'], "%12.4fc" )
-		local p`c' = outmig`i'[2,`c']
-		local stars_abs`c' = cond(`p`c'' < 0.01, "***", cond(`p`c'' < 0.05, "**", cond(`p`c'' < 0.1, "*", "")))
-		local sd`c' = string(outmig`i'[3,`c'], "%12.4fc" )
-		local r`c' = string(outmig`i'[4,`c'], "%12.4fc" )
-	}
-	file write sumstat " `varname' & `b1'`stars_abs1' & `b2'`stars_abs2' & `b3'`stars_abs3' & `b4'`stars_abs4' \\" _n 
-	file write sumstat " \textit{SE} & (`sd1') & (`sd2') & (`sd3') & (`sd4') \\" _n 
-	file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4'  \\" _n 
-	file write sumstat "\\" _n 
+global varnames `"  "Prev Migpuma exposure" "Prev State exposure" "Prev in Secure Community"  "'
+* store coverage results
+local i = 1
+local rowcount = 1
+while `rowcount' < 10 {
+	local varlab: word `i' of $varnames
+	* label
+	file write sumstat " `varlab'  "
+	storecoeff, mat(zoom2) row(`rowcount') cols(1 2 3 4)
+	local rowcount = `rowcount' +3
+	local++ i
 }
-file write sumstat "Sample Size "
-forval i = 1/4 {
-	local n`i' = string(outmig1[6,`i'], "%12.0fc" )
-	file write sumstat " & `n`i'' "
-}
-file write sumstat "\\" _n 
+file write sumstat "\\" _n
+//store sample size
+    forval col = 1/4 {
+        local r2_`col' = string(zoom2[16,`col'], "%12.3fc")
+        local n_`col' = string(zoom2[18,`col'], "%12.0fc")
+    }
+file write sumstat "R-2 & `r2_1' & `r2_2' & `r2_3' & `r2_4' \\" _n
+file write sumstat "Sample size & `n_1' & `n_2' & `n_3' & `n_4' \\" _n
 file write sumstat "\bottomrule" _n
 file write sumstat "\bottomrule" _n
 
@@ -413,3 +418,48 @@ file write sumstat "\end{tabular}"
 file close sumstat
 
 
+
+
+
+
+cap program drop storemean
+program define storemean
+syntax, varname(str) mat(str) restriction(str) tosum(str) [cond(str)]
+    qui reg `varname' `restriction' [pw=perwt] , `cond'
+    local m = _b[`tosum']
+    local sd = _se[`tosum']
+    local n = e(N)
+    mat `mat' = nullmat(`mat') \ (`m' , `sd', `n')
+end
+
+cap program drop storecoeff
+program define storecoeff
+syntax, mat(str) row(int) cols(str)
+    local rb = `row'
+    local rp = `rb' + 1
+    local rse = `rp' + 1
+    * coefficient with stars
+    foreach col in `cols' {
+        if `mat'[`rb',`col'] != 9999 {
+            local b = string(`mat'[`rb',`col'], "%12.3fc")
+            local pval = string(`mat'[`rp',`col'], "%12.3fc")
+            local stars_abs = cond(`pval' < 0.01, "***", cond(`pval' < 0.05, "**", cond(`pval' < 0.1, "*", "")))
+            file write sumstat " & `b'`stars_abs'  "
+        }
+        if `mat'[`rb',`col'] == 9999 {
+            file write sumstat " &  "
+        }
+    }
+    file write sumstat "\\" _n
+    * standard errors
+    foreach col in `cols' {
+        if `mat'[`rb',`col'] != 9999 {
+            local se = string(`mat'[`rse',`col'], "%12.3fc")
+            file write sumstat " & (`se')  "
+        }
+        if `mat'[`rb',`col'] == 9999 {
+            file write sumstat " &   "
+        }
+    }
+    file write sumstat "\\" _n
+end
