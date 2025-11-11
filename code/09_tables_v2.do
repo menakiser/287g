@@ -387,7 +387,7 @@ file write sumstat "\midrule" _n
 * out migration
 file write sumstat " \multicolumn{5}{c}{Panel B: Out migration}  \\" _n
 file write sumstat " & & & \multicolumn{2}{c}{Propensity weighting}  \\" _n
-file write sumstat " & Targeted & Placebo & Targeted & Placebo \\" _n
+file write sumstat " & Baseline & Treated migpuma t-1 & Untreated migpuma t-1 & Poor English language \\" _n
 file write sumstat " & (5) & (6)  & (7) & (8)  \\" _n
 file write sumstat "\midrule " _n
 
@@ -406,8 +406,8 @@ while `rowcount' < 10 {
 file write sumstat "\\" _n
 //store sample size
     forval col = 1/4 {
-        local r2_`col' = string(zoom2[16,`col'], "%12.3fc")
-        local n_`col' = string(zoom2[18,`col'], "%12.0fc")
+        local r2_`col' = string(zoom2[10,`col'], "%12.3fc")
+        local n_`col' = string(zoom2[12,`col'], "%12.0fc")
     }
 file write sumstat "R-2 & `r2_1' & `r2_2' & `r2_3' & `r2_4' \\" _n
 file write sumstat "Sample size & `n_1' & `n_2' & `n_3' & `n_4' \\" _n
