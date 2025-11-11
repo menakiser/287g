@@ -80,7 +80,7 @@ gen prev_year = year-1
 gen perwt_wt = perwt*wt
 
 * create exposure
-gen targetpop = sex==1 & lowskill==1 & hispan!=0 & imm==1 /*born abroad and not a citizen*/ & young==1 & yrimmig>2007 & inlist(yrsusa2 , 1 ,2) & marst>=3 & nchild==0
+gen targetpop = sex==1 & lowskill==1 & bpl==200 & imm==1 /*born abroad and not a citizen*/ & young==1 & yrimmig>2007 & inlist(yrsusa2 , 1 ,2) & marst>=3 & nchild==0
 
 * Identify counties that lose treatment
 preserve
