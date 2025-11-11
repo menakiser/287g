@@ -12,7 +12,8 @@ global or "$wd/data/raw"
 global oi "$wd/data/int"
 global oo "$wd/output/"
 
-
+cap log close 
+log using "$oo/prop_matching.pdf", replace
 * import ACS data 
 use "$oi/working_acs", clear 
 
@@ -64,6 +65,10 @@ isid statefip current_migpuma
 
 compress
 save "$oi/propensity_weights", replace
+
+
+log close 
+translate "$oo/prop_matching.pdf" "$oo/prop_matching.pdf", translator(smcl2pdf) replace
 
 
 *run regressions using weights
