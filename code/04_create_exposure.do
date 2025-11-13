@@ -96,11 +96,15 @@ collapse (max) exp_any_state=exposure_state exp_any_county=exposure_county ///
 	exp_task_state exp_task_county ///
 	exp_warrant_state exp_warrant_county, by(statefips countyfips year)
 
+* rename to match acs 
+rename countyfips countyfip
+rename statefips statefip
+
 * store county exposure
 preserve
-drop if countyfips==99999
+drop if countyfip==99999
 drop *_state
-tab year if countyfips<99999
+tab year if countyfip<99999
 //177 unique counties
 //9 years of treatment
 
@@ -109,7 +113,7 @@ save "$oi/exposure_county_year", replace
 restore 
 
 * store state exposure
-collapse (max) exp_any_state exp_jail_state exp_task_state exp_warrant_state, by(statefips year)
+collapse (max) exp_any_state exp_jail_state exp_task_state exp_warrant_state, by(statefip year)
 
 
 compress
@@ -118,7 +122,9 @@ save "$oi/exposure_state_year", replace
 
 * migpuma exposure
 use "$oi/exposure_county_year" , clear
-merge m:1 statefips countyfips using "$oi/xwalk/county_migpuma10", nogen keep(1 3)
-collapse (max) exp_any_migpuma=exp_any_county exp_jail_migpuma=exp_jail_county exp_task_migpuma=exp_task_county exp_warrant_migpuma=exp_warrant_county, by(statefips migpuma10 year)
+rename countyfip countyfips
+merge m:1 statefip countyfip using "$oi/xwalk/county_migpuma10", nogen keep(1 3)
+rename countyfips countyfip
+collapse (max) exp_any_migpuma=exp_any_county exp_jail_migpuma=exp_jail_county exp_task_migpuma=exp_task_county exp_warrant_migpuma=exp_warrant_county, by(statefip migpuma10 year)
 compress
 save "$oi/exposure_migpuma10_year", replace

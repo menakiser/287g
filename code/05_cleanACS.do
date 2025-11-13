@@ -22,7 +22,6 @@ use "$or/usa_00048.dta", clear
 **** Sample restrictions
 *50 US states and DC
 keep if statefip<=56
-//drop if countyfip==000 //not identifiable
 *Eliminate people living in group quarters (military or convicts): those with the gq variable equal to 0, 3 or 4.
 drop if inlist(gq, 0, 3, 4)
 *restrict census year 
@@ -59,7 +58,9 @@ gen never_married = inlist(marst, 6)
 gen ownhome = ownershp==1
 gen employed = empstat==1
 
+********************************************************
 **** location variables: obtaining current migpuma
+*********************************************************
 gen puma00 = puma if year<2012
 //state 22
 merge m:1 statefip puma00 using "$oi/xwalk/puma00_puma10"  , nogen keep(1 3) //louisiana 77777 no matches due to katrina
@@ -68,23 +69,24 @@ replace puma10 = puma if year>=2012
 merge m:1 statefip puma10 using "$oi/xwalk/puma10_migpuma10" , nogen keep(1 3)
 rename (puma10 ) ( current_puma  ) 
 
-* obtain exposure variables at the migpuma level
-/* All migpumas match with some exposure, missing matches arise from years that do not observe these pumas
-keep statefip migpuma10
-duplicates drop 
-merge 1:m statefip migpuma10  using "$oi/exposure_migpuma10_year"
-*/
-rename statefip statefips
+********************************************************
+**** obtain exposure variables at the migpuma level for CURRENT year
+*********************************************************
+* county
+merge m:1 statefip countyfip year using "$oi/exposure_county_year" , keepusing(exp_any_county exp_jail_county exp_task_county exp_warrant_county) nogen keep(1 3) 
+foreach v in exp_any_county exp_jail_county exp_task_county exp_warrant_county {
+	replace `v' = 0 if mi(`v')
+}
+
+*migpuma
 merge m:1 statefip migpuma10 year using "$oi/exposure_migpuma10_year" , keepusing(exp_any_migpuma exp_jail_migpuma exp_task_migpuma exp_warrant_migpuma) nogen keep(1 3) //all 2012-2020 match
-rename statefips statefip
 foreach v in exp_any_migpuma exp_jail_migpuma exp_task_migpuma exp_warrant_migpuma {
 	replace `v' = 0 if mi(`v')
 }
 rename migpuma10 current_migpuma
-* obtain exposure variables at the migpuma level
-rename statefip statefips
+
+* state
 merge m:1 statefip year using "$oi/exposure_state_year" , nogen keep(1 3) keepusing(exp_any_state exp_jail_state exp_task_state exp_warrant_state)
-rename statefips statefip
 foreach v in exp_any_state exp_jail_state exp_task_state exp_warrant_state {
 	replace `v' = 0 if mi(`v')
 }
@@ -107,26 +109,38 @@ rename (migplac1 migpuma1) (statefip migpuma10)
 gen current_year = year
 replace year = current_year -1 
 
-* obtain exposure variables at the migpuma level for previous year
+********************************************************
+**** obtain exposure variables at the migpuma level for previous year
+*********************************************************
+*county
+foreach v in exp_any_county exp_jail_county exp_task_county exp_warrant_county {
+	rename `v' current_`v'
+}
+merge m:1 statefip countyfip year using "$oi/exposure_county_year" , nogen keep(1 3) keepusing(exp_any_county exp_jail_county exp_task_county exp_warrant_county)
+foreach v in exp_any_county exp_jail_county exp_task_county exp_warrant_county {
+	replace `v' = 0 if mi(`v')
+	rename `v' prev_`v'
+	rename current_`v'  `v'
+}
+
+
+*migpuma
 foreach v in exp_any_migpuma exp_jail_migpuma exp_task_migpuma exp_warrant_migpuma {
 	rename `v' current_`v'
 }
-rename (statefip) (statefips)
 merge m:1 statefip migpuma10 year using "$oi/exposure_migpuma10_year" , nogen keep(1 3) keepusing(exp_any_migpuma exp_jail_migpuma exp_task_migpuma exp_warrant_migpuma)
-rename  statefips statefip
 foreach v in exp_any_migpuma exp_jail_migpuma exp_task_migpuma exp_warrant_migpuma {
 	replace `v' = 0 if mi(`v')
 	rename `v' prev_`v'
 	rename current_`v'  `v'
 }
 rename migpuma10 prev_migpuma
-* obtain exposure variables at the migpuma level for previous yeae
+
+*state 
 foreach v in exp_any_state exp_jail_state exp_task_state exp_warrant_state {
 	rename `v' current_`v'
 }
-rename statefip statefips
 merge m:1 statefip year using "$oi/exposure_state_year" , nogen keep(1 3) keepusing(exp_any_state exp_jail_state exp_task_state exp_warrant_state)
-rename  statefips statefip
 foreach v in exp_any_state exp_jail_state exp_task_state exp_warrant_state {
 	replace `v' = 0 if mi(`v')
 	rename `v' prev_`v'
@@ -163,6 +177,47 @@ replace year = current_year
 rename SC_any prev_SC_any
 rename current_SC_any SC_any
 
-drop if puma== 77777
+
+/* restrictions to remember
+drop if puma== 77777 //louisiana katrina
+drop if countyfip==000 //not identifiable
+*/
+
+* define targetpop
+cap drop targetpop*
+gen targetpop1 = sex==1 & lowskill==1 & hispan!=0 & imm==1 & young==1 & yrimmig>2007 & inlist(yrsusa2 , 1 ,2) //hispanic, young, <10 yrs in the country
+gen targetpop2 = targetpop1==1 & marst>=3
+gen targetpop3 = targetpop1==1 & marst>=3 & nchild==0 
+gen targetpop4 = targetpop1==1 & bpl==200 //mexican, young, <10 yrs in the country
+gen targetpop5 = targetpop4==1 & marst>=3
+gen targetpop6 = targetpop4==1 & marst>=3 & nchild==0 
+gen targetpop7 = sex==1 & lowskill==1 & race!=1 & imm==1 & young==1 & yrimmig>2007 & inlist(yrsusa2 , 1 ,2) //nonwhite, young, <10 yrs in the country
+gen targetpop8 = targetpop7==1 & marst>=3
+gen targetpop9 = targetpop7==1 & marst>=3 & nchild==0 
+
+label var targetpop1 "hispanic immigrants"
+label var targetpop2 "hispanic immigrants unmarried"
+label var targetpop3 "hispanic immigrants unmarried, no kids"
+label var targetpop4 "mexican immigrants"
+label var targetpop5 "mexican immigrants unmarried"
+label var targetpop6 "mexican immigrants unmarried, no kids"
+label var targetpop7 "non-white immigrants"
+label var targetpop8 "non-white immigrants unmarried"
+label var targetpop9 "non-white immigrants unmarried, no kids"
+
+/* define placebo
+cap drop placebo*
+gen placebo1 = sex==1 & lowskill==1 & hispan!=0 & born_abroad==0 & citizen!=3 & young==1  & marst>=3 & nchild==0 //hispanic citizens born in the usa, 113,260, n 
+gen placebo2 = sex==1 & lowskill==1 & hispan==0 & imm==1 & young==1 & yrimmig>2007 & inlist(yrsusa2 , 1 ,2) & marst>=3 & nchild==0 //same as target but not hispanic, 9,316, p
+gen placebo3 = sex==1 & lowskill==1 & hispan==0 & born_abroad==1 & citizen!=3 & young==1 & yrimmig>2007 & inlist(yrsusa2 , 1 ,2) & marst>=3 & nchild==0 //non-hispanic citizen (born to american parents, naturalized citizen) born abroad,  2,731 n
+gen placebo4 = sex==1 & lowskill==1 & hispan==0 & born_abroad==0 & citizen!=3 & young==1  & marst>=3 & nchild==0 //non-hispanic citizens born in the usa,  532,596 n
+gen placebo5 = sex==1 & lowskill==1 & hispan==0 & race==1 & born_abroad==0 & citizen!=3 & young==1  & marst>=3 & nchild==0 //non-hispanic white citizens born in the usa,  400,003 n
+
+label var placebo1 "hispanic citizen US born"
+label var placebo2 "non-hispanic target"
+label var placebo3 "non-hispanic citizen"
+label var placebo4 "non-hispanic citizen US born"
+label var placebo5 "non-hispanic white citizen US born"
+*/
 compress 
 save "$oi/working_acs", replace

@@ -12,66 +12,68 @@ global or "$wd/data/raw"
 global oi "$wd/data/int"
 global oo "$wd/output/"
 
-cap log close 
-log using "$oo/prop_matching.pdf", replace
-* import ACS data 
-use "$oi/working_acs", clear 
+forval i = 1/9 {
+	cap log close 
+	log using "$oo/logs/prop_matching_t`i'.pdf", replace
+	* import ACS data 
+	use "$oi/working_acs", clear 
 
-*define affected population (presumably undocumented) as male, low-skill (High School or less), Hispanic, foreign-born, noncitizens of ages 18-39, and
-gen targetpop = sex==1 & lowskill==1 & bpl==200 & imm==1 /*born abroad and not a citizen*/ & young==1 & yrimmig>2007 & inlist(yrsusa2 , 1 ,2) & marst>=3 & nchild==0
+	*define affected population (presumably undocumented) as male, low-skill (High School or less), Hispanic, foreign-born, noncitizens of ages 18-39, and
 
-* create county variables that may predict exposure
-gen red_state = inlist(statefip, 1, 2, 4, 5, 13, 16, 20, 21, 22, 28, 29, 30, 31, 38, 40, 45, 46, 47, 48, 49, 54, 56) //https://www.worldatlas.com/articles/states-that-have-voted-republican-in-the-most-consecutive-u-s-presidential-elections.html
-gen total_pop = age>=18 & age<=65
-bys statefip current_migpuma: egen ever_treated_migpuma = max( exp_any_migpuma>0)
-bys statefip: egen ever_treated_state = max( exp_any_state>0)
-keep if year == 2011
-gen ishispanic = hispan!=0 & hispan!=2 //hispanic origin of any kind excluding PR
-gen istexas = statefip==48
+	* create county variables that may predict exposure
+	gen red_state = inlist(statefip, 1, 2, 4, 5, 13, 16, 20, 21, 22, 28, 29, 30, 31, 38, 40, 45, 46, 47, 48, 49, 54, 56) //https://www.worldatlas.com/articles/states-that-have-voted-republican-in-the-most-consecutive-u-s-presidential-elections.html
+	gen total_pop = age>=18 & age<=65
+	bys statefip current_migpuma: egen ever_treated_migpuma = max( exp_any_migpuma>0)
+	bys statefip: egen ever_treated_state = max( exp_any_state>0)
+	keep if year == 2011
+	gen ishispanic = hispan!=0 & hispan!=2 //hispanic origin of any kind excluding PR
+	gen istexas = statefip==48
 
-collapse (sum) total_pop target_pop=targetpop foreign_pop=imm young_pop=young hispan_pop=ishispanic lowskill_pop=lowskill  ///
-	(mean) targetpop_sh=targetpop exp* red_state incwage employed target_sh=targetpop foreign_sh=imm young_sh=young  ///
-	hispan_sh=ishispanic lowskill_sh=lowskill istexas ///
-	(max) ever_treated_state ever_treated_migpuma ///
-	[pw=perwt] ///
-	, by(statefip current_migpuma)
+	collapse (sum) total_pop target_pop=targetpop`i' foreign_pop=imm young_pop=young hispan_pop=ishispanic lowskill_pop=lowskill  ///
+		(mean) targetpop_sh=targetpop`i' exp* red_state incwage employed target_sh=targetpop`i' foreign_sh=imm young_sh=young  ///
+		hispan_sh=ishispanic lowskill_sh=lowskill istexas ///
+		(max) ever_treated_state ever_treated_migpuma ///
+		[pw=perwt] ///
+		, by(statefip current_migpuma)
 
-/* get propensity score for county exposure */
-logit ever_treated_migpuma total_pop target_sh foreign_sh young_sh hispan_sh lowskill_sh istexas ever_treated_state
-cap drop phat
-predict phat
+	/* get propensity score for county exposure */
+	logit ever_treated_migpuma total_pop target_sh foreign_sh young_sh hispan_sh lowskill_sh istexas ever_treated_state [pw=total_pop]
+	//like doing it at the individual level
+	cap drop phat
+	predict phat
 
-/* weights to get everyone to look like treated */
-sum phat
-gen wt = phat if ever_treated_migpuma==1
-replace wt=phat/(1-phat) if ever_treated_migpuma==0
+	/* weights to get everyone to look like treated */
+	sum phat
+	gen wt = phat if ever_treated_migpuma==1
+	replace wt=phat/(1-phat) if ever_treated_migpuma==0
 
-/* graph the propensity score */
-histogram phat, by(ever_treated_migpuma) kdensity
+	/* graph the propensity score */
+	histogram phat, by(ever_treated_migpuma) kdensity
 
-kdensity phat if ever_treated_migpuma==1, gen(x_1 d_1)
-label var d_1 "treatment group"
-kdensity phat if ever_treated_migpuma==0, gen(x_0 d_0)
-label var d_0 "control group, unweighted"
-kdensity phat if ever_treated_migpuma==0 [aw=wt], gen(x_0w d_0w)
-label var d_0w "control group, weighted"
-twoway (line d_1 x_1, sort) (line d_0 x_0, sort) (line d_0w x_0w, sort)
+	kdensity phat if ever_treated_migpuma==1, gen(x_1 d_1)
+	label var d_1 "treatment group"
+	kdensity phat if ever_treated_migpuma==0, gen(x_0 d_0)
+	label var d_0 "control group, unweighted"
+	kdensity phat if ever_treated_migpuma==0 [aw=wt], gen(x_0w d_0w)
+	label var d_0w "control group, weighted"
+	twoway (line d_1 x_1, sort) (line d_0 x_0, sort) (line d_0w x_0w, sort)
 
-/* look at distribution of weights -- sometimes end out putting tons of weight on a few obs */
-summ wt if ever_treated_migpuma==0, d
+	/* look at distribution of weights -- sometimes end out putting tons of weight on a few obs */
+	summ wt if ever_treated_migpuma==0, d
 
-keep statefip current_migpuma phat ever_treated_migpuma wt d_1 x_1 d_0 x_0 d_0w x_0w
-isid statefip current_migpuma
+	keep statefip current_migpuma phat ever_treated_migpuma wt d_1 x_1 d_0 x_0 d_0w x_0w
+	isid statefip current_migpuma
 
-compress
-save "$oi/propensity_weights", replace
-
-
-log close 
-translate "$oo/prop_matching.pdf" "$oo/prop_matching.pdf", translator(smcl2pdf) replace
+	compress
+	save "$oi/propensity_weights_t`i", replace
 
 
-*run regressions using weights
+	log close 
+	translate "$oo/logs/prop_matching_t`i'.pdf" "$oo/logs/prop_matching_t`i'.pdf", translator(smcl2pdf) replace
+
+}
+
+/*run regressions using weights
 use "$oi/working_acs", clear 
 merge m:1 statefip current_migpuma using  "$oi/propensity_weights" , nogen keep(1 3) keepusing(ever_treated_migpuma phat wt)
 
@@ -113,8 +115,7 @@ egen group_id1 = group(prev_geoid prev_year)
 
 global covars "age i.race i.educ i.speakeng i.hcovany i.school ownhome" 
 
-
-*define placebos
+/*define placebos
 cap drop placebo*
 //gen targetpop = sex==1 & lowskill==1 & hispan!=0 & imm==1 & young==1 & yrimmig>2007 & inlist(yrsusa2 , 1 ,2) & marst>=3
 gen placebo1 = sex==1 & lowskill==1 & hispan!=0 & bpl!=200 & born_abroad==0 & citizen!=3 & young==1  & marst>=3 & nchild==0 //hispanic citizens born in the usa, 113,260, n 
@@ -128,8 +129,9 @@ label var placebo2 "non-hispanic target"
 label var placebo3 "non-hispanic citizen"
 label var placebo4 "non-hispanic citizen US born"
 label var placebo5 "non-hispanic white citizen US born"
-
+*/
 
 compress
 save "$oi/acs_w_propensity_weights", replace
 
+*/
