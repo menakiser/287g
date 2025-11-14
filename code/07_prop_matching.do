@@ -23,7 +23,7 @@ forval i = 1/9 {
 	* create county variables that may predict exposure
 	gen red_state = inlist(statefip, 1, 2, 4, 5, 13, 16, 20, 21, 22, 28, 29, 30, 31, 38, 40, 45, 46, 47, 48, 49, 54, 56) //https://www.worldatlas.com/articles/states-that-have-voted-republican-in-the-most-consecutive-u-s-presidential-elections.html
 	gen total_pop = age>=18 & age<=65
-	bys statefip current_migpuma: egen ever_treated_migpuma = max( exp_any_migpuma>0)
+	bys statefip countyfip: egen ever_treated_county = max( exp_any_county>0)
 	bys statefip: egen ever_treated_state = max( exp_any_state>0)
 	keep if year == 2011
 	gen ishispanic = hispan!=0 & hispan!=2 //hispanic origin of any kind excluding PR
@@ -32,40 +32,39 @@ forval i = 1/9 {
 	collapse (sum) total_pop target_pop=targetpop`i' foreign_pop=imm young_pop=young hispan_pop=ishispanic lowskill_pop=lowskill  ///
 		(mean) targetpop_sh=targetpop`i' exp* red_state incwage employed target_sh=targetpop`i' foreign_sh=imm young_sh=young  ///
 		hispan_sh=ishispanic lowskill_sh=lowskill istexas ///
-		(max) ever_treated_state ever_treated_migpuma ///
+		(max) ever_treated_state ever_treated_county ///
 		[pw=perwt] ///
-		, by(statefip current_migpuma)
-
+		, by(statefip countyfip)
+drop if countyfip==000
 	/* get propensity score for county exposure */
-	logit ever_treated_migpuma total_pop target_sh foreign_sh young_sh hispan_sh lowskill_sh istexas ever_treated_state [pw=total_pop]
+	logit ever_treated_county total_pop target_sh foreign_sh young_sh hispan_sh lowskill_sh istexas ever_treated_state [pw=total_pop]
 	//like doing it at the individual level
 	cap drop phat
 	predict phat
 
 	/* weights to get everyone to look like treated */
 	sum phat
-	gen wt = phat if ever_treated_migpuma==1
-	replace wt=phat/(1-phat) if ever_treated_migpuma==0
+	gen wt = phat if ever_treated_county==1
+	replace wt=phat/(1-phat) if ever_treated_county==0
 
 	/* graph the propensity score */
-	histogram phat, by(ever_treated_migpuma) kdensity
+	histogram phat, by(ever_treated_county) kdensity
 
-	kdensity phat if ever_treated_migpuma==1, gen(x_1 d_1)
+	kdensity phat if ever_treated_county==1, gen(x_1 d_1)
 	label var d_1 "treatment group"
-	kdensity phat if ever_treated_migpuma==0, gen(x_0 d_0)
+	kdensity phat if ever_treated_county==0, gen(x_0 d_0)
 	label var d_0 "control group, unweighted"
-	kdensity phat if ever_treated_migpuma==0 [aw=wt], gen(x_0w d_0w)
+	kdensity phat if ever_treated_county==0 [aw=wt], gen(x_0w d_0w)
 	label var d_0w "control group, weighted"
 	twoway (line d_1 x_1, sort) (line d_0 x_0, sort) (line d_0w x_0w, sort)
 
 	/* look at distribution of weights -- sometimes end out putting tons of weight on a few obs */
-	summ wt if ever_treated_migpuma==0, d
+	summ wt if ever_treated_county==0, d
 
-	keep statefip current_migpuma phat ever_treated_migpuma wt d_1 x_1 d_0 x_0 d_0w x_0w
-	isid statefip current_migpuma
+	keep statefip countyfip phat ever_treated_county wt d_1 x_1 d_0 x_0 d_0w x_0w
 
 	compress
-	save "$oi/propensity_weights_t`i", replace
+	save "$oi/troubleshoot/propensity_weights_t`i'", replace
 
 
 	log close 
