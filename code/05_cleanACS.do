@@ -219,5 +219,26 @@ label var placebo3 "non-hispanic citizen"
 label var placebo4 "non-hispanic citizen US born"
 label var placebo5 "non-hispanic white citizen US born"
 */
+
+gen prev_year = year-1
+
+* define FE and SE for county
+gen geoid_county = statefip*1000 + countyfip //unique county-state group
+gen prev_geoid_county = prev_statefip*1000 +  countyfip if move_county==1
+replace prev_geoid_county = geoid if move_county==0
+
+egen group_id_county = group(geoid_county year) 
+egen group_id1_county = group(prev_geoid_county prev_year)
+
+
+* define FE and SE for migpuma
+gen geoid_migpuma = statefip*100000 + current_migpuma //unique county-state group
+gen prev_geoid_migpuma = prev_statefip*100000 +  prev_migpuma if move_migpuma==1
+replace prev_geoid_migpuma = geoid_migpuma if move_migpuma==0
+
+egen group_id_migpuma = group(geoid_migpuma year) 
+egen group_id1_migpuma = group(prev_geoid_migpuma prev_year)
+
+
 compress 
 save "$oi/working_acs", replace
