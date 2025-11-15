@@ -191,7 +191,7 @@ gen targetpop3 = targetpop1==1 & marst>=3 & nchild==0
 gen targetpop4 = targetpop1==1 & bpl==200 //mexican, young, <10 yrs in the country
 gen targetpop5 = targetpop4==1 & marst>=3
 gen targetpop6 = targetpop4==1 & marst>=3 & nchild==0 
-gen targetpop7 = sex==1 & lowskill==1 & race!=1 & imm==1 & young==1 & yrimmig>2007 & inlist(yrsusa2 , 1 ,2) //nonwhite, young, <10 yrs in the country
+gen targetpop7 = targetpop1==1 & bpl!=200 //non-mexican hispanic, young, <10 yrs in the country
 gen targetpop8 = targetpop7==1 & marst>=3
 gen targetpop9 = targetpop7==1 & marst>=3 & nchild==0 
 
@@ -201,9 +201,9 @@ label var targetpop3 "hispanic immigrants unmarried, no kids"
 label var targetpop4 "mexican immigrants"
 label var targetpop5 "mexican immigrants unmarried"
 label var targetpop6 "mexican immigrants unmarried, no kids"
-label var targetpop7 "non-white immigrants"
-label var targetpop8 "non-white immigrants unmarried"
-label var targetpop9 "non-white immigrants unmarried, no kids"
+label var targetpop7 "hispanic non-mexican immigrants"
+label var targetpop8 "hispanic non-mexican immigrants unmarried"
+label var targetpop9 "hispanic non-mexican immigrants unmarried, no kids"
 
 /* define placebo
 cap drop placebo*
