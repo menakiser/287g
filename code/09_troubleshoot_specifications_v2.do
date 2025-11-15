@@ -17,7 +17,7 @@ global outvars "prev_SC_any prev_exp_any_state"
 
 
 /**************************************************************
-Troubleshoot populations at the migpuma level
+Troubleshoot populations at the migpuma IN level
 **************************************************************/
 
 cap mat drop nocontrols
