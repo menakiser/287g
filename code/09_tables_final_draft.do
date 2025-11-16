@@ -95,11 +95,13 @@ rename (phat wt) (phat2 wt2)
 gen perwt_wt2 = perwt*wt2
 drop if mi(perwt_wt2)
 
+gen placebo1 = sex==1 & lowskill==1 & hispan!=0 & born_abroad==1 & citizen!=3 & young==1  & marst>=3  //hispanic citizens born in the usa
+
 * create summary values
 cap mat drop sumstat
 foreach v in exp_any_migpuma move_any move_migpuma move_state age r_white r_black r_asian hs no_english in_school nchild employed wkswork1 uhrswork incwage ownhome rentprice mortprice {
     di in red "Processing `v'"
-
+    /* TARGET POPULATION FOR HISPANICS
     * Ever exposed
     qui reg `v' targetpop2 [pw=perwt_wt2] if ever_treated_migpuma==1 , nocons 
     local m1 = _b[targetpop]
@@ -108,9 +110,21 @@ foreach v in exp_any_migpuma move_any move_migpuma move_state age r_white r_blac
     qui reg `v' targetpop2 [pw=perwt] if ever_treated_migpuma==0 , nocons 
     local m2 = _b[targetpop]
     qui reg `v' targetpop2 [pw=perwt_wt2] if  ever_treated_migpuma==0 , nocons 
-    local m3 = _b[targetpop]
+    local m3 = _b[targetpop]*/
 
-    mat sumstat = nullmat(sumstat) \ (`m1', `m2', `m3' )
+    * PLACEBO
+    * Ever exposed
+    qui reg `v' placebo1 [pw=perwt_wt2] if ever_treated_migpuma==1 , nocons 
+    local m4 = _b[placebo1]
+
+    * Never exposed
+    qui reg `v' placebo1 [pw=perwt] if ever_treated_migpuma==0 , nocons 
+    local m5 = _b[placebo1]
+    qui reg `v' placebo1 [pw=perwt_wt2] if  ever_treated_migpuma==0 , nocons 
+    local m6 = _b[placebo1]
+
+    //mat sumstat = nullmat(sumstat) \ (`m1', `m2', `m3',`m4', `m5', `m6'  )
+    mat sumstat = nullmat(sumstat) \ (`m4', `m5', `m6'  )
 }
 
 qui count if targetpop2==1 & exp_any_migpuma==1
@@ -120,18 +134,26 @@ local m2 = r(N)
 qui count if targetpop2==1 & exp_any_migpuma==0
 local m3 = r(N)
 
-mat sumstat = nullmat(sumstat) \ (`m1', `m2', `m3')
+qui count if placebo1==1 & exp_any_migpuma==1
+local m4 = r(N)
+qui count if placebo1==1 & exp_any_migpuma==0 
+local m5 = r(N)
+qui count if placebo1==1 & exp_any_migpuma==0
+local m6 = r(N)
+
+mat sumstat = nullmat(sumstat) \ (`m1', `m2', `m3',`m4', `m5', `m6'  )
 
 
 * Create table
 cap file close sumstat
 file open sumstat using "$oo/t2_sumstat.tex", write replace
-file write sumstat "\begin{tabular}{lccc}" _n
+file write sumstat "\begin{tabular}{lcccccc}" _n
 file write sumstat "\toprule" _n
 file write sumstat "\toprule" _n
-file write sumstat " & Exposed & \multicolumn{2}{c}{Never Exposed} \\" _n
+file write sumstat " & \multicolumn{2}{c}{Target Population} & \multicolumn{2}{c}{Placebo} \\" _n
+file write sumstat " & Exposed & \multicolumn{2}{c}{Never Exposed} & Exposed & \multicolumn{2}{c}{Never Exposed} \\" _n
 file write sumstat " &  &  & Propensity weighted \\" _n
-file write sumstat " & (1) & (2) & (3)   \\" _n
+file write sumstat " & (1) & (2) & (3) & (4) & (5) & (6)  \\" _n
 file write sumstat "\midrule " _n
 
 global varnames `" "Exposure" "Any move" "Moved migpuma" "Moved state" "Age" "Race: White" "Race: Black" "Race: Asian" "High School" "Poor English" "In School" "Number of children" "Employed" "Weeks worked" "Usual weekly hours worked" "Wage income" "Owns a home" "Rent price" "Mortgage price" "Sample size" "'
@@ -139,7 +161,7 @@ forval r = 1/20 {
 	local varname : word `r' of $varnames
 	file write sumstat " `varname' "
 	di "Writing row `r'"
-	forval c = 1/3 {
+	forval c = 1/6 {
 		di "Writing column `c'"
 		local a = string(sumstat[`r',`c'], "%12.2fc" )
 		file write sumstat " & `a'"
