@@ -229,7 +229,7 @@ file write sumstat "\begin{tabular}{lcccc}" _n
 file write sumstat "\toprule" _n
 file write sumstat "\toprule" _n
 * Panel A
-file write sumstat " \multicolumn{5}{c}{Panel A: Hispanic foreign-born non-citizens}  \\" _n
+file write sumstat " \multicolumn{5}{c}{Panel A: Target population}  \\" _n
 file write sumstat "\midrule " _n
 file write sumstat " & & & \multicolumn{2}{c}{Propensity weighted}  \\" _n
 file write sumstat " & (1) & (2)  & (3) & (4)  \\" _n
@@ -260,7 +260,7 @@ file write sumstat "\midrule" _n
 file write sumstat "\midrule" _n
 
 * out migration
-file write sumstat " \multicolumn{5}{c}{Panel B: Hispanic U.S.-born citizens}  \\" _n
+file write sumstat " \multicolumn{5}{c}{Panel B: Placebo}  \\" _n
 file write sumstat "\midrule " _n
 file write sumstat " & & & \multicolumn{2}{c}{Propensity weighted}  \\" _n
 file write sumstat " & (5) & (6)  & (7) & (8)  \\" _n
