@@ -229,7 +229,7 @@ file write sumstat "\begin{tabular}{lcccc}" _n
 file write sumstat "\toprule" _n
 file write sumstat "\toprule" _n
 * Panel A
-file write sumstat " \multicolumn{5}{c}{Panel A: Hispanic non-citizens}  \\" _n
+file write sumstat " \multicolumn{5}{c}{Panel A: Hispanic foreign-born non-citizens}  \\" _n
 file write sumstat "\midrule " _n
 file write sumstat " & & & \multicolumn{2}{c}{Propensity weighted}  \\" _n
 file write sumstat " & (1) & (2)  & (3) & (4)  \\" _n
@@ -246,10 +246,10 @@ forval c = 1/4  {
     local r`c' = string(intarget[4,`c'], "%12.4fc" )
 }
 file write sumstat " `varname' & `b1'`stars_abs1' & `b2'`stars_abs2' & `b3'`stars_abs3' & `b4'`stars_abs4' \\" _n 
-file write sumstat " \textit{SE} & (`sd1') & (`sd2') & (`sd3') & (`sd4') \\" _n 
-file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4'  \\" _n 
+file write sumstat " & (`sd1') & (`sd2') & (`sd3') & (`sd4') \\" _n 
 file write sumstat "\\" _n 
-
+file write sumstat " Controls &  & X &  & X \\" _n 
+file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4'  \\" _n 
 file write sumstat "Sample Size "
 forval i = 1/4 {
 	local n`i' = string(intarget[6,`i'], "%12.0fc" )
@@ -260,7 +260,7 @@ file write sumstat "\midrule" _n
 file write sumstat "\midrule" _n
 
 * out migration
-file write sumstat " \multicolumn{5}{c}{Panel B: Hispanic citizens}  \\" _n
+file write sumstat " \multicolumn{5}{c}{Panel B: Hispanic U.S.-born citizens}  \\" _n
 file write sumstat "\midrule " _n
 file write sumstat " & & & \multicolumn{2}{c}{Propensity weighted}  \\" _n
 file write sumstat " & (5) & (6)  & (7) & (8)  \\" _n
@@ -276,10 +276,10 @@ forval c = 1/4  {
     local r`c' = string(inplacebo[4,`c'], "%12.4fc" )
 }
 file write sumstat " `varname' & `b1'`stars_abs1' & `b2'`stars_abs2' & `b3'`stars_abs3' & `b4'`stars_abs4' \\" _n 
-file write sumstat " \textit{SE} & (`sd1') & (`sd2') & (`sd3') & (`sd4') \\" _n 
-file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4'  \\" _n 
+file write sumstat "  & (`sd1') & (`sd2') & (`sd3') & (`sd4') \\" _n 
 file write sumstat "\\" _n 
-
+file write sumstat " Controls &  & X &  & X \\" _n 
+file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4'  \\" _n 
 file write sumstat "Sample Size "
 forval i = 1/4 {
 	local n`i' = string(inplacebo[6,`i'], "%12.0fc" )
