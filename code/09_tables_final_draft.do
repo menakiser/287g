@@ -147,12 +147,13 @@ mat sumstat = nullmat(sumstat) \ (`m1', `m2', `m3',`m4', `m5', `m6'  )
 * Create table
 cap file close sumstat
 file open sumstat using "$oo/t2_sumstat.tex", write replace
-file write sumstat "\begin{tabular}{lcccccc}" _n
+file write sumstat "\begin{tabular}{lccc|ccc}" _n
 file write sumstat "\toprule" _n
 file write sumstat "\toprule" _n
-file write sumstat " & \multicolumn{2}{c}{Target Population} & \multicolumn{2}{c}{Placebo} \\" _n
+file write sumstat " & \multicolumn{3}{c}{Target Population} & \multicolumn{3}{c}{Placebo} \\" _n
 file write sumstat " & Exposed & \multicolumn{2}{c}{Never Exposed} & Exposed & \multicolumn{2}{c}{Never Exposed} \\" _n
-file write sumstat " &  &  & Propensity weighted \\" _n
+file write sumstat " &  &  & Propensity &  &  & Propensity \\" _n
+file write sumstat " &  &  & weighted &  &  & weighted \\" _n
 file write sumstat " & (1) & (2) & (3) & (4) & (5) & (6)  \\" _n
 file write sumstat "\midrule " _n
 
