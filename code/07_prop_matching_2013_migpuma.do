@@ -14,7 +14,7 @@ global oo "$wd/output/"
 
 
 ************* FOR CURRENT MIGPUMA
-foreach i in 1/9 {
+forval i = 1/9 {
 	cap log close 
 	log using "$oo/logs/prop_matching2013migpuma_t`i'.pdf", replace
 	* import ACS data 
