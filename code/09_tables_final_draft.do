@@ -294,111 +294,118 @@ file close sumstat
 
 
 
+global covars "age r_white r_black r_asian hs in_school no_english ownhome"
+global invars "exp_any_state " //SC_any
+global outvars "prev_exp_any_state " //prev_SC_any
 
+use "$oi/working_acs", clear 
+keep if year >= 2012
+drop if always_treated_migpuma==1
+* define propensity weights
+merge m:1 statefip current_migpuma  using  "$oi/troubleshoot/propensity_weights2013migpuma_t2" , nogen keep(3) keepusing( phat wt)
+gen perwt_wt = perwt*wt
+drop if mi(perwt_wt)
+gen placebo1 = sex==1 & lowskill==1 & hispan!=0 & born_abroad==0 & young==1  & marst>=3  //hispanic citizens born in the usa
 
+**** OUT MIGRATION FOR TARGET POPULATION
+cap mat drop outtarget
+* with simple weights
+* without controls
+reghdfe move_migpuma prev_exp_any_migpuma  [pw=perwt]  if targetpop2==1 & year>=2013 , vce(cluster group_id1_migpuma) absorb(prev_geoid_migpuma year)
+reg_to_mat, depvar( move_migpuma ) indvars( prev_exp_any_migpuma ) mat(outtarget)
+* with controls 
+reghdfe move_migpuma prev_exp_any_migpuma $covars $outvars [pw=perwt]  if targetpop2==1 & year>=2013 , vce(cluster group_id1_migpuma) absorb(prev_geoid_migpuma year)
+reg_to_mat, depvar( move_migpuma ) indvars( prev_exp_any_migpuma ) mat(outtarget)
+* with propensity weights
+* without controls
+reghdfe move_migpuma prev_exp_any_migpuma  [pw=perwt_wt]  if targetpop2==1 & year>=2013, vce(cluster group_id1_migpuma) absorb(prev_geoid_migpuma year)
+reg_to_mat, depvar( move_migpuma ) indvars( prev_exp_any_migpuma ) mat(outtarget)
+* with controls 
+reghdfe move_migpuma prev_exp_any_migpuma $covars $outvars [pw=perwt_wt]  if targetpop2==1 & year>=2013 , vce(cluster group_id1_migpuma) absorb(prev_geoid_migpuma year)
+reg_to_mat, depvar( move_migpuma ) indvars( prev_exp_any_migpuma ) mat(outtarget)
 
-/**************************************************************
-Table 4: Zooming in
-**************************************************************/
-use "$oi/acs_w_propensity_weights", clear 
-global covars "age i.race i.educ i.speakeng i.hcovany i.school ownhome " 
-global invars "exp_any_state SC_any"
-global outvars "prev_exp_any_state prev_SC_any"
-
-*in migration
-cap mat drop zoom1
-reghdfe move_migpuma exp_any_migpuma  $covars $invars [pw=perwt_wt]  if targetpop==1 , vce(cluster group_id) absorb(geoid year)
-reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma $invars  ) mat(zoom1)
-
-reghdfe move_migpuma exp_any_migpuma  $covars $invars [pw=perwt_wt]  if targetpop==1 & prev_exp_any_state==1  , vce(cluster group_id) absorb(geoid year) //previous migpuma was treated
-reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma $invars  ) mat(zoom1)
-
-reghdfe move_migpuma exp_any_migpuma  $covars $invars [pw=perwt_wt]  if targetpop==1 & prev_exp_any_state==0  , vce(cluster group_id) absorb(geoid year) //previous migpuma was untreated
-reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma $invars ) mat(zoom1)
-
-reghdfe move_migpuma exp_any_migpuma  $covars $invars [pw=perwt_wt]  if targetpop==1 & inlist(speakeng, 1, 6) , vce(cluster group_id) absorb(geoid year) //does not speak english or speaks english but not well
-reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma $invars ) mat(zoom1)
-
-
-* out migration
-cap mat drop zoom2
-reghdfe move_migpuma prev_exp_any_migpuma  $covars $outvars [pw=perwt_wt]  if targetpop==1 & year>=2012, vce(cluster group_id) absorb(prev_geoid year)
-reg_to_mat, depvar( move_migpuma ) indvars( prev_exp_any_migpuma $outvars) mat(zoom2)
-
-reghdfe move_migpuma prev_exp_any_migpuma  $covars $outvars [pw=perwt_wt]  if targetpop==1 & year>=2012 & prev_exp_any_state==1,  vce(cluster group_id) absorb(prev_geoid year)
-reg_to_mat, depvar( move_migpuma ) indvars( prev_exp_any_migpuma $outvars) mat(zoom2)
-
-reghdfe move_migpuma prev_exp_any_migpuma  $covars $outvars [pw=perwt_wt]  if targetpop==1 & year>=2012 & prev_exp_any_state==0,  vce(cluster group_id) absorb(prev_geoid year)
-reg_to_mat, depvar( move_migpuma ) indvars( prev_exp_any_migpuma $outvars) mat(zoom2)
-
-reghdfe move_migpuma prev_exp_any_migpuma  $covars $outvars [pw=perwt_wt]  if targetpop==1 & year>=2012 & inlist(speakeng, 1, 6), vce(cluster group_id) absorb(prev_geoid year)
-reg_to_mat, depvar( move_migpuma ) indvars( prev_exp_any_migpuma $outvars) mat(zoom2)
-
+**** OUT MIGRATION FOR PLACEBO POPULATION
+cap mat drop outplacebo
+* with simple weights
+* without controls
+reghdfe move_migpuma exp_any_migpuma  [pw=perwt]  if placebo1==1  & year>=2013, vce(cluster group_id1_migpuma) absorb(prev_geoid_migpuma year)
+reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(outplacebo)
+* with controls 
+reghdfe move_migpuma exp_any_migpuma $covars $invars [pw=perwt]  if placebo1==1  & year>=2013, vce(cluster group_id1_migpuma) absorb(prev_geoid_migpuma year)
+reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(outplacebo)
+* with propensity weights
+* without controls
+reghdfe move_migpuma exp_any_migpuma  [pw=perwt_wt]  if placebo1==1 & year>=2013 , vce(cluster group_id1_migpuma) absorb(prev_geoid_migpuma year)
+reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(outplacebo)
+* with controls 
+reghdfe move_migpuma exp_any_migpuma $covars $invars [pw=perwt_wt]  if placebo1==1 & year>=2013 , vce(cluster group_id1_migpuma) absorb(prev_geoid_migpuma year)
+reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(outplacebo)
 
 
 * Create table
 cap file close sumstat
-file open sumstat using "$oo/t4_inout_zooming.tex", write replace
+file open sumstat using "$oo/out_migration_target2.tex", write replace
 file write sumstat "\begin{tabular}{lcccc}" _n
 file write sumstat "\toprule" _n
 file write sumstat "\toprule" _n
-
-* in migration
-file write sumstat " \multicolumn{5}{c}{Panel A: In migration}  \\" _n
-file write sumstat " & Baseline & Treated migpuma t-1 & Untreated migpuma t-1 & Poor English language \\" _n
+* Panel A
+file write sumstat " \multicolumn{5}{c}{Panel A: Target population}  \\" _n
+file write sumstat "\midrule " _n
+file write sumstat " & & & \multicolumn{2}{c}{Propensity weighted}  \\" _n
 file write sumstat " & (1) & (2)  & (3) & (4)  \\" _n
 file write sumstat "\midrule " _n
 
-global varnames `"  "Migpuma exposure" "State exposure" "In Secure Community"  "'
-* store coverage results
-local i = 1
-local rowcount = 1
-while `rowcount' < 10 {
-	local varlab: word `i' of $varnames
-	* label
-	file write sumstat " `varlab'  "
-	storecoeff, mat(zoom1) row(`rowcount') cols(1 2 3 4)
-	local rowcount = `rowcount' +3
-	local++ i
+global varnames `"  "Move migpuma" "'
+
+local varname : word 1 of $varnames
+forval c = 1/4  {
+    local b`c' = string(outtarget[1,`c'], "%12.4fc" )
+    local p`c' = outtarget[2,`c']
+    local stars_abs`c' = cond(`p`c'' < 0.01, "***", cond(`p`c'' < 0.05, "**", cond(`p`c'' < 0.1, "*", "")))
+    local sd`c' = string(outtarget[3,`c'], "%12.4fc" )
+    local r`c' = string(outtarget[4,`c'], "%12.4fc" )
 }
-file write sumstat "\\" _n
-//store sample size
-    forval col = 1/4 {
-        local r2_`col' = string(zoom1[16,`col'], "%12.3fc")
-        local n_`col' = string(zoom1[18,`col'], "%12.0fc")
-    }
-file write sumstat "R-2 & `r2_1' & `r2_2' & `r2_3' & `r2_4' \\" _n
-file write sumstat "Sample size & `n_1' & `n_2' & `n_3' & `n_4' \\" _n
+file write sumstat " `varname' & `b1'`stars_abs1' & `b2'`stars_abs2' & `b3'`stars_abs3' & `b4'`stars_abs4' \\" _n 
+file write sumstat " & (`sd1') & (`sd2') & (`sd3') & (`sd4') \\" _n 
+file write sumstat "\\" _n 
+file write sumstat " Controls &  & X &  & X \\" _n 
+file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4'  \\" _n 
+file write sumstat "Sample Size "
+forval i = 1/4 {
+	local n`i' = string(outtarget[6,`i'], "%12.0fc" )
+	file write sumstat " & `n`i'' "
+}
+file write sumstat "\\" _n 
 file write sumstat "\midrule" _n
 file write sumstat "\midrule" _n
 
 * out migration
-file write sumstat " \multicolumn{5}{c}{Panel B: Out migration}  \\" _n
-file write sumstat " & & & \multicolumn{2}{c}{Propensity weighting}  \\" _n
-file write sumstat " & Baseline & Treated migpuma t-1 & Untreated migpuma t-1 & Poor English language \\" _n
+file write sumstat " \multicolumn{5}{c}{Panel B: Placebo}  \\" _n
+file write sumstat "\midrule " _n
+file write sumstat " & & & \multicolumn{2}{c}{Propensity weighted}  \\" _n
 file write sumstat " & (5) & (6)  & (7) & (8)  \\" _n
 file write sumstat "\midrule " _n
 
-global varnames `"  "Prev Migpuma exposure" "Prev State exposure" "Prev in Secure Community"  "'
-* store coverage results
-local i = 1
-local rowcount = 1
-while `rowcount' < 10 {
-	local varlab: word `i' of $varnames
-	* label
-	file write sumstat " `varlab'  "
-	storecoeff, mat(zoom2) row(`rowcount') cols(1 2 3 4)
-	local rowcount = `rowcount' +3
-	local++ i
+global varnames `"   "Move migpuma" "'
+local varname : word 1 of $varnames
+forval c = 1/4  {
+    local b`c' = string(outplacebo[1,`c'], "%12.4fc" )
+    local p`c' = outplacebo`i'[2,`c']
+    local stars_abs`c' = cond(`p`c'' < 0.01, "***", cond(`p`c'' < 0.05, "**", cond(`p`c'' < 0.1, "*", "")))
+    local sd`c' = string(outplacebo[3,`c'], "%12.4fc" )
+    local r`c' = string(outplacebo[4,`c'], "%12.4fc" )
 }
-file write sumstat "\\" _n
-//store sample size
-    forval col = 1/4 {
-        local r2_`col' = string(zoom2[10,`col'], "%12.3fc")
-        local n_`col' = string(zoom2[12,`col'], "%12.0fc")
-    }
-file write sumstat "R-2 & `r2_1' & `r2_2' & `r2_3' & `r2_4' \\" _n
-file write sumstat "Sample size & `n_1' & `n_2' & `n_3' & `n_4' \\" _n
+file write sumstat " `varname' & `b1'`stars_abs1' & `b2'`stars_abs2' & `b3'`stars_abs3' & `b4'`stars_abs4' \\" _n 
+file write sumstat "  & (`sd1') & (`sd2') & (`sd3') & (`sd4') \\" _n 
+file write sumstat "\\" _n 
+file write sumstat " Controls &  & X &  & X \\" _n 
+file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4'  \\" _n 
+file write sumstat "Sample Size "
+forval i = 1/4 {
+	local n`i' = string(outplacebo[6,`i'], "%12.0fc" )
+	file write sumstat " & `n`i'' "
+}
+file write sumstat "\\" _n 
 file write sumstat "\bottomrule" _n
 file write sumstat "\bottomrule" _n
 
