@@ -99,9 +99,9 @@ gen placebo1 = sex==1 & lowskill==1 & hispan!=0 & born_abroad==1 & citizen!=3 & 
 
 * create summary values
 cap mat drop sumstat
-foreach v in exp_any_migpuma move_any move_migpuma move_state age r_white r_black r_asian hs no_english in_school nchild employed wkswork1 uhrswork incwage ownhome rentprice mortprice {
+foreach v in exp_any_migpuma move_any move_migpuma move_state move_abroad age r_white r_black r_asian hs no_english in_school nchild employed wkswork1 uhrswork incwage ownhome rentprice mortprice {
     di in red "Processing `v'"
-    /* TARGET POPULATION FOR HISPANICS
+    * TARGET POPULATION FOR HISPANICS
     * Ever exposed
     qui reg `v' targetpop2 [pw=perwt_wt2] if ever_treated_migpuma==1 , nocons 
     local m1 = _b[targetpop]
@@ -110,7 +110,7 @@ foreach v in exp_any_migpuma move_any move_migpuma move_state age r_white r_blac
     qui reg `v' targetpop2 [pw=perwt] if ever_treated_migpuma==0 , nocons 
     local m2 = _b[targetpop]
     qui reg `v' targetpop2 [pw=perwt_wt2] if  ever_treated_migpuma==0 , nocons 
-    local m3 = _b[targetpop]*/
+    local m3 = _b[targetpop]
 
     * PLACEBO
     * Ever exposed
@@ -123,8 +123,7 @@ foreach v in exp_any_migpuma move_any move_migpuma move_state age r_white r_blac
     qui reg `v' placebo1 [pw=perwt_wt2] if  ever_treated_migpuma==0 , nocons 
     local m6 = _b[placebo1]
 
-    //mat sumstat = nullmat(sumstat) \ (`m1', `m2', `m3',`m4', `m5', `m6'  )
-    mat sumstat = nullmat(sumstat) \ (`m4', `m5', `m6'  )
+    mat sumstat = nullmat(sumstat) \ (`m1', `m2', `m3',`m4', `m5', `m6'  )
 }
 
 qui count if targetpop2==1 & exp_any_migpuma==1
@@ -158,8 +157,8 @@ file write sumstat " &  &  & weighted &  &  & weighted \\" _n
 file write sumstat " & (1) & (2) & (3) & (4) & (5) & (6)  \\" _n
 file write sumstat "\midrule " _n
 
-global varnames `" "Exposure" "Any move" "Moved migpuma" "Moved state" "Age" "Race: White" "Race: Black" "Race: Asian" "High School" "Poor English" "In School" "Number of children" "Employed" "Weeks worked" "Usual weekly hours worked" "Wage income" "Owns a home" "Rent price" "Mortgage price" "Sample size" "'
-forval r = 1/20 {
+global varnames `" "Exposure" "Any move" "Moved migpuma" "Moved state" "Moved from abroad" "Age" "Race: White" "Race: Black" "Race: Asian" "High School" "Poor English" "In School" "Number of children" "Employed" "Weeks worked" "Usual weekly hours worked" "Wage income" "Owns a home" "Rent price" "Mortgage price" "Sample size" "'
+forval r = 1/21 {
 	local varname : word `r' of $varnames
 	file write sumstat " `varname' "
 	di "Writing row `r'"
