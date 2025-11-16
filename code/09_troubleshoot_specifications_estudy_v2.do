@@ -33,7 +33,7 @@ foreach i in 2 3 5 6 8 9 {
     drop if puma== 77777 //louisiana katrina
 
     * define propensity weights
-    merge m:1 statefip current_migpuma  using  "$oi/troubleshoot/propensity_weights2013migpuma_t`i'" , nogen keep(1 3) keepusing(ever_treated_migpuma phat wt)
+    merge m:1 statefip current_migpuma  using  "$oi/troubleshoot/propensity_weights2013migpuma_t`i'" , nogen keep(3) keepusing(ever_treated_migpuma phat wt)
     gen perwt_wt = perwt*wt
     
     * drop 17 migpumas that lost treatment at some point 
@@ -108,7 +108,7 @@ foreach i in 2 3 5 6 8 9 {
     drop if puma== 77777 //louisiana katrina
 
     * define propensity weights
-    merge m:1 statefip current_migpuma  using  "$oi/troubleshoot/propensity_weights2013migpuma_t`i'" , nogen keep(1 3) keepusing(ever_treated_migpuma phat wt)
+    merge m:1 statefip current_migpuma  using  "$oi/troubleshoot/propensity_weights2013migpuma_t`i'" , nogen keep(3) keepusing(ever_treated_migpuma phat wt)
     gen perwt_wt = perwt*wt
     
     * drop 17 migpumas that lost treatment at some point 
@@ -198,7 +198,7 @@ foreach i in 2 3 5 6 8 9 {
     keep if year >= 2013
     * define propensity weights
     keep if !(ever_lost_exp_migpuma==1 | always_treated_migpuma==1)
-    merge m:1 statefip current_migpuma  using  "$oi/troubleshoot/propensity_weights2013migpuma_t`i'" , nogen keep(1 3) keepusing(ever_treated_migpuma phat wt)
+    merge m:1 statefip current_migpuma  using  "$oi/troubleshoot/propensity_weights2013migpuma_t`i'" , nogen keep(3) keepusing(ever_treated_migpuma phat wt)
     gen perwt_wt = perwt*wt
 
     /* restrictions to remember
@@ -299,7 +299,7 @@ foreach i in 2 3 5 6 8 9 {
     keep if year >= 2013
     * define propensity weights
     drop if always_treated_migpuma==1
-    merge m:1 statefip current_migpuma  using  "$oi/troubleshoot/propensity_weights2013migpuma_t`i'" , nogen keep(1 3) keepusing(ever_treated_migpuma phat wt)
+    merge m:1 statefip current_migpuma  using  "$oi/troubleshoot/propensity_weights2013migpuma_t`i'" , nogen keep(3) keepusing(ever_treated_migpuma phat wt)
     gen perwt_wt = perwt*wt
 
     /* restrictions to remember
@@ -390,7 +390,7 @@ drop if puma== 77777 //louisiana katrina
 drop if always_treated_migpuma==1
 
 * define propensity weights
-merge m:1 statefip current_migpuma  using  "$oi/troubleshoot/propensity_weights2013migpuma_t`i'" , nogen keep(1 3) keepusing(ever_treated_migpuma phat wt)
+merge m:1 statefip current_migpuma  using  "$oi/troubleshoot/propensity_weights2013migpuma_t`i'" , nogen keep(3) keepusing(ever_treated_migpuma phat wt)
 gen perwt_wt = perwt*wt
 
 * obtain the prop score weighted vsersion
