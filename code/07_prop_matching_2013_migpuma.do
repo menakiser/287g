@@ -14,7 +14,7 @@ global oo "$wd/output/"
 
 
 ************* FOR CURRENT MIGPUMA
-forval i = 1/9 {
+foreach i in 1/9 {
 	cap log close 
 	log using "$oo/logs/prop_matching2013migpuma_t`i'.pdf", replace
 	* import ACS data 
@@ -22,11 +22,17 @@ forval i = 1/9 {
 
 	*define affected population (presumably undocumented) as male, low-skill (High School or less), Hispanic, foreign-born, noncitizens of ages 18-39, and
 	keep if year >= 2013
+	* drop pumas that lost treatment and those always treated, keeoing only never treated and those that gained exposure
+    drop if always_treated_migpuma==1
+
 	* create county variables that may predict exposure
 	gen red_state = inlist(statefip, 1, 2, 4, 5, 13, 16, 20, 21, 22, 28, 29, 30, 31, 38, 40, 45, 46, 47, 48, 49, 54, 56) //https://www.worldatlas.com/articles/states-that-have-voted-republican-in-the-most-consecutive-u-s-presidential-elections.html
 	gen total_pop = age>=18 & age<=65
+	cap drop ever_treated_migpuma
 	bys statefip current_migpuma: egen ever_treated_migpuma = max( exp_any_migpuma>0)
 	bys statefip: egen ever_treated_state = max( exp_any_state>0)
+	bys statefip : egen ever_treated_migpuma_st = max( exp_any_migpuma>0)
+	drop if ever_treated_migpuma_st==0 & ever_treated_state==0
 	keep if year == 2013
 	gen ishispanic = hispan!=0 & hispan!=2 //hispanic origin of any kind excluding PR
 	gen istexas = statefip==48
@@ -48,7 +54,7 @@ forval i = 1/9 {
 
 	/* weights to get everyone to look like treated */
 	sum phat
-	gen wt = phat if ever_treated_migpuma==1
+	gen wt = 1 if ever_treated_migpuma==1
 	replace wt=phat/(1-phat) if ever_treated_migpuma==0
 
 	/* graph the propensity score */
@@ -80,7 +86,7 @@ forval i = 1/9 {
 
 
 
-************* BY CURRENT MIGPUMA AND YEAR
+/************* BY CURRENT MIGPUMA AND YEAR
 
 cap log close 
 log using "$oo/logs/prop_matching2013migpumayear_t1.pdf", replace
@@ -93,6 +99,7 @@ drop if puma==77777
 * create county variables that may predict exposure
 gen red_state = inlist(statefip, 1, 2, 4, 5, 13, 16, 20, 21, 22, 28, 29, 30, 31, 38, 40, 45, 46, 47, 48, 49, 54, 56) //https://www.worldatlas.com/articles/states-that-have-voted-republican-in-the-most-consecutive-u-s-presidential-elections.html
 gen total_pop = age>=18 & age<=65
+cap drop ever_treated_migpuma
 bys statefip current_migpuma: egen ever_treated_migpuma = max( exp_any_migpuma>0)
 bys statefip: egen ever_treated_state = max( exp_any_state>0)
 //keep if year == 2013
@@ -114,7 +121,7 @@ predict phat
 
 /* weights to get everyone to look like treated */
 sum phat
-gen wt = phat if ever_treated_migpuma==1
+gen wt = 1 if ever_treated_migpuma==1
 replace wt=phat/(1-phat) if ever_treated_migpuma==0
 
 /* graph the propensity score */
