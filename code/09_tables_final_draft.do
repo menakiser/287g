@@ -225,7 +225,7 @@ reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(inplacebo)
 * Create table
 cap file close sumstat
 file open sumstat using "$oo/in_migration_target2.tex", write replace
-file write sumstat "\begin{tabular}{lcc|cc}" _n
+file write sumstat "\begin{tabular}{lcccc}" _n
 file write sumstat "\toprule" _n
 file write sumstat "\toprule" _n
 * Panel A
