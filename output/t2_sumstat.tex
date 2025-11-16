@@ -1,29 +1,30 @@
-\begin{tabular}{lcccccccc}
+\begin{tabular}{lccc}
 \toprule
 \toprule
- & & & & & \multicolumn{4}{c}{Propensity score weighting} \\
- & \multicolumn{2}{c}{Targeted population} & \multicolumn{2}{c}{Placebo} & \multicolumn{2}{c}{Targeted population} & \multicolumn{2}{c}{Placebo}  \\
- & Exposure=0 & Exposure=1 & Exposure=0 & Exposure=1 & Exposure=0 & Exposure=1 & Exposure=0 & Exposure=1 \\
- & (1) & (2) & (3) & (4) & (5) & (6) & (7) & (8) \\
+ & Exposed & \multicolumn{2}{c}{Never Exposed} \\
+ &  &  & Propensity weighted \\
+ & (1) & (2) & (3)   \\
 \midrule 
- Male  & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & 1.00\\
- Age  & 26.02 & 25.89 & 24.39 & 24.06 & 26.38 & 25.82 & 24.53 & 24.12\\
- Exposure  & 0.00 & 1.00 & 0.00 & 1.00 & 0.00 & 1.00 & 0.00 & 1.00\\
- High School  & 0.44 & 0.43 & 0.74 & 0.74 & 0.48 & 0.42 & 0.74 & 0.74\\
- Any move  & 0.26 & 0.30 & 0.16 & 0.15 & 0.23 & 0.29 & 0.14 & 0.14\\
- Moved migpuma  & 0.14 & 0.14 & 0.05 & 0.04 & 0.12 & 0.13 & 0.04 & 0.03\\
- Moved state  & 0.11 & 0.12 & 0.02 & 0.02 & 0.10 & 0.11 & 0.02 & 0.01\\
- Married  & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00\\
- Never married  & 0.95 & 0.93 & 0.95 & 0.96 & 0.94 & 0.93 & 0.95 & 0.96\\
- Number of children  & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00\\
- Employed  & 0.86 & 0.87 & 0.60 & 0.62 & 0.86 & 0.86 & 0.60 & 0.61\\
- Weeks worked  & 41.10 & 43.10 & 32.52 & 34.50 & 43.19 & 43.00 & 32.70 & 33.79\\
- Usual weekly hours worked  & 36.79 & 35.91 & 25.48 & 25.72 & 35.87 & 35.24 & 25.21 & 25.31\\
- Wage income  & 21,290.30 & 20,362.75 & 20,660.92 & 20,098.13 & 21,548.41 & 19,768.17 & 21,161.90 & 19,865.32\\
- Owns a home  & 0.18 & 0.15 & 0.50 & 0.50 & 0.17 & 0.14 & 0.52 & 0.50\\
- Rent price  & 887.42 & 833.32 & 936.61 & 1,000.08 & 968.52 & 838.27 & 1,007.99 & 1,018.78\\
- Mortgage price  & 647.60 & 636.45 & 856.64 & 915.01 & 709.68 & 689.64 & 885.71 & 943.36\\
- Sample size  & 6,015.00 & 1,716.00 & 95,563.00 & 28,676.00 & 6,015.00 & 1,716.00 & 95,563.00 & 28,676.00\\
+ Exposure  & 0.42 & 0.00 & 0.00\\
+ Any move  & 0.28 & 0.26 & 0.27\\
+ Moved migpuma  & 0.12 & 0.13 & 0.13\\
+ Moved state  & 0.10 & 0.09 & 0.10\\
+ Age  & 26.31 & 26.14 & 26.15\\
+ Race: White  & 0.64 & 0.53 & 0.63\\
+ Race: Black  & 0.01 & 0.02 & 0.01\\
+ Race: Asian  & 0.00 & 0.00 & 0.00\\
+ High School  & 0.47 & 0.45 & 0.47\\
+ Poor English  & 0.69 & 0.67 & 0.66\\
+ In School  & 0.09 & 0.08 & 0.09\\
+ Number of children  & 0.21 & 0.21 & 0.21\\
+ Employed  & 0.84 & 0.84 & 0.83\\
+ Weeks worked  & 40.01 & 41.41 & 42.00\\
+ Usual weekly hours worked  & 35.19 & 35.29 & 34.68\\
+ Wage income  & 21,500.92 & 21,877.51 & 21,859.27\\
+ Owns a home  & 0.16 & 0.15 & 0.19\\
+ Rent price  & 1,008.73 & 1,040.50 & 1,046.92\\
+ Mortgage price  & 872.33 & 916.56 & 820.27\\
+ Sample size  & 2,509.00 & 11,489.00 & 11,489.00\\
 \bottomrule
 \bottomrule
 \end{tabular}

@@ -244,7 +244,7 @@ egen group_id1_migpuma = group(prev_geoid_migpuma prev_year)
 **************************************************
 
 * drop years and puma's we don't need
-keep if year>=2013
+keep if year>=2012
 drop if puma==77777
 
 /*
@@ -283,6 +283,16 @@ foreach v in prev_lost_treatment_migpuma prev_ever_treated_migpuma prev_year_los
 	replace `v' = 0 if mi(`v')
 }
 */
+
+
+* Create covariates
+gen r_white = race==1
+gen r_black = race==2
+gen r_asian = inlist(race, 4, 6)
+gen in_school = school==2
+gen no_english = inlist(speakeng, 1, 6)
+
+
 
 compress 
 save "$oi/working_acs", replace

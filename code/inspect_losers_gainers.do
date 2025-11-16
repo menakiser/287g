@@ -15,7 +15,7 @@ global oi "$wd/data/int"
 
 use "$oi/working_acs" , clear
 * drop years and puma's we don't need
-keep if year>=2013
+keep if year>=2012
 drop if puma==77777
 
 keep year statefip current_migpuma exp_any_migpuma

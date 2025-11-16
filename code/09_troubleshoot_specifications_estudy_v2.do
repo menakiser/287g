@@ -11,9 +11,9 @@ global or "$wd/data/raw"
 global oi "$wd/data/int"
 global oo "$wd/output/"
 
-global covars "exp_any_state age i.race i.race i.hcovany i.school" 
-global invars "exp_any_state"
-global outvars "prev_exp_any_state"
+global covars "age r_white r_black r_asian high_school in_school no_english ownhome"
+global invars "exp_any_state " //SC_any
+global outvars "prev_exp_any_state " //prev_SC_any
 
 *** focusing on target population of single and no kids, hispanic and mexican 
 * 2 3 5 6 8 9
@@ -312,7 +312,7 @@ foreach i in 2 3 5 6 8 9 {
     di in red "IN migration: Target population `i' WITH weights "
     **** WITH WEIGHT
     * base no controls or state exposure
-    reghdfe move_migpuma exp_any_migpuma  [pw=perwt_wt]  if targetpop`i'==1 & year>=2013 & , vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+    reghdfe move_migpuma exp_any_migpuma  [pw=perwt_wt]  if targetpop`i'==1 & year>=2013  , vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
     reg_to_mat, depvar(move_migpuma ) indvars(exp_any_migpuma $invars) mat(in_nocontrols_wwt)
 
     * with controls and state exposure
@@ -438,19 +438,20 @@ graph export "$oo/move_means/move_migpuma_targetpop`i'_wwt.pdf", replace
 
 
 
-/*
+
 /**************************************************************
 troubleshoot other stuff
 **************************************************************/
 
 
 foreach i in 2 3 5 6 8 9 {
+    local i = 5
     di in red "Processing target population `i' "
 
     use "$oi/working_acs", clear 
     * using county level vars
 
-    keep if year >= 2013
+    keep if year >= 2012
     drop if always_treated_migpuma==1
     * define propensity weights
     merge m:1 statefip current_migpuma  using  "$oi/troubleshoot/propensity_weights2013migpuma_t`i'" , nogen keep(1 3) keepusing(ever_treated_migpuma phat wt)
@@ -467,109 +468,21 @@ foreach i in 2 3 5 6 8 9 {
 
     di in red "IN migration: Target population `i' NO weights "
     * no controls
-    reghdfe move_migpuma exp_any_migpuma  if targetpop`i'==1 & year>=2013 , vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-    reghdfe move_migpuma exp_any_migpuma  [pw=perwt_wt]  if targetpop`i'==1 & year>=2013, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+    reghdfe move_migpuma exp_any_migpuma SC if targetpop`i'==1 & year>=2012 , vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+
+    reghdfe move_migpuma exp_any_migpuma SC [pw=perwt_wt]  if targetpop`i'==1 & year>=2012, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
     * with controls
-    reghdfe move_migpuma exp_any_migpuma $covars if targetpop`i'==1 & year>=2013, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-    reghdfe move_migpuma exp_any_migpuma $covars [pw=perwt_wt] if targetpop`i'==1 & year>=2013, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+    reghdfe move_migpuma exp_any_migpuma $covars if targetpop`i'==1 & year>=2012, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+    reghdfe move_migpuma exp_any_migpuma $covars  [pw=perwt_wt] if targetpop`i'==1 & year>=2012, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
 
-    * no controls
-    reghdfe move_migpuma exp_any_migpuma  if targetpop`i'==1 & year>=2013 & !(year>=lost_exp_year & ever_lost_exp_migpuma==1), vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-    reghdfe move_migpuma exp_any_migpuma  [pw=perwt_wt]  if targetpop`i'==1 & year>=2013 & !(year>=lost_exp_year & ever_lost_exp_migpuma==1), vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+    reghdfe move_migpuma exp_any_migpuma $covars $invars [pw=perwt_wt] if targetpop`i'==1 & year>=2012, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
 
-    reghdfe move_migpuma exp_any_migpuma  if targetpop`i'==1 & year>=2013 & ever_lost_exp_migpuma==0, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-    reghdfe move_migpuma exp_any_migpuma  [pw=perwt_wt]  if targetpop`i'==1 & year>=2013 & ever_lost_exp_migpuma==0, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-
-
-
-    * with controls
-    reghdfe move_migpuma exp_any_migpuma $covars if targetpop`i'==1 & year>=2013 & !(year>=lost_exp_year & ever_lost_exp_migpuma==1), vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-    reghdfe move_migpuma exp_any_migpuma $covars [pw=perwt_wt] if targetpop`i'==1 & year>=2013 & !(year>=lost_exp_year & ever_lost_exp_migpuma==1), vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-
-    reghdfe move_migpuma exp_any_migpuma $covars if targetpop`i'==1 & year>=2013 & ever_lost_exp_migpuma==0, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-    reghdfe move_migpuma exp_any_migpuma $covars [pw=perwt_wt] if targetpop`i'==1 & year>=2013 & ever_lost_exp_migpuma==0, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-
-    * no controls
-    reghdfe move_migpuma exp_any_migpuma  if targetpop`i'==1 & year>=2013 & ever_lost_exp_migpuma==1, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-    reghdfe move_migpuma exp_any_migpuma  [pw=perwt_wt]  if targetpop`i'==1 & year>=2013 & ever_lost_exp_migpuma==1, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-
-
-    * with weights
-    reghdfe move_migpuma exp_any_migpuma $covars if targetpop`i'==1 & year>=2013 & ever_lost_exp_migpuma==1, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-    reghdfe move_migpuma exp_any_migpuma $covars [pw=perwt_wt] if targetpop`i'==1 & year>=2013 & ever_lost_exp_migpuma==1, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-
-
-    di in red "IN migration: Target population `i' WITH weights "
-    local i = 2
-    reghdfe move_migpuma exp_any_migpuma  [pw=perwt_wt]  if targetpop`i'==1 & year>=2013 & !(ever_lost_exp_migpuma==1 | always_treated_migpuma==1), vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-    **** WITH WEIGHT
-    * base no controls or state exposure. Only those gaining exposure
-    reghdfe move_migpuma exp_any_migpuma  [pw=perwt_wt]  if targetpop`i'==1 & year>=2013 & !(ever_lost_exp_migpuma==1 | always_treated_migpuma==1), vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
     
 
-    * base no controls or state exposure. Only those loosing exposure
-    reghdfe move_migpuma exp_any_migpuma  [pw=perwt_wt]  if targetpop`i'==1 & year>=2013 & !(ever_gain_exp_migpuma==1 | always_treated_migpuma==1), vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-    
-
-    * base no controls or state exposure. Only those always treated
-    local i = 2
-    reghdfe move_migpuma exp_any_migpuma  [pw=perwt_wt]  if targetpop`i'==1 & year>=2013 & ever_lost_exp_migpuma!=1  & ever_gain_exp_migpuma!=1, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-    reg_to_mat, depvar(move_migpuma ) indvars(exp_any_migpuma $invars) mat(in_nocontrols_wwt)
+    reghdfe move_migpuma exp_any_migpuma age r_white r_black r_asian in_school no_english ownhome $invars [pw=perwt_wt] if targetpop`i'==1 & year>=2012, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
 
 
+    * restricting to counties that only gain
+    reghdfe move_migpuma exp_any_migpuma $covars [pw=perwt_wt] if targetpop`i'==1 & year>=2012 & ever_lost_exp_migpuma!=1, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
 
-    * with controls and state exposure
-    reghdfe move_migpuma exp_any_migpuma $invars  $covars [pw=perwt_wt]  if targetpop`i'==1  & year>=2013  & !(ever_lost_exp_migpuma==1 | always_treated_migpuma==1), vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-    reg_to_mat, depvar(move_migpuma) indvars(exp_any_migpuma $invars) mat(in_wcontrols_wwt)
-
-    di in red "IN migration: Target population `i' NO weights "
-    **** NO WEIGHT
-    * base no controls or state exposure
-    reghdfe move_migpuma exp_any_migpuma  if targetpop`i'==1 & year>=2013  & !(ever_lost_exp_migpuma==1 | always_treated_migpuma==1), vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-    reg_to_mat, depvar(move_migpuma ) indvars(exp_any_migpuma $invars) mat(in_nocontrols_nowt)
-
-    * with controls and state exposure
-    reghdfe move_migpuma exp_any_migpuma $invars  $covars  if targetpop`i'==1  & year>=2013  & !(ever_lost_exp_migpuma==1 | always_treated_migpuma==1), vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-    reg_to_mat, depvar(move_migpuma) indvars(exp_any_migpuma $invars) mat(in_wcontrols_nowt)
-
-
-    /*/**************************************************************
-    OUT migration
-    **************************************************************/
-    di in red "OUT migration: Target population `i' WITH weights "
-    **** WITH WEIGHT
-    * base no controls or state exposure
-    reghdfe move_migpuma prev_exp_any_migpuma [pw=perwt_wt]  if targetpop`i'==1 & year>=2014  & !(prev_ever_lost_exp_migpuma==1 | prev_always_treated_migpuma==1) , vce(cluster group_id1_migpuma) absorb(prev_geoid_migpuma year)
-    reg_to_mat, depvar(move_migpuma ) indvars(prev_exp_any_migpuma $outvars) mat(out_nocontrols_wwt)
-
-    * with controls and state exposure
-    reghdfe move_migpuma prev_exp_any_migpuma $outvars  $covars [pw=perwt_wt]  if targetpop`i'==1  & year>=2014 & !(prev_ever_lost_exp_migpuma==1 | prev_always_treated_migpuma==1), vce(cluster group_id1_migpuma) absorb(prev_geoid_migpuma year)
-    reg_to_mat, depvar(move_migpuma) indvars(prev_exp_any_migpuma $outvars) mat(out_wcontrols_wwt)
-
-    di in red "OUT migration: Target population `i' NO weights "
-    **** NO WEIGHT
-    * base no controls or state exposure
-    reghdfe move_migpuma prev_exp_any_migpuma  if targetpop`i'==1 & year>=2014 & !(prev_ever_lost_exp_migpuma==1 | prev_always_treated_migpuma==1), vce(cluster group_id1_migpuma) absorb(prev_geoid_migpuma year)
-    reg_to_mat, depvar(move_migpuma ) indvars(prev_exp_any_migpuma $outvars) mat(out_nocontrols_nowt)
-
-    * with controls and state exposure
-    reghdfe move_migpuma prev_exp_any_migpuma $outvars  $covars  if targetpop`i'==1  & year>=2014 & !(prev_ever_lost_exp_migpuma==1 | prev_always_treated_migpuma==1), vce(cluster group_id1_migpuma) absorb(prev_geoid_migpuma year)
-    reg_to_mat, depvar(move_migpuma) indvars(prev_exp_any_migpuma $outvars) mat(out_wcontrols_nowt)*/ 
-
-}
-
-
-/**** Consolidate matrices
-mat targetpop_in_wwt = in_nocontrols_wwt , in_wcontrols_wwt
-mat targetpop_in_nowt = in_nocontrols_nowt , in_wcontrols_nowt
-
-mat targetpop_out_wwt = out_nocontrols_wwt , out_wcontrols_wwt
-mat targetpop_out_nowt = out_nocontrols_nowt , out_wcontrols_nowt
-
-
-**** Input matrices in spreadsheet
-fill_tables, mat(targetpop_in_wwt) save_txt("$oo/estudy_specifications") save_excel("$oo/estudy_specifications") 
-fill_tables, mat(targetpop_in_nowt) save_txt("$oo/estudy_specifications") save_excel("$oo/estudy_specifications") 
-
-fill_tables, mat(targetpop_out_wwt) save_txt("$oo/estudy_specifications") save_excel("$oo/estudy_specifications") 
-fill_tables, mat(targetpop_out_nowt) save_txt("$oo/estudy_specifications") save_excel("$oo/estudy_specifications") 
+    reghdfe move_migpuma exp_any_migpuma $covars i.educ i.speakeng i.ownhome [pw=perwt_wt] if targetpop`i'==1 & year>=2012 & ever_lost_exp_migpuma!=1, vce(cluster  group_id_migpuma) absorb(geoid_migpuma year)
