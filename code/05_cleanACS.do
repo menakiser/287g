@@ -239,6 +239,50 @@ replace prev_geoid_migpuma = geoid_migpuma if move_migpuma==0
 egen group_id_migpuma = group(geoid_migpuma year) 
 egen group_id1_migpuma = group(prev_geoid_migpuma prev_year)
 
+**************************************************
+* Identify migpumas that lose treatment
+**************************************************
+
+* drop years and puma's we don't need
+keep if year>=2013
+drop if puma==77777
+
+/*
+preserve
+bys statefip current_migpuma: egen ever_treated_migpuma = max( exp_any_migpuma>0)
+collapse (mean) exp_any_migpuma ever_treated_migpuma, by(statefip current_migpuma year)
+gen lost_treatment_migpuma = 0
+bys statefip current_migpuma (year): replace lost_treatment_migpuma = 1 if ever_treated_migpuma==1 & exp_any_migpuma[_n-1]==1 & exp_any_migpuma==0
+bys statefip current_migpuma year: ereplace lost_treatment_migpuma = max(lost_treatment_migpuma)
+
+* get year of treatment 
+gen event_year_migpuma = year if exp_any_migpuma==1
+* Get the year of loss
+bys statefip current_migpuma (year): egen year_lost_migpuma = min(cond(lost_treatment_migpuma==1, year, .))
+
+* transform to state and migpuma
+collapse (max) lost_treatment_migpuma ever_treated_migpuma year_lost_migpuma (sum) treat_length_migpuma = exp_any_migpuma (min) event_year_migpuma, by(statefip current_migpuma) 
+* save for migpuma
+tempfile losttreat 
+save `losttreat'
+
+* save for previous migpuma
+foreach v in  lost_treatment_migpuma ever_treated_migpuma year_lost_migpuma treat_length_migpuma statefip event_year_migpuma {
+	rename `v' prev_`v'
+}
+rename current_migpuma prev_migpuma
+tempfile prev_losttreat 
+save `prev_losttreat'
+
+restore 
+
+merge m:1 statefip current_migpuma using `losttreat', nogen keep(1 3)
+merge m:1 prev_statefip prev_migpuma using `prev_losttreat', nogen keep(1 3) //missing if living abroad
+
+foreach v in prev_lost_treatment_migpuma prev_ever_treated_migpuma prev_year_lost_migpuma prev_treat_length_migpuma prev_event_year_migpuma {
+	replace `v' = 0 if mi(`v')
+}
+*/
 
 compress 
 save "$oi/working_acs", replace
