@@ -151,6 +151,7 @@ file write sumstat "\begin{tabular}{lccc|ccc}" _n
 file write sumstat "\toprule" _n
 file write sumstat "\toprule" _n
 file write sumstat " & \multicolumn{3}{c|}{Target Population} & \multicolumn{3}{c}{Placebo} \\" _n
+file write sumstat "\midrule " _n
 file write sumstat " & Exposed & \multicolumn{2}{c|}{Never Exposed} & Exposed & \multicolumn{2}{c}{Never Exposed} \\" _n
 file write sumstat " &  &  & Propensity &  &  & Propensity \\" _n
 file write sumstat " &  &  & weighted &  &  & weighted \\" _n
