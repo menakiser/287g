@@ -872,8 +872,9 @@ file write sumstat " & (1) & (2) & (3)  \\" _n
 file write sumstat "\midrule " _n
 
 global varnames `" "Age" "Race: White" "Race: Black" "Race: Asian" "High School" "Poor English" "In School" "Number of children" "Employed" "Weeks worked" "Usual weekly hours worked" "Wage income" "Owns a home" "Rent price" "Mortgage price" "'
+local i = 1
 forval r = 1/15 {
-	local varname : word `r' of $varnames
+	local varname : word `i' of $varnames
 	file write sumstat " `varname' "
 	di "Writing row `r'"
     * mean
@@ -891,11 +892,12 @@ forval r = 1/15 {
         file write sumstat " & (`a')"
     }
 	file write sumstat "\\" _n 
-	local a1 = string(sumstat[16,1], "%12.0fc" )
-	local a2 = string(sumstat[16,2], "%12.0fc" )
-	local a3 = string(sumstat[16,3], "%12.0fc" )
-    file write sumstat "Sample size & `a1' & `a2' & `a3' \\" _n
+	local++ i
 }
+local a1 = string(sumstat[16,1], "%12.0fc" )
+local a2 = string(sumstat[16,2], "%12.0fc" )
+local a3 = string(sumstat[16,3], "%12.0fc" )
+file write sumstat "Sample size & `a1' & `a2' & `a3' \\" _n
 file write sumstat "\bottomrule" _n
 file write sumstat "\bottomrule" _n
 file write sumstat "\end{tabular}"
