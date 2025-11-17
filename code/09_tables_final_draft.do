@@ -866,8 +866,8 @@ file open sumstat using "$oo/balancetable.tex", write replace
 file write sumstat "\begin{tabular}{lccc}" _n
 file write sumstat "\toprule" _n
 file write sumstat "\toprule" _n
-file write sumstat " &  & Never exposed & Never exposed \\" _n
-file write sumstat " & Exposed & unweighted & weighted   \\" _n
+file write sumstat " &  & Difference & Difference \\" _n
+file write sumstat " & Treated & (unweighted) & (weighted)   \\" _n
 file write sumstat " & (1) & (2) & (3)  \\" _n
 file write sumstat "\midrule " _n
  
