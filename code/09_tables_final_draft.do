@@ -510,7 +510,7 @@ file write sumstat "\toprule" _n
 * Panel A
 file write sumstat " \multicolumn{9}{c}{Panel A: Target population}  \\" _n
 file write sumstat "\midrule " _n
-file write sumstat " & \multicolumn{4}{c|}{Only gainers} & \multicolumn{4}{c}{Only loosers}  \\" _n
+file write sumstat " & \multicolumn{4}{c|}{Only gainers} & \multicolumn{4}{c}{Only losers}  \\" _n
 file write sumstat " & & & \multicolumn{2}{c|}{Propensity weighted} & & & \multicolumn{2}{c}{Propensity weighted}  \\" _n
 file write sumstat " & (1) & (2)  & (3) & (4) & (5) & (6)  & (7) & (8)  \\" _n
 file write sumstat "\midrule " _n
@@ -542,7 +542,7 @@ file write sumstat "\midrule" _n
 * out migration
 file write sumstat " \multicolumn{9}{c}{Panel B: Placebo}  \\" _n
 file write sumstat "\midrule " _n
-file write sumstat " & \multicolumn{4}{c|}{Only gainers} & \multicolumn{4}{c}{Only loosers}  \\" _n
+file write sumstat " & \multicolumn{4}{c|}{Only gainers} & \multicolumn{4}{c}{Only losers}  \\" _n
 file write sumstat " & & & \multicolumn{2}{c|}{Propensity weighted} & & & \multicolumn{2}{c}{Propensity weighted}  \\" _n
 file write sumstat " & (9) & (10) & (11) & (12) & (13) & (14) & (15) & (16)  \\" _n
 file write sumstat "\midrule " _n
@@ -559,7 +559,6 @@ forval c = 1/8  {
 file write sumstat " `varname' & `b1'`stars_abs1' & `b2'`stars_abs2' & `b3'`stars_abs3' & `b4'`stars_abs4' "  
 file write sumstat " & `b5'`stars_abs5' & `b6'`stars_abs6' & `b7'`stars_abs7' & `b8'`stars_abs8'  \\" _n 
 file write sumstat "  & (`sd1') & (`sd2') & (`sd3') & (`sd4')  & (`sd5') & (`sd6') & (`sd7') & (`sd8') \\" _n 
-file write sumstat "\\" _n 
 file write sumstat " Controls &  & X &  & X &  & X &  & X  \\" _n 
 file write sumstat " R-2 & `r1' & `r2' & `r3' & `r4' & `r5' & `r6' & `r7' & `r8'  \\" _n 
 file write sumstat "Sample Size "
