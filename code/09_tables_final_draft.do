@@ -279,7 +279,7 @@ file write sumstat " `varname' & `b1'`stars_abs1' & `b2'`stars_abs2' & `b3'`star
 file write sumstat "  & (`sd1') & (`sd2') & (`sd3') & (`sd4') \\" _n 
 file write sumstat "\\" _n 
 file write sumstat " Controls &  & X &  & X \\" _n 
-file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4'  \\" _n 
+file write sumstat " R-2 & `r1' & `r2' & `r3' & `r4'  \\" _n 
 file write sumstat "Sample Size "
 forval i = 1/4 {
 	local n`i' = string(inplacebo[6,`i'], "%12.0fc" )
@@ -399,13 +399,160 @@ file write sumstat " `varname' & `b1'`stars_abs1' & `b2'`stars_abs2' & `b3'`star
 file write sumstat "  & (`sd1') & (`sd2') & (`sd3') & (`sd4') \\" _n 
 file write sumstat "\\" _n 
 file write sumstat " Controls &  & X &  & X \\" _n 
-file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4'  \\" _n 
+file write sumstat " R-2 & `r1' & `r2' & `r3' & `r4'  \\" _n 
 file write sumstat "Sample Size "
 forval i = 1/4 {
 	local n`i' = string(outplacebo[6,`i'], "%12.0fc" )
 	file write sumstat " & `n`i'' "
 }
 file write sumstat "\\" _n 
+file write sumstat "\bottomrule" _n
+file write sumstat "\bottomrule" _n
+
+file write sumstat "\end{tabular}"
+file close sumstat
+
+
+
+/**************************************************************
+Heterogeneity
+**************************************************************/
+global covars "age r_white r_black r_asian hs in_school no_english ownhome"
+global invars "exp_any_state " //SC_any
+global outvars "prev_exp_any_state " //prev_SC_any
+
+use "$oi/working_acs", clear 
+keep if year >= 2012
+drop if always_treated_migpuma==1
+* define propensity weights for target population 2
+merge m:1 statefip current_migpuma  using  "$oi/troubleshoot/propensity_weights2013migpuma_t2" , nogen keep(3) keepusing( phat wt)
+rename (phat wt) (phat2 wt2)
+gen perwt_wt2 = perwt*wt
+drop if mi(perwt_wt2)
+
+**** IN MIGRATION FOR TARGET POPULATION
+foreach i in 2 5 {
+    foreach v in move_migpuma move_state move_abroad {
+        di in red "Processing `v', target pop `i' "
+        cap mat drop `v'_target`i'
+        * with propensity weights
+        * baseline
+        reghdfe `v' exp_any_migpuma $covars $invars [pw=perwt_wt]  if targetpop`i'==1 , vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+        reg_to_mat, depvar( `v' ) indvars( exp_any_migpuma ) mat(`v'_target`i')
+
+        reghdfe `v' exp_any_migpuma $covars $invars [pw=perwt_wt]  if targetpop`i'==1 & no_english==1, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+        reg_to_mat, depvar( `v' ) indvars( exp_any_migpuma ) mat(`v'_target`i')
+
+        reghdfe `v' exp_any_migpuma $covars $invars [pw=perwt_wt]  if targetpop`i'==1 & no_english==0, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+        reg_to_mat, depvar( `v' ) indvars( exp_any_migpuma ) mat(`v'_target`i')
+
+        reghdfe `v' exp_any_migpuma $covars $invars [pw=perwt_wt]  if targetpop`i'==1 & prev_exp_any_migpuma==1, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+        reg_to_mat, depvar( `v' ) indvars( exp_any_migpuma ) mat(`v'_target`i')
+
+        reghdfe `v' exp_any_migpuma $covars $invars [pw=perwt_wt]  if targetpop`i'==1 & prev_exp_any_migpuma==0, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+        reg_to_mat, depvar( `v' ) indvars( exp_any_migpuma ) mat(`v'_target`i')
+    }
+}
+
+* Create table
+cap file close sumstat
+file open sumstat using "$oo/move_het.tex", write replace
+file write sumstat "\begin{tabular}{lcccccc}" _n
+file write sumstat "\toprule" _n
+file write sumstat "\toprule" _n
+* Panel A
+file write sumstat " \multicolumn{5}{c}{Panel A: Target population}  \\" _n
+file write sumstat "\midrule " _n
+file write sumstat " &  & &  & Previous year & Previous year   \\" _n
+file write sumstat " & Baseline & No English & Some English & exposure=1 & exposure=0  \\" _n
+file write sumstat " & (1) & (2)  & (3) & (4) & (5)   \\" _n
+file write sumstat "\midrule " _n
+
+local order = 1
+global varnames `"  "Move migpuma" "Move state" "Move from abroad" "'
+foreach v in move_migpuma move_state move_abroad {
+    local varname : word `order' of $varnames
+    forval c = 1/5  {
+        local b`c' = string(`v'_target2[1,`c'], "%12.4fc" )
+        local p`c' = `v'_target2[2,`c']
+        local stars_abs`c' = cond(`p`c'' < 0.01, "***", cond(`p`c'' < 0.05, "**", cond(`p`c'' < 0.1, "*", "")))
+        local sd`c' = string(`v'_target2[3,`c'], "%12.4fc" )
+        local r`c' = string(`v'_target2[4,`c'], "%12.4fc" )
+    }
+   if "`v'"!="move_abroad" {
+        file write sumstat " `varname' & `b1'`stars_abs1' & `b2'`stars_abs2' & `b3'`stars_abs3' & `b4'`stars_abs4'  & `b5'`stars_abs5' \\" _n 
+        file write sumstat " & (`sd1') & (`sd2') & (`sd3') & (`sd4') & (`sd5')  \\" _n 
+        
+        file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4' & `r5'  \\" _n 
+        file write sumstat "Sample Size "
+        forval i = 1/5 {
+            local n`i' = string(`v'_target2[6,`i'], "%12.0fc" )
+            file write sumstat " & `n`i'' "
+        }
+    }
+    if "`v'"=="move_abroad" {
+        file write sumstat " `varname' & `b1'`stars_abs1' & `b2'`stars_abs2' & `b3'`stars_abs3' & & \\" _n 
+        file write sumstat " & (`sd1') & (`sd2') & (`sd3') & & \\" _n 
+        
+        file write sumstat " \textit{R2} & `r1' & `r2' & `r3' &  &   \\" _n 
+        file write sumstat "Sample Size "
+        forval i = 1/3 {
+            local n`i' = string(`v'_target2[6,`i'], "%12.0fc" )
+            file write sumstat " & `n`i'' "
+        }
+    }
+    local++ order
+
+        file write sumstat "\\" _n 
+}
+file write sumstat "\midrule" _n
+file write sumstat "\midrule" _n
+
+* Panel B
+file write sumstat " \multicolumn{5}{c}{Panel B: Mexican}  \\" _n
+file write sumstat "\midrule " _n
+file write sumstat " &  & &  & Previous year & Previous year   \\" _n
+file write sumstat " & Baseline & No English & Some English & exposure=1 & exposure=0  \\" _n
+file write sumstat " & (6) & (7) & (8)  & (9) & (10) \\" _n
+file write sumstat "\midrule " _n
+
+local order = 1
+global varnames `"  "Move migpuma" "Move state" "Move from abroad" "'
+foreach v in move_migpuma move_state move_abroad {
+    local varname : word `order' of $varnames
+    forval c = 1/5  {
+            local b`c' = string(`v'_target5[1,`c'], "%12.4fc" )
+            local p`c' = `v'_target5[2,`c']
+            local stars_abs`c' = cond(`p`c'' < 0.01, "***", cond(`p`c'' < 0.05, "**", cond(`p`c'' < 0.1, "*", "")))
+            local sd`c' = string(`v'_target5[3,`c'], "%12.4fc" )
+            local r`c' = string(`v'_target5[4,`c'], "%12.4fc" )
+    }
+    if "`v'"!="move_abroad" {
+        file write sumstat " `varname' & `b1'`stars_abs1' & `b2'`stars_abs2' & `b3'`stars_abs3' & `b4'`stars_abs4'  & `b5'`stars_abs5' \\" _n 
+        file write sumstat " & (`sd1') & (`sd2') & (`sd3') & (`sd4') & (`sd5')  \\" _n 
+        
+        file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4' & `r5'  \\" _n 
+        file write sumstat "Sample Size "
+        forval i = 1/5 {
+            local n`i' = string(`v'_target5[6,`i'], "%12.0fc" )
+            file write sumstat " & `n`i'' "
+        }
+    }
+    if "`v'"=="move_abroad" {
+        file write sumstat " `varname' & `b1'`stars_abs1' & `b2'`stars_abs2' & `b3'`stars_abs3' & & \\" _n 
+        file write sumstat " & (`sd1') & (`sd2') & (`sd3') & & \\" _n 
+        
+        file write sumstat " \textit{R2} & `r1' & `r2' & `r3' &  &   \\" _n 
+        file write sumstat "Sample Size "
+        forval i = 1/3 {
+            local n`i' = string(`v'_target5[6,`i'], "%12.0fc" )
+            file write sumstat " & `n`i'' "
+        }
+    }
+    local++ order
+    file write sumstat "\\" _n 
+    file write sumstat "\\" _n 
+}
 file write sumstat "\bottomrule" _n
 file write sumstat "\bottomrule" _n
 
