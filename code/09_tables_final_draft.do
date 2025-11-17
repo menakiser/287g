@@ -502,8 +502,8 @@ foreach v in move_migpuma move_state move_abroad {
         }
     }
     local++ order
-
-        file write sumstat "\\" _n 
+    file write sumstat "\\" _n 
+    file write sumstat "\\" _n 
 }
 file write sumstat "\midrule" _n
 file write sumstat "\midrule" _n
