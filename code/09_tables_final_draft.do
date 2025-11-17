@@ -528,7 +528,6 @@ forval c = 1/8  {
 file write sumstat " `varname' & `b1'`stars_abs1' & `b2'`stars_abs2' & `b3'`stars_abs3' & `b4'`stars_abs4' "  
 file write sumstat " & `b5'`stars_abs5' & `b6'`stars_abs6' & `b7'`stars_abs7' & `b8'`stars_abs8'  \\" _n 
 file write sumstat "  & (`sd1') & (`sd2') & (`sd3') & (`sd4')  & (`sd5') & (`sd6') & (`sd7') & (`sd8') \\" _n 
-file write sumstat "\\" _n 
 file write sumstat " Controls &  & X &  & X &  & X &  & X  \\" _n 
 file write sumstat " R-2 & `r1' & `r2' & `r3' & `r4' & `r5' & `r6' & `r7' & `r8'  \\" _n 
 file write sumstat "Sample Size "
@@ -568,10 +567,8 @@ forval i = 1/8 {
 	local n`i' = string(inplacebo[6,`i'], "%12.0fc" )
 	file write sumstat " & `n`i'' "
 }
-file write sumstat "\\" _n 
 file write sumstat "\bottomrule" _n
 file write sumstat "\bottomrule" _n
-
 file write sumstat "\end{tabular}"
 file close sumstat
 
