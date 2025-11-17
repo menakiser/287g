@@ -508,9 +508,9 @@ file write sumstat "\begin{tabular}{lcccc|cccc}" _n
 file write sumstat "\toprule" _n
 file write sumstat "\toprule" _n
 * Panel A
-file write sumstat " \multicolumn{5}{c}{Panel A: Target population}  \\" _n
+file write sumstat " \multicolumn{9}{c}{Panel A: Target population}  \\" _n
 file write sumstat "\midrule " _n
-file write sumstat " & \multicolumn{2}{c|}{Only gainers} & \multicolumn{2}{c}{Only loosers}  \\" _n
+file write sumstat " & \multicolumn{4}{c|}{Only gainers} & \multicolumn{4}{c}{Only loosers}  \\" _n
 file write sumstat " & & & \multicolumn{2}{c|}{Propensity weighted} & & & \multicolumn{2}{c}{Propensity weighted}  \\" _n
 file write sumstat " & (1) & (2)  & (3) & (4) & (5) & (6)  & (7) & (8)  \\" _n
 file write sumstat "\midrule " _n
@@ -541,9 +541,9 @@ file write sumstat "\midrule" _n
 file write sumstat "\midrule" _n
 
 * out migration
-file write sumstat " \multicolumn{5}{c}{Panel B: Placebo}  \\" _n
+file write sumstat " \multicolumn{9}{c}{Panel B: Placebo}  \\" _n
 file write sumstat "\midrule " _n
-file write sumstat " & \multicolumn{2}{c|}{Only gainers} & \multicolumn{2}{c}{Only loosers}  \\" _n
+file write sumstat " & \multicolumn{4}{c|}{Only gainers} & \multicolumn{4}{c}{Only loosers}  \\" _n
 file write sumstat " & & & \multicolumn{2}{c|}{Propensity weighted} & & & \multicolumn{2}{c}{Propensity weighted}  \\" _n
 file write sumstat " & (9) & (10) & (11) & (12) & (13) & (14) & (15) & (16)  \\" _n
 file write sumstat "\midrule " _n
