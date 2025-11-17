@@ -414,6 +414,171 @@ file close sumstat
 
 
 
+
+/**************************************************************
+Losers vs gainers
+**************************************************************/
+global covars "age r_white r_black r_asian hs in_school no_english ownhome"
+global invars "exp_any_state " //SC_any
+global outvars "prev_exp_any_state " //prev_SC_any
+
+use "$oi/working_acs", clear 
+keep if year >= 2012
+drop if always_treated_migpuma==1
+* define propensity weights
+merge m:1 statefip current_migpuma  using  "$oi/troubleshoot/propensity_weights2013migpuma_t2" , nogen keep(3) keepusing( phat wt)
+gen perwt_wt = perwt*wt
+drop if mi(perwt_wt)
+gen placebo1 = sex==1 & lowskill==1 & hispan!=0 & born_abroad==0 & young==1  & marst>=3  //hispanic citizens born in the usa
+
+**** IN MIGRATION FOR TARGET POPULATION
+cap mat drop intarget
+* GAIINERS + NEVER TREATED
+* with simple weights
+* without controls
+reghdfe move_migpuma exp_any_migpuma  [pw=perwt]  if targetpop2==1 & ever_lost_exp_migpuma==0, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(intarget)
+* with controls 
+reghdfe move_migpuma exp_any_migpuma $covars $invars [pw=perwt]  if targetpop2==1  & ever_lost_exp_migpuma==0, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(intarget)
+* with propensity weights
+* without controls
+reghdfe move_migpuma exp_any_migpuma  [pw=perwt_wt]  if targetpop2==1  & ever_lost_exp_migpuma==0, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(intarget)
+* with controls 
+reghdfe move_migpuma exp_any_migpuma $covars $invars [pw=perwt_wt]  if targetpop2==1  & ever_lost_exp_migpuma==0, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(intarget)
+
+* LOSERS + NEVER TREATED
+* with simple weights
+* without controls
+reghdfe move_migpuma exp_any_migpuma  [pw=perwt]  if targetpop2==1 & ever_gain_exp_migpuma==0, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(intarget)
+* with controls 
+reghdfe move_migpuma exp_any_migpuma $covars $invars [pw=perwt]  if targetpop2==1  & ever_gain_exp_migpuma==0, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(intarget)
+* with propensity weights
+* without controls
+reghdfe move_migpuma exp_any_migpuma  [pw=perwt_wt]  if targetpop2==1  & ever_gain_exp_migpuma==0, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(intarget)
+* with controls 
+reghdfe move_migpuma exp_any_migpuma $covars $invars [pw=perwt_wt]  if targetpop2==1  & ever_gain_exp_migpuma==0, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(intarget)
+
+**** IN MIGRATION FOR PLACEBO POPULATION
+cap mat drop inplacebo
+** GAINERS ONLY
+* with simple weights
+* without controls
+reghdfe move_migpuma exp_any_migpuma  [pw=perwt]  if placebo1==1  & ever_lost_exp_migpuma==0, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(inplacebo)
+* with controls 
+reghdfe move_migpuma exp_any_migpuma $covars $invars [pw=perwt]  if placebo1==1  & ever_lost_exp_migpuma==0, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(inplacebo)
+* with propensity weights
+* without controls
+reghdfe move_migpuma exp_any_migpuma  [pw=perwt_wt]  if placebo1==1  & ever_lost_exp_migpuma==0, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(inplacebo)
+* with controls 
+reghdfe move_migpuma exp_any_migpuma $covars $invars [pw=perwt_wt]  if placebo1==1  & ever_lost_exp_migpuma==0, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(inplacebo)
+
+* LOOSERS ONLY 
+* with simple weights
+* without controls
+reghdfe move_migpuma exp_any_migpuma  [pw=perwt]  if placebo1==1  & ever_gain_exp_migpuma==0, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(inplacebo)
+* with controls 
+reghdfe move_migpuma exp_any_migpuma $covars $invars [pw=perwt]  if placebo1==1  & ever_gain_exp_migpuma==0, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(inplacebo)
+* with propensity weights
+* without controls
+reghdfe move_migpuma exp_any_migpuma  [pw=perwt_wt]  if placebo1==1  & ever_gain_exp_migpuma==0, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(inplacebo)
+* with controls 
+reghdfe move_migpuma exp_any_migpuma $covars $invars [pw=perwt_wt]  if placebo1==1  & ever_gain_exp_migpuma==0, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(inplacebo)
+
+
+
+* Create table
+cap file close sumstat
+file open sumstat using "$oo/in_gain_lost.tex", write replace
+file write sumstat "\begin{tabular}{lcccc|cccc}" _n
+file write sumstat "\toprule" _n
+file write sumstat "\toprule" _n
+* Panel A
+file write sumstat " \multicolumn{5}{c}{Panel A: Target population}  \\" _n
+file write sumstat "\midrule " _n
+file write sumstat " & \multicolumn{2}{c|}{Only gainers} & \multicolumn{2}{c}{Only loosers}  \\" _n
+file write sumstat " & & & \multicolumn{2}{c|}{Propensity weighted} & & & \multicolumn{2}{c}{Propensity weighted}  \\" _n
+file write sumstat " & (1) & (2)  & (3) & (4) & (5) & (6)  & (7) & (8)  \\" _n
+file write sumstat "\midrule " _n
+
+global varnames `"  "Move migpuma" "'
+
+local varname : word 1 of $varnames
+forval c = 1/8  {
+    local b`c' = string(intarget[1,`c'], "%12.4fc" )
+    local p`c' = intarget[2,`c']
+    local stars_abs`c' = cond(`p`c'' < 0.01, "***", cond(`p`c'' < 0.05, "**", cond(`p`c'' < 0.1, "*", "")))
+    local sd`c' = string(intarget[3,`c'], "%12.4fc" )
+    local r`c' = string(intarget[4,`c'], "%12.4fc" )
+}
+file write sumstat " `varname' & `b1'`stars_abs1' & `b2'`stars_abs2' & `b3'`stars_abs3' & `b4'`stars_abs4' "  
+file write sumstat " & `b5'`stars_abs5' & `b6'`stars_abs6' & `b7'`stars_abs7' & `b8'`stars_abs8'  \\" _n 
+file write sumstat "  & (`sd1') & (`sd2') & (`sd3') & (`sd4')  & (`sd5') & (`sd6') & (`sd7') & (`sd8') \\" _n 
+file write sumstat "\\" _n 
+file write sumstat " Controls &  & X &  & X &  & X &  & X  \\" _n 
+file write sumstat " R-2 & `r1' & `r2' & `r3' & `r4' & `r5' & `r6' & `r7' & `r8'  \\" _n 
+file write sumstat "Sample Size "
+forval i = 1/8 {
+	local n`i' = string(intarget[6,`i'], "%12.0fc" )
+	file write sumstat " & `n`i'' "
+}
+file write sumstat "\\" _n 
+file write sumstat "\midrule" _n
+file write sumstat "\midrule" _n
+
+* out migration
+file write sumstat " \multicolumn{5}{c}{Panel B: Placebo}  \\" _n
+file write sumstat "\midrule " _n
+file write sumstat " & \multicolumn{2}{c|}{Only gainers} & \multicolumn{2}{c}{Only loosers}  \\" _n
+file write sumstat " & & & \multicolumn{2}{c|}{Propensity weighted} & & & \multicolumn{2}{c}{Propensity weighted}  \\" _n
+file write sumstat " & (9) & (10) & (11) & (12) & (13) & (14) & (15) & (16)  \\" _n
+file write sumstat "\midrule " _n
+
+global varnames `"   "Move migpuma" "'
+local varname : word 1 of $varnames
+forval c = 1/8  {
+    local b`c' = string(inplacebo[1,`c'], "%12.4fc" )
+    local p`c' = inplacebo`i'[2,`c']
+    local stars_abs`c' = cond(`p`c'' < 0.01, "***", cond(`p`c'' < 0.05, "**", cond(`p`c'' < 0.1, "*", "")))
+    local sd`c' = string(inplacebo[3,`c'], "%12.4fc" )
+    local r`c' = string(inplacebo[4,`c'], "%12.4fc" )
+}
+file write sumstat " `varname' & `b1'`stars_abs1' & `b2'`stars_abs2' & `b3'`stars_abs3' & `b4'`stars_abs4' "  
+file write sumstat " & `b5'`stars_abs5' & `b6'`stars_abs6' & `b7'`stars_abs7' & `b8'`stars_abs8'  \\" _n 
+file write sumstat "  & (`sd1') & (`sd2') & (`sd3') & (`sd4')  & (`sd5') & (`sd6') & (`sd7') & (`sd8') \\" _n 
+file write sumstat "\\" _n 
+file write sumstat " Controls &  & X &  & X &  & X &  & X  \\" _n 
+file write sumstat " R-2 & `r1' & `r2' & `r3' & `r4' & `r5' & `r6' & `r7' & `r8'  \\" _n 
+file write sumstat "Sample Size "
+forval i = 1/8 {
+	local n`i' = string(inplacebo[6,`i'], "%12.0fc" )
+	file write sumstat " & `n`i'' "
+}
+file write sumstat "\\" _n 
+file write sumstat "\bottomrule" _n
+file write sumstat "\bottomrule" _n
+
+file write sumstat "\end{tabular}"
+file close sumstat
+
+
+
+
+
 /**************************************************************
 Heterogeneity
 **************************************************************/
