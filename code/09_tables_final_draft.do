@@ -820,7 +820,7 @@ graph export "$oo/troubleshoot_propscore/propensity_age_t2.pdf", replace
 cap mat drop sumstat
 cap mat drop matse
 cap mat drop matpval
-foreach v in /*exp_any_migpuma move_any move_migpuma move_state move_abroad*/ age r_white r_black r_asian hs no_english in_school nchild employed wkswork1 uhrswork incwage ownhome rentprice mortprice {
+foreach v in  age r_white r_black hs no_english in_school nchild employed incwage  {
     di in red "Processing `v'"
     * TARGET POPULATION FOR HISPANICS
     * Ever exposed
@@ -870,10 +870,10 @@ file write sumstat " &  & Never exposed & Never exposed \\" _n
 file write sumstat " & Exposed & unweighted & weighted   \\" _n
 file write sumstat " & (1) & (2) & (3)  \\" _n
 file write sumstat "\midrule " _n
-
-global varnames `" "Age" "Race: White" "Race: Black" "Race: Asian" "High School" "Poor English" "In School" "Number of children" "Employed" "Weeks worked" "Usual weekly hours worked" "Wage income" "Owns a home" "Rent price" "Mortgage price" "'
+ 
+global varnames `" "Age" "Race: White" "Race: Black" "High School" "Poor English" "In School" "Number of children" "Employed"  "Wage income" "'
 local i = 1
-forval r = 1/15 {
+forval r = 1/9 {
 	local varname : word `i' of $varnames
 	file write sumstat " `varname' "
 	di "Writing row `r'"
@@ -894,9 +894,9 @@ forval r = 1/15 {
 	file write sumstat "\\" _n 
 	local++ i
 }
-local a1 = string(sumstat[16,1], "%12.0fc" )
-local a2 = string(sumstat[16,2], "%12.0fc" )
-local a3 = string(sumstat[16,3], "%12.0fc" )
+local a1 = string(sumstat[10,1], "%12.0fc" )
+local a2 = string(sumstat[10,2], "%12.0fc" )
+local a3 = string(sumstat[10,3], "%12.0fc" )
 file write sumstat "Sample size & `a1' & `a2' & `a3' \\" _n
 file write sumstat "\bottomrule" _n
 file write sumstat "\bottomrule" _n
