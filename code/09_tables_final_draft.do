@@ -766,3 +766,138 @@ syntax, mat(str) row(int) cols(str)
     }
     file write sumstat "\\" _n
 end
+
+
+
+
+
+/**************************************************************
+Difference
+**************************************************************/
+
+* import clean ACS data ready for regressions
+use "$oi/working_acs", clear 
+gen rentprice = rent if ownhome==0
+gen mortprice = mortamt1 if ownhome==1
+
+* restrict sample 
+keep if year >= 2012
+drop if always_treated_migpuma==1 //ruling out always treated counties
+
+* define propensity weights for hispanic singles
+merge m:1 statefip current_migpuma  using  "$oi/troubleshoot/propensity_weights2013migpuma_t2" , nogen keep(3) keepusing(phat wt)
+rename (phat wt) (phat2 wt2)
+gen perwt_wt2 = perwt*wt2
+drop if mi(perwt_wt2)
+
+gen placebo1 = sex==1 & lowskill==1 & hispan!=0 & born_abroad==0 & young==1  & marst>=3  //hispanic citizens born in the usa
+
+
+/* graph the propensity score */
+histogram age if targetpop2==1, by(ever_treated_migpuma) kdensity
+
+* age
+kdensity age if targetpop2==1 & ever_treated_migpuma==1 [aw=perwt], gen(agex_1 aged_1)
+label var aged_1 "treatment group"
+kdensity age if targetpop2==1 & ever_treated_migpuma==0 [aw=perwt], gen(agex_0 aged_0)
+label var aged_0 "control group, unweighted"
+kdensity age if targetpop2==1 & ever_treated_migpuma==0 [aw=perwt_wt2], gen(agex_0w aged_0w)
+label var aged_0w "control group, weighted"
+twoway (line aged_1 agex_1, sort) (line aged_0 agex_0, sort lpattern(shortdash)) (line aged_0w agex_0w, sort), legend(pos(6) rows(1)) 
+
+twoway (line aged_1 agex_1, sort  lpattern(solid) lcolor(midblue) lwidth(0.3)  ) ///
+	(line aged_0 agex_0, sort lpattern(longdash) lcolor(dkorange) lwidth(0.4)  ) ///
+	 (line aged_0w agex_0w, sort lpattern(shortdash) lcolor(black) lwidth(0.5) ) ///
+	 , legend(pos(6)  rows(1) order( 1 "Treatment group" 2 "Control group, unweighted" 3 "Control group, weighted" ) ) ///
+	 xtitle("Age") ytitle("Density")
+
+graph export "$oo/troubleshoot_propscore/propensity_age_t2.pdf", replace
+
+
+
+//remember you see some effects in migration for born_abroad==1 & citizen!=3
+* create summary values
+cap mat drop sumstat
+cap mat drop matse
+cap mat drop matpval
+foreach v in /*exp_any_migpuma move_any move_migpuma move_state move_abroad*/ age r_white r_black r_asian hs no_english in_school nchild employed wkswork1 uhrswork incwage ownhome rentprice mortprice {
+    di in red "Processing `v'"
+    * TARGET POPULATION FOR HISPANICS
+    * Ever exposed
+    qui reg `v' targetpop2 [pw=perwt_wt2] if ever_treated_migpuma==1 , nocons 
+    local m1 = _b[targetpop]
+    local se1 = _se[targetpop]
+    local pval1 = 9999
+   
+   * Difference without prop score
+    qui reg `v' ever_treated_migpuma [pw=perwt] if targetpop2==1, robust
+    local m2 = _b[ever_treated_migpuma]
+    local se2 = _se[ever_treated_migpuma]
+    local t = _b[ever_treated_migpuma] / _se[ever_treated_migpuma]
+    local pval2 =  2*ttail(e(df_r), abs(`t'))
+   
+    * Difference with prop score
+    qui reg `v' ever_treated_migpuma [pw=perwt_wt2] if targetpop2==1, robust
+    local m3 = _b[ever_treated_migpuma]
+    local se3 = _se[ever_treated_migpuma]
+    local t = _b[ever_treated_migpuma] / _se[ever_treated_migpuma]
+    local pval3 =  2*ttail(e(df_r), abs(`t'))
+    
+
+    mat sumstat = nullmat(sumstat) \ (`m1', `m2', `m3' )
+    mat matse = nullmat(matse) \ (`se1', `se2', `se3' )
+    mat matpval = nullmat(matpval) \ (`pval1' , `pval2', `pval3' )
+}
+
+qui count if targetpop2==1 & exp_any_migpuma==1
+local m1 = r(N)
+qui count if targetpop2==1 
+local m2 = r(N)
+qui count if targetpop2==1 
+local m3 = r(N)
+
+mat sumstat = nullmat(sumstat) \ (`m1', `m2', `m3' )
+
+
+
+* Create table
+cap file close sumstat
+file open sumstat using "$oo/balancetable.tex", write replace
+file write sumstat "\begin{tabular}{lccc}" _n
+file write sumstat "\toprule" _n
+file write sumstat "\toprule" _n
+file write sumstat " &  & Never exposed & Never exposed \\" _n
+file write sumstat " & Exposed & unweighted & weighted   \\" _n
+file write sumstat " & (1) & (2) & (3)  \\" _n
+file write sumstat "\midrule " _n
+
+global varnames `" "Age" "Race: White" "Race: Black" "Race: Asian" "High School" "Poor English" "In School" "Number of children" "Employed" "Weeks worked" "Usual weekly hours worked" "Wage income" "Owns a home" "Rent price" "Mortgage price" "'
+forval r = 1/15 {
+	local varname : word `r' of $varnames
+	file write sumstat " `varname' "
+	di "Writing row `r'"
+    * mean
+	forval c = 1/3 {
+		di "Writing column `c'"
+		local a = string(sumstat[`r',`c'], "%12.2fc" )
+        local pval = matpval[`r', `c']
+        local stars_abs = cond(`pval' < 0.01, "***", cond(`pval' < 0.05, "**", cond(`pval' < 0.1, "*", "")))
+        file write sumstat " & `a'`stars_abs' "
+	}
+	file write sumstat "\\" _n 
+    * se
+    forval c = 1/3 {
+        local a = string(matse[`r',`c'], "%12.2fc" )
+        file write sumstat " & (`a')"
+    }
+	file write sumstat "\\" _n 
+	local a1 = string(sumstat[16,1], "%12.0fc" )
+	local a2 = string(sumstat[16,2], "%12.0fc" )
+	local a3 = string(sumstat[16,3], "%12.0fc" )
+    file write sumstat "Sample size & `a1' & `a2' & `a3' \\" _n
+}
+file write sumstat "\bottomrule" _n
+file write sumstat "\bottomrule" _n
+file write sumstat "\end{tabular}"
+file close sumstat
+

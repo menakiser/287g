@@ -34,6 +34,18 @@ collapse (sum) val, by(char group)
 sort group val
 drop if val==0
 
+* bar graph for each fiscal year
+preserve
+keep if group=="All"
+destring char, replace
+format val %12.0fc
+twoway (bar val char, barw(0.6)  color(gs9) ) ///
+	(scatter val char , mstyle(none) mlabel(val) mlabcolor(black) mlabgap(1) mlabpos(12) mlabsize(3.7) ) ///
+	, legend(off) ytitle(Deportation count) xtitle(Fiscal year)  ///
+	xlabel(2012(1)2019) ylabel(0(5000)20000)
+graph export "$oo/deportations.png", replace
+restore
+
 * obtain shares
 gen total = val if group=="All"
 ereplace total = sum(total)
