@@ -461,7 +461,7 @@ file write sumstat "\begin{tabular}{lcccccc}" _n
 file write sumstat "\toprule" _n
 file write sumstat "\toprule" _n
 * Panel A
-file write sumstat " \multicolumn{5}{c}{Panel A: Target population}  \\" _n
+file write sumstat " \multicolumn{6}{c}{Panel A: Target population}  \\" _n
 file write sumstat "\midrule " _n
 file write sumstat " &  & &  & Previous year & Previous year   \\" _n
 file write sumstat " & Baseline & No English & Some English & exposure=1 & exposure=0  \\" _n
@@ -509,7 +509,7 @@ file write sumstat "\midrule" _n
 file write sumstat "\midrule" _n
 
 * Panel B
-file write sumstat " \multicolumn{5}{c}{Panel B: Mexican}  \\" _n
+file write sumstat " \multicolumn{6}{c}{Panel B: Mexican}  \\" _n
 file write sumstat "\midrule " _n
 file write sumstat " &  & &  & Previous year & Previous year   \\" _n
 file write sumstat " & Baseline & No English & Some English & exposure=1 & exposure=0  \\" _n
