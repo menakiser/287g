@@ -29,7 +29,7 @@ gen ogorder = _n
 reshape long char val, i(ogorder) j(year)
 
 * restrict to focus years
-keep if year>=2013 & year<=2019
+keep if year>=2012 & year<=2019
 collapse (sum) val, by(char group)
 sort group val
 drop if val==0

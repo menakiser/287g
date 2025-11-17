@@ -59,6 +59,7 @@ forval i = 1/9 {
 	sum phat
 	gen wt = 1 if ever_treated_migpuma==1
 	replace wt=phat/(1-phat) if ever_treated_migpuma==0
+	replace wt=1 if ever_treated_migpuma==0 & wt>1
 
 	/* graph the propensity score */
 	histogram phat, by(ever_treated_migpuma) kdensity
