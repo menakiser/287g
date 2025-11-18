@@ -486,14 +486,15 @@ reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(inplacebo) wt(
 * Create table
 cap file close sumstat
 file open sumstat using "$oo/final/in_gain_lost.tex", write replace
-file write sumstat "\begin{tabular}{lcc|cc}" _n
+file write sumstat "\begin{tabular}{lcccc}" _n
 file write sumstat "\toprule" _n
 file write sumstat "\toprule" _n
 * Panel A
 file write sumstat " \multicolumn{5}{c}{Panel A: Target population}  \\" _n
 file write sumstat "\midrule " _n
-file write sumstat " & \multicolumn{2}{c|}{Only gainers} & \multicolumn{2}{c}{Only losers}  \\" _n
-file write sumstat " & & Propensity weighted & & Propensity weighted  \\" _n
+file write sumstat " & \multicolumn{2}{Only gainers} & \multicolumn{2}{c}{Only losers}  \\" _n
+file write sumstat " & & Propensity & & Propensity  \\" _n
+file write sumstat " & & weighted & & weighted  \\" _n
 file write sumstat "Move migpuma & (1) & (2)  & (3) & (4) \\" _n
 file write sumstat "\midrule " _n
 
@@ -526,8 +527,9 @@ file write sumstat "\midrule" _n
 * panel b placebo
 file write sumstat " \multicolumn{5}{c}{Panel B: Placebo}  \\" _n
 file write sumstat "\midrule " _n
-file write sumstat " & \multicolumn{2}{c|}{Only gainers} & \multicolumn{2}{c}{Only losers}  \\" _n
-file write sumstat " & & Propensity weighted & & Propensity weighted  \\" _n
+file write sumstat " & \multicolumn{2}{Only gainers} & \multicolumn{2}{c}{Only losers}  \\" _n
+file write sumstat " & & Propensity & & Propensity  \\" _n
+file write sumstat " & & weighted & & weighted  \\" _n
 file write sumstat "Move migpuma & (5) & (6)  & (7) & (8) \\" _n
 file write sumstat "\midrule " _n
 
