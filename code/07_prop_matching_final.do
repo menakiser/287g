@@ -43,18 +43,19 @@ drop if puma==77777
 tab  hispand , gen(int_hispan)
 tab educ , gen(int_educ)
 tab marst , gen(int_marst)
+tab speakeng , gen(int_speakeng)
 
-collapse (sum) total_pop target_pop=targetpop2 foreign_pop=imm young_pop=young hispan_pop=ishispanic lowskill_pop=lowskill  ///
-	(mean) targetpop_sh=targetpop2 exp* red_state incwage employed target_sh=targetpop2 foreign_sh=imm young_sh=young  ///
-	r_white r_black r_asian int_hispan* int_educ* int_marst* ///
-	hispan_sh=ishispanic lowskill_sh=lowskill istexas isflorida  ///
+collapse (sum) total_pop  ///
+	(mean) exp* red_state incwage employed target_sh=targetpop2 foreign_sh=imm young_sh=young  ///
+	r_white r_black r_asian int_hispan* int_educ* int_marst* int_speakeng* in_school ///
+	lowskill_sh=lowskill istexas isflorida   ///
 	(max) ever_treated_state ever_treated_migpuma ///
 	[pw=perwt] ///
 	, by(statefip current_migpuma)
 
 /* get propensity score for county exposure */	
 logit ever_treated_migpuma total_pop target_sh foreign_sh young_sh lowskill_sh red_state istexas ever_treated_state ///
-	r_white r_black r_asian int_hispan* int_educ* int_marst* [pw=total_pop]
+	r_white r_black r_asian int_hispan* int_educ* int_marst* int_speakeng* [pw=total_pop]
 
 //like doing it at the individual level
 cap drop phat

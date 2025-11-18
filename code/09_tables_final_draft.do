@@ -70,7 +70,7 @@ file write sumstat "\end{tabular}"
 file close sumstat
 
 */
-
+/*
 /**************************************************************
 Table 2: Summary Statistics
 **************************************************************/
@@ -104,19 +104,12 @@ foreach v in exp_any_migpuma move_any move_migpuma move_state move_abroad age r_
     * Never exposed
     qui reg `v' targetpop2 [pw=perwt] if ever_treated_migpuma==0 , nocons 
     local m2 = _b[targetpop]
+
+    * Difference
+
     qui reg `v' targetpop2 [pw=perwt_wt2] if  ever_treated_migpuma==0 , nocons 
     local m3 = _b[targetpop]
 
-    * PLACEBO
-    * Ever exposed
-    qui reg `v' placebo1 [pw=perwt_wt2] if ever_treated_migpuma==1 , nocons 
-    local m4 = _b[placebo1]
-
-    * Never exposed
-    qui reg `v' placebo1 [pw=perwt] if ever_treated_migpuma==0 , nocons 
-    local m5 = _b[placebo1]
-    qui reg `v' placebo1 [pw=perwt_wt2] if  ever_treated_migpuma==0 , nocons 
-    local m6 = _b[placebo1]
 
     mat sumstat = nullmat(sumstat) \ (`m1', `m2', `m3',`m4', `m5', `m6'  )
 }
@@ -169,10 +162,10 @@ file write sumstat "\bottomrule" _n
 file write sumstat "\end{tabular}"
 file close sumstat
 
-
+*/
 
 /**************************************************************
-Table 3: Regressions
+Table 3: in migration Regressions
 **************************************************************/
 global covars "age r_white r_black r_asian hs in_school no_english ownhome"
 global invars "exp_any_state " //SC_any
@@ -294,6 +287,10 @@ file close sumstat
 
 
 
+
+/**************************************************************
+Table 3: out migration Regressions
+**************************************************************/
 global covars "age r_white r_black r_asian hs in_school no_english ownhome"
 global invars "exp_any_state " //SC_any
 global outvars "prev_exp_any_state " //prev_SC_any
@@ -302,7 +299,7 @@ use "$oi/working_acs", clear
 keep if year >= 2012
 drop if always_treated_migpuma==1
 * define propensity weights
-merge m:1 statefip current_migpuma  using  "$oi/troubleshoot/propensity_weights2013migpuma_t2" , nogen keep(3) keepusing( phat wt)
+merge m:1 statefip current_migpuma  using  "$oi/propensity_weights2012migpuma_t2" , nogen keep(3) keepusing( phat wt)
 gen perwt_wt = perwt*wt
 drop if mi(perwt_wt)
 gen placebo1 = sex==1 & lowskill==1 & hispan!=0 & born_abroad==0 & young==1  & marst>=3  //hispanic citizens born in the usa
@@ -344,7 +341,7 @@ reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(outplacebo)
 
 * Create table
 cap file close sumstat
-file open sumstat using "$oo/out_migration_target2.tex", write replace
+file open sumstat using "$oo/final/out_migration_target2.tex", write replace
 file write sumstat "\begin{tabular}{lcccc}" _n
 file write sumstat "\toprule" _n
 file write sumstat "\toprule" _n
@@ -772,7 +769,7 @@ end
 
 
 /**************************************************************
-Difference
+Balance table with differences
 **************************************************************/
 
 * import clean ACS data ready for regressions
@@ -789,31 +786,6 @@ merge m:1 statefip current_migpuma  using  "$oi/troubleshoot/propensity_weights2
 rename (phat wt) (phat2 wt2)
 gen perwt_wt2 = perwt*wt2
 drop if mi(perwt_wt2)
-
-gen placebo1 = sex==1 & lowskill==1 & hispan!=0 & born_abroad==0 & young==1  & marst>=3  //hispanic citizens born in the usa
-
-
-/* graph the propensity score */
-histogram age if targetpop2==1, by(ever_treated_migpuma) kdensity
-
-* age
-kdensity age if targetpop2==1 & ever_treated_migpuma==1 [aw=perwt], gen(agex_1 aged_1)
-label var aged_1 "treatment group"
-kdensity age if targetpop2==1 & ever_treated_migpuma==0 [aw=perwt], gen(agex_0 aged_0)
-label var aged_0 "control group, unweighted"
-kdensity age if targetpop2==1 & ever_treated_migpuma==0 [aw=perwt_wt2], gen(agex_0w aged_0w)
-label var aged_0w "control group, weighted"
-twoway (line aged_1 agex_1, sort) (line aged_0 agex_0, sort lpattern(shortdash)) (line aged_0w agex_0w, sort), legend(pos(6) rows(1)) 
-
-twoway (line aged_1 agex_1, sort  lpattern(solid) lcolor(midblue) lwidth(0.3)  ) ///
-	(line aged_0 agex_0, sort lpattern(longdash) lcolor(dkorange) lwidth(0.4)  ) ///
-	 (line aged_0w agex_0w, sort lpattern(shortdash) lcolor(black) lwidth(0.5) ) ///
-	 , legend(pos(6)  rows(1) order( 1 "Treatment group" 2 "Control group, unweighted" 3 "Control group, weighted" ) ) ///
-	 xtitle("Age") ytitle("Density")
-
-graph export "$oo/troubleshoot_propscore/propensity_age_t2.pdf", replace
-
-
 
 //remember you see some effects in migration for born_abroad==1 & citizen!=3
 * create summary values
@@ -862,7 +834,7 @@ mat sumstat = nullmat(sumstat) \ (`m1', `m2', `m3' )
 
 * Create table
 cap file close sumstat
-file open sumstat using "$oo/balancetable.tex", write replace
+file open sumstat using "$oo/final/balancetable.tex", write replace
 file write sumstat "\begin{tabular}{lccc}" _n
 file write sumstat "\toprule" _n
 file write sumstat "\toprule" _n
