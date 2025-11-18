@@ -875,3 +875,95 @@ file write sumstat "\bottomrule" _n
 file write sumstat "\end{tabular}"
 file close sumstat
 
+
+
+//MOBILITY VARS
+
+//remember you see some effects in migration for born_abroad==1 & citizen!=3
+* create summary values
+cap mat drop sumstat
+cap mat drop matse
+cap mat drop matpval
+foreach v in  move_any move_migpuma move_state move_abroad  {
+    di in red "Processing `v'"
+    * TARGET POPULATION FOR HISPANICS
+    * Ever exposed
+    qui reg `v' targetpop2 [pw=perwt_wt2] if ever_treated_migpuma==1 , nocons 
+    local m1 = _b[targetpop]
+    local se1 = _se[targetpop]
+    local pval1 = 9999
+   
+   * Difference without prop score
+    qui reg `v' ever_treated_migpuma [pw=perwt] if targetpop2==1, robust
+    local m2 = _b[ever_treated_migpuma]
+    local se2 = _se[ever_treated_migpuma]
+    local t = _b[ever_treated_migpuma] / _se[ever_treated_migpuma]
+    local pval2 =  2*ttail(e(df_r), abs(`t'))
+   
+    * Difference with prop score
+    qui reg `v' ever_treated_migpuma [pw=perwt_wt2] if targetpop2==1, robust
+    local m3 = _b[ever_treated_migpuma]
+    local se3 = _se[ever_treated_migpuma]
+    local t = _b[ever_treated_migpuma] / _se[ever_treated_migpuma]
+    local pval3 =  2*ttail(e(df_r), abs(`t'))
+    
+
+    mat sumstat = nullmat(sumstat) \ (`m1', `m2', `m3' )
+    mat matse = nullmat(matse) \ (`se1', `se2', `se3' )
+    mat matpval = nullmat(matpval) \ (`pval1' , `pval2', `pval3' )
+}
+
+qui count if targetpop2==1 & exp_any_migpuma==1
+local m1 = r(N)
+qui count if targetpop2==1 
+local m2 = r(N)
+qui count if targetpop2==1 
+local m3 = r(N)
+
+mat sumstat = nullmat(sumstat) \ (`m1', `m2', `m3' )
+
+
+
+* Create table
+cap file close sumstat
+file open sumstat using "$oo/final/balancetable_move.tex", write replace
+file write sumstat "\begin{tabular}{lccc}" _n
+file write sumstat "\toprule" _n
+file write sumstat "\toprule" _n
+file write sumstat " &  & Difference & Difference \\" _n
+file write sumstat " & Treated & (unweighted) & (weighted)   \\" _n
+file write sumstat " & (1) & (2) & (3)  \\" _n
+file write sumstat "\midrule " _n
+ 
+global varnames `" "Any move" "Move migpuma" "Move state" "Move from abroad"  "'
+local i = 1
+forval r = 1/4 {
+	local varname : word `i' of $varnames
+	file write sumstat " `varname' "
+	di "Writing row `r'"
+    * mean
+	forval c = 1/3 {
+		di "Writing column `c'"
+		local a = string(sumstat[`r',`c'], "%12.2fc" )
+        local pval = matpval[`r', `c']
+        local stars_abs = cond(`pval' < 0.01, "***", cond(`pval' < 0.05, "**", cond(`pval' < 0.1, "*", "")))
+        file write sumstat " & `a'`stars_abs' "
+	}
+	file write sumstat "\\" _n 
+    * se
+    forval c = 1/3 {
+        local a = string(matse[`r',`c'], "%12.2fc" )
+        file write sumstat " & (`a')"
+    }
+	file write sumstat "\\" _n 
+	local++ i
+}
+local a1 = string(sumstat[5,1], "%12.0fc" )
+local a2 = string(sumstat[5,2], "%12.0fc" )
+local a3 = string(sumstat[5,3], "%12.0fc" )
+file write sumstat "Sample size & `a1' & `a2' & `a3' \\" _n
+file write sumstat "\bottomrule" _n
+file write sumstat "\bottomrule" _n
+file write sumstat "\end{tabular}"
+file close sumstat
+
