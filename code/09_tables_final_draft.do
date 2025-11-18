@@ -659,7 +659,7 @@ file write sumstat "\midrule" _n
 file write sumstat " \multicolumn{6}{c}{Panel B: Mexican}  \\" _n
 file write sumstat "\midrule " _n
 file write sumstat " &  & &  & Previous year & Previous year   \\" _n
-file write sumstat " & Baseline & No English & Some English & exposure=1 & exposure=0  \\" _n
+file write sumstat " & Baseline & Poor English & Some English & treated & untreated  \\" _n
 file write sumstat "Outcome & (6) & (7) & (8)  & (9) & (10) \\" _n
 file write sumstat "\midrule " _n
 
