@@ -953,3 +953,77 @@ file write sumstat "\bottomrule" _n
 file write sumstat "\end{tabular}"
 file close sumstat
 
+
+
+
+
+
+/**************************************************************
+Moving to better prospects
+**************************************************************/
+global covars "age r_white r_black r_asian hs in_school no_english ownhome"
+global invars "exp_any_state " //SC_any
+global outvars "prev_exp_any_state " //prev_SC_any
+
+use "$oi/working_acs", clear 
+keep if year >= 2012
+drop if always_treated_migpuma==1
+* define propensity weights for target population 2
+merge m:1 statefip current_migpuma  using  "$oi/propensity_weights2012migpuma_t2" , nogen keep(3) keepusing( phat wt)
+rename (phat wt) (phat2 wt2)
+gen perwt_wt2 = perwt*wt
+drop if mi(perwt_wt2)
+
+**** IN MIGRATION FOR TARGET POPULATION
+cap mat drop intarget
+foreach v in employed incwage uhrswork {
+    * with controls no weights
+    reghdfe `v' exp_any_migpuma $covars $invars [pw=perwt]  if targetpop2==1 , vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+    reg_to_mat, depvar( `v' ) indvars( exp_any_migpuma ) mat(intarget) wt(perwt) wttype(pw)
+    * with controls yes weights
+    reghdfe `v' exp_any_migpuma $covars $invars [pw=perwt_wt]  if targetpop2==1 , vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+    reg_to_mat, depvar( `v' ) indvars( exp_any_migpuma ) mat(intarget) wt(perwt_wt) wttype(pw)
+}
+
+
+* Create table
+cap file close sumstat
+file open sumstat using "$oo/final/opportunity.tex", write replace
+file write sumstat "\begin{tabular}{lcccccc}" _n
+file write sumstat "\toprule" _n
+file write sumstat "\toprule" _n
+* Panel A
+file write sumstat " \multicolumn{6}{c}{Panel A: Target population}  \\" _n
+file write sumstat "\midrule " _n
+file write sumstat " Outcome & \multicolumn{2}{c}{Employed} & \multicolumn{2}{c}{Wage income} & \multicolumn{2}{c}{Usual hours}   \\" _n
+file write sumstat " & Unweighted & Weighted & Unweighted & Weighted & Unweighted & Weighted \\" _n
+file write sumstat " & (1) & (2)  & (3) & (4) & (5)  & (6) \\" _n
+file write sumstat "\midrule " _n
+
+global varnames `"  "Treated migpuma" "'
+local varname : word 1 of $varnames
+forval c = 1/6  {
+    local b`c' = string(intarget[1,`c'], "%12.4fc" )
+    local temp = intarget[1,`c']/intarget[5,`c']*100
+    local bmean`c' = string(`temp', "%12.2fc" )
+    local p`c' = intarget[2,`c']
+    local stars_abs`c' = cond(`p`c'' < 0.01, "***", cond(`p`c'' < 0.05, "**", cond(`p`c'' < 0.1, "*", "")))
+    local sd`c' = string(intarget[3,`c'], "%12.4fc" )
+    local r`c' = string(intarget[4,`c'], "%12.4fc" )
+    local um`c' = string(intarget[5,`c'], "%12.4fc" )
+	local n`c' = string(intarget[6,`c'], "%12.0fc" )
+}
+file write sumstat " `varname' & `b1'`stars_abs1' & `b2'`stars_abs2' & `b3'`stars_abs3' & `b4'`stars_abs4' & `b5'`stars_abs5' & `b6'`stars_abs6' \\" _n 
+file write sumstat "  & [`bmean1'$\%$] & [`bmean2'$\%$] & [`bmean3'$\%$] & [`bmean4'$\%$]  & [`bmean5'$\%$] & [`bmean6'$\%$]  \\" _n 
+file write sumstat " & (`sd1') & (`sd2') & (`sd3') & (`sd4') & (`sd5') & (`sd6') \\" _n 
+file write sumstat "\\" _n 
+file write sumstat " Controls & X & X & X & X & X & X \\" _n 
+file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4' & `r5' & `r6'  \\" _n 
+file write sumstat " Untreated mean & `um1' & `um2' & `um3' & `um4' & `um5' & `um6'   \\" _n 
+file write sumstat "Sample Size & `n1' & `n2' & `n3' & `n4' & `n5' & `n6'  \\" _n
+file write sumstat "\\" _n 
+file write sumstat "\bottomrule" _n
+file write sumstat "\bottomrule" _n
+file write sumstat "\end{tabular}"
+file close sumstat
+
