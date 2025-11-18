@@ -85,7 +85,7 @@ keep if year >= 2012
 drop if always_treated_migpuma==1 //ruling out always treated counties
 
 * define propensity weights for hispanic singles
-merge m:1 statefip current_migpuma  using  "$oi/troubleshoot/propensity_weights2013migpuma_t2" , nogen keep(3) keepusing(phat wt)
+merge m:1 statefip current_migpuma  using  "$oi/troubleshoot/propensity_weights2012migpuma_t2" , nogen keep(3) keepusing(phat wt)
 rename (phat wt) (phat2 wt2)
 gen perwt_wt2 = perwt*wt2
 drop if mi(perwt_wt2)
@@ -182,7 +182,7 @@ use "$oi/working_acs", clear
 keep if year >= 2012
 drop if always_treated_migpuma==1
 * define propensity weights
-merge m:1 statefip current_migpuma  using  "$oi/troubleshoot/propensity_weights2013migpuma_t2" , nogen keep(3) keepusing( phat wt)
+merge m:1 statefip current_migpuma  using  "$oi/propensity_weights2012migpuma_t2" , nogen keep(3) keepusing( phat wt)
 gen perwt_wt = perwt*wt
 drop if mi(perwt_wt)
 gen placebo1 = sex==1 & lowskill==1 & hispan!=0 & born_abroad==0 & young==1  & marst>=3  //hispanic citizens born in the usa
@@ -224,7 +224,7 @@ reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(inplacebo)
 
 * Create table
 cap file close sumstat
-file open sumstat using "$oo/in_migration_target2.tex", write replace
+file open sumstat using "$oo/final/in_migration_target2.tex", write replace
 file write sumstat "\begin{tabular}{lcccc}" _n
 file write sumstat "\toprule" _n
 file write sumstat "\toprule" _n
