@@ -16,12 +16,12 @@ global oo "$wd/output/"
 /**************************************************************
 Figure 1: propensity score density
 **************************************************************/
-use "$oi/troubleshoot/propensity_weights2013migpuma_t2" , clear 
+use "$oi/propensity_weights2012migpuma_t2", clear 
 twoway (line d_1 x_1, sort  lpattern(solid) lcolor(midblue) lwidth(0.3)  ) ///
 	(line d_0 x_0, sort lpattern(longdash) lcolor(dkorange) lwidth(0.4)  ) ///
 	 (line d_0w x_0w, sort lpattern(shortdash) lcolor(black) lwidth(0.5) ) ///
 	 , legend(pos(6)  rows(1) order( 1 "Treatment group" 2 "Control group, unweighted" 3 "Control group, weighted" ) ) ///
-	 xtitle("Pr(Migpuma is ever exposed)") ytitle("Density")
+	 xtitle("Pr(Migpuma is ever exposed)") ytitle("Density") xsize(7)
 graph export "$oo/final/prop_score.png", replace
 
 
