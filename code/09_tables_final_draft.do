@@ -193,10 +193,10 @@ reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(intarget) wt(p
 * with propensity weights
 * without controls
 reghdfe move_migpuma exp_any_migpuma  [pw=perwt_wt]  if targetpop2==1 , vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(intarget) wt(perwt) wttype(pw)
+reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(intarget) wt(perwt_wt) wttype(pw)
 * with controls 
 reghdfe move_migpuma exp_any_migpuma $covars $invars [pw=perwt_wt]  if targetpop2==1 , vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(intarget) wt(perwt) wttype(pw)
+reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(intarget) wt(perwt_wt) wttype(pw)
 
 **** IN MIGRATION FOR PLACEBO POPULATION
 cap mat drop inplacebo
@@ -210,10 +210,10 @@ reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(inplacebo) wt(
 * with propensity weights
 * without controls
 reghdfe move_migpuma exp_any_migpuma  [pw=perwt_wt]  if placebo1==1 , vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(inplacebo) wt(perwt) wttype(pw)
+reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(inplacebo) wt(perwt_wt) wttype(pw)
 * with controls 
 reghdfe move_migpuma exp_any_migpuma $covars $invars [pw=perwt_wt]  if placebo1==1 , vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(inplacebo) wt(perwt) wttype(pw)
+reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(inplacebo) wt(perwt_wt) wttype(pw)
 
 
 * Create table
@@ -225,8 +225,8 @@ file write sumstat "\toprule" _n
 * Panel A
 file write sumstat " \multicolumn{5}{c}{Panel A: Target population}  \\" _n
 file write sumstat "\midrule " _n
-file write sumstat " Move migpuma & & & \multicolumn{2}{c}{Propensity weighted}  \\" _n
-file write sumstat " & (1) & (2)  & (3) & (4)  \\" _n
+file write sumstat "  & & & \multicolumn{2}{c}{Propensity weighted}  \\" _n
+file write sumstat " Move migpuma & (1) & (2)  & (3) & (4)  \\" _n
 file write sumstat "\midrule " _n
 
 global varnames `"  "Treated migpuma" "'
@@ -255,7 +255,7 @@ file write sumstat "\\" _n
 file write sumstat "\midrule" _n
 file write sumstat "\midrule" _n
 
-* out migration
+* placebo
 file write sumstat " \multicolumn{5}{c}{Panel B: Placebo}  \\" _n
 file write sumstat "\midrule " _n
 file write sumstat " & & & \multicolumn{2}{c}{Propensity weighted}  \\" _n
@@ -272,6 +272,7 @@ forval c = 1/4  {
     local stars_abs`c' = cond(`p`c'' < 0.01, "***", cond(`p`c'' < 0.05, "**", cond(`p`c'' < 0.1, "*", "")))
     local sd`c' = string(inplacebo[3,`c'], "%12.4fc" )
     local r`c' = string(inplacebo[4,`c'], "%12.4fc" )
+    local um`c' = string(inplacebo[5,`c'], "%12.4fc" )
     local n`c' = string(inplacebo[6,`c'], "%12.0fc" )
 }
 file write sumstat " `varname' & `b1'`stars_abs1' & `b2'`stars_abs2' & `b3'`stars_abs3' & `b4'`stars_abs4' \\" _n 
