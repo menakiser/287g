@@ -234,8 +234,8 @@ global varnames `"  "Treated migpuma" "'
 local varname : word 1 of $varnames
 forval c = 1/4  {
     local b`c' = string(intarget[1,`c'], "%12.4fc" )
-    local temp = intarget[1,`c']/intarget[5,`c']
-    local bmean`c' = string(`temp', "%12.4fc" )
+    local temp = intarget[1,`c']/intarget[5,`c']*100
+    local bmean`c' = string(`temp', "%12.2fc" )
     local p`c' = intarget[2,`c']
     local stars_abs`c' = cond(`p`c'' < 0.01, "***", cond(`p`c'' < 0.05, "**", cond(`p`c'' < 0.1, "*", "")))
     local sd`c' = string(intarget[3,`c'], "%12.4fc" )
@@ -266,8 +266,8 @@ global varnames `"   "Treated migpuma" "'
 local varname : word 1 of $varnames
 forval c = 1/4  {
     local b`c' = string(inplacebo[1,`c'], "%12.4fc" )
-    local temp = inplacebo[1,`c']/inplacebo[5,`c']
-    local bmean`c' = string(`temp', "%12.4fc" )
+    local temp = inplacebo[1,`c']/inplacebo[5,`c']*100
+    local bmean`c' = string(`temp', "%12.2fc" )
     local p`c' = inplacebo`i'[2,`c']
     local stars_abs`c' = cond(`p`c'' < 0.01, "***", cond(`p`c'' < 0.05, "**", cond(`p`c'' < 0.1, "*", "")))
     local sd`c' = string(inplacebo[3,`c'], "%12.4fc" )
