@@ -301,10 +301,15 @@ gen total_pop_k = total_pop /1000
 
 gen placebo1_k = placebo1/1000
 
+
+gen log_total_pop = total_pop
+gen log_total_targetpop2 = total_targetpop2
+gen log_total_placebo1 = placebo1
+
 ************** TOTAL POPULATION of target pop
 
 ************ gainers YES weights, no controls $covars $invars
-reghdfe total_targetpop2_k gain_ry_minus6 gain_ry_minus5 gain_ry_minus4 gain_ry_minus3 gain_ry_minus2 o.gain_ry_minus1 ///
+reghdfe log_total_targetpop2 gain_ry_minus6 gain_ry_minus5 gain_ry_minus4 gain_ry_minus3 gain_ry_minus2 o.gain_ry_minus1 ///
 gain_ry_plus0 gain_ry_plus1 gain_ry_plus2 gain_ry_plus3 exp_any_state ///
 	   if ever_lost_exp_migpuma==0, ///
 	vce(cluster geoid_migpuma) absorb(geoid_migpuma year) //for those that gain treatment, the total target pop increases with treatment
@@ -323,7 +328,7 @@ graph export "$oo/final/ingain_total_target_nowt.png", replace
 
 
 ************* losers YES weights
-reghdfe total_targetpop2_wwt_k lost_ry_minus6 lost_ry_minus5 lost_ry_minus4 lost_ry_minus3 lost_ry_minus2 o.lost_ry_minus1 ///
+reghdfe log_total_targetpop2 lost_ry_minus6 lost_ry_minus5 lost_ry_minus4 lost_ry_minus3 lost_ry_minus2 o.lost_ry_minus1 ///
 lost_ry_plus0 lost_ry_plus1 lost_ry_plus2 lost_ry_plus3 lost_ry_plus4 lost_ry_plus5 lost_ry_plus6 exp_any_state ///
 	if ever_gain_exp_migpuma==0, ///
 	vce(cluster geoid_migpuma) absorb(geoid_migpuma year)
@@ -346,7 +351,7 @@ graph export "$oo/final/inlost_total_target_nowt.png", replace
 ************** TOTAL PLACEBO POPULATION 
 
 ************ gainers YES weights, no controls $covars $invars
-reghdfe placebo1_k gain_ry_minus6 gain_ry_minus5 gain_ry_minus4 gain_ry_minus3 gain_ry_minus2 o.gain_ry_minus1 ///
+reghdfe log_total_placebo1 gain_ry_minus6 gain_ry_minus5 gain_ry_minus4 gain_ry_minus3 gain_ry_minus2 o.gain_ry_minus1 ///
 gain_ry_plus0 gain_ry_plus1 gain_ry_plus2 gain_ry_plus3 exp_any_state ///
 	   if ever_lost_exp_migpuma==0, ///
 	vce(cluster geoid_migpuma) absorb(geoid_migpuma year) //for those that gain treatment, the total target pop increases with treatment
@@ -365,7 +370,7 @@ graph export "$oo/final/ingain_placebo_nowt.png", replace
 
 
 ************* losers YES weights
-reghdfe placebo1_k lost_ry_minus6 lost_ry_minus5 lost_ry_minus4 lost_ry_minus3 lost_ry_minus2 o.lost_ry_minus1 ///
+reghdfe log_total_placebo1 lost_ry_minus6 lost_ry_minus5 lost_ry_minus4 lost_ry_minus3 lost_ry_minus2 o.lost_ry_minus1 ///
 lost_ry_plus0 lost_ry_plus1 lost_ry_plus2 lost_ry_plus3 lost_ry_plus4 lost_ry_plus5 lost_ry_plus6 exp_any_state ///
 	if ever_gain_exp_migpuma==0, ///
 	vce(cluster geoid_migpuma) absorb(geoid_migpuma year)
@@ -385,7 +390,7 @@ graph export "$oo/final/inlost_placebo_nowt.png", replace
 
 
 
-************** target POPULATION as a share of total pop
+/************** target POPULATION as a share of total pop
 
 ************ gainers YES weights, no controls $covars $invars
 reghdfe total_targetpop2_sh gain_ry_minus6 gain_ry_minus5 gain_ry_minus4 gain_ry_minus3 gain_ry_minus2 o.gain_ry_minus1 ///
@@ -463,3 +468,4 @@ coefplot ///
 	title("(b) Lost treatment") ///
 	legend(order(2 "Active treatment" 4 "No treatment") row(1) pos(6)) xsize(5)
 graph export "$oo/final/inlost_movetotal_target_nowt.png", replace
+*/

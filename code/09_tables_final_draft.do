@@ -85,7 +85,7 @@ keep if year >= 2012
 drop if always_treated_migpuma==1 //ruling out always treated counties
 
 * define propensity weights for hispanic singles
-merge m:1 statefip current_migpuma  using  "$oi/troubleshoot/propensity_weights2012migpuma_t2" , nogen keep(3) keepusing(phat wt)
+merge m:1 statefip current_migpuma  using  "$oi/propensity_weights2012migpuma_t2" , nogen keep(3) keepusing(phat wt)
 rename (phat wt) (phat2 wt2)
 gen perwt_wt2 = perwt*wt2
 drop if mi(perwt_wt2)
@@ -768,7 +768,7 @@ keep if year >= 2012
 drop if always_treated_migpuma==1 //ruling out always treated counties
 
 * define propensity weights for hispanic singles
-merge m:1 statefip current_migpuma  using  "$oi/troubleshoot/propensity_weights2013migpuma_t2" , nogen keep(3) keepusing(phat wt)
+merge m:1 statefip current_migpuma  using  "$oi/propensity_weights2012migpuma_t2" , nogen keep(3) keepusing(phat wt)
 rename (phat wt) (phat2 wt2)
 gen perwt_wt2 = perwt*wt2
 drop if mi(perwt_wt2)
