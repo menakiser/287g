@@ -228,8 +228,8 @@ gen perwt_wt = perwt*wt
 drop if mi(perwt_wt)
 gen placebo1 = sex==1 & lowskill==1 & hispan!=0 & born_abroad==0 & young==1  & marst>=3  //hispanic citizens born in the usa
 
-gen total_targetpop2 = perwt
-gen total_targetpop2_wwt = perwt_wt
+gen total_targetpop2 = perwt if targetpop2==1
+gen total_targetpop2_wwt = perwt_wt if targetpop2==1
 gen total_pop = perwt if age>=18 & age<=65
 gen total_pop_wwt = perwt_wt if age>=18 & age<=65
 
@@ -248,7 +248,10 @@ replace move_migpuma = perwt*move_migpuma
 gen relative_year_lost =  year - lost_exp_year
 replace relative_year_lost = . if lost_exp_year == 0
 
-collapse (sum) move_target move_migpuma move_target_wwt move_migpuma_wwt total_targetpop2 total_targetpop2_wwt total_pop total_pop_wwt  ///
+replace placebo1 = placebo1*perwt 
+gen placebo1_wwt = placebo1*wt 
+
+collapse (sum) move_target move_migpuma move_target_wwt move_migpuma_wwt total_targetpop2 total_targetpop2_wwt total_pop total_pop_wwt placebo1 placebo1_wwt ///
 	(mean) $covars ///
 	(max) exp_any_migpuma  ever_treated_migpuma ever_lost_exp_migpuma ever_gain_exp_migpuma ///
 	relative_year_gain relative_year_lost geoid_migpuma $invars ///
@@ -292,6 +295,12 @@ format move_target_wwt %12.0fc
 gen move_target_wwt_k = move_target_wwt/1000
 gen move_target_k = move_target/1000
 
+gen total_targetpop2_sh = total_targetpop2 / total_pop
+
+gen total_pop_k = total_pop /1000
+
+gen placebo1_k = placebo1/1000
+
 ************** TOTAL POPULATION of target pop
 
 ************ gainers YES weights, no controls $covars $invars
@@ -314,7 +323,7 @@ graph export "$oo/final/ingain_total_target_nowt.png", replace
 
 
 ************* losers YES weights
-reghdfe total_targetpop2_k lost_ry_minus6 lost_ry_minus5 lost_ry_minus4 lost_ry_minus3 lost_ry_minus2 o.lost_ry_minus1 ///
+reghdfe total_targetpop2_wwt_k lost_ry_minus6 lost_ry_minus5 lost_ry_minus4 lost_ry_minus3 lost_ry_minus2 o.lost_ry_minus1 ///
 lost_ry_plus0 lost_ry_plus1 lost_ry_plus2 lost_ry_plus3 lost_ry_plus4 lost_ry_plus5 lost_ry_plus6 exp_any_state ///
 	if ever_gain_exp_migpuma==0, ///
 	vce(cluster geoid_migpuma) absorb(geoid_migpuma year)
@@ -332,8 +341,51 @@ coefplot ///
 graph export "$oo/final/inlost_total_target_nowt.png", replace
 
 
+
+
+************** TOTAL PLACEBO POPULATION 
+
+************ gainers YES weights, no controls $covars $invars
+reghdfe placebo1_k gain_ry_minus6 gain_ry_minus5 gain_ry_minus4 gain_ry_minus3 gain_ry_minus2 o.gain_ry_minus1 ///
+gain_ry_plus0 gain_ry_plus1 gain_ry_plus2 gain_ry_plus3 exp_any_state ///
+	   if ever_lost_exp_migpuma==0, ///
+	vce(cluster geoid_migpuma) absorb(geoid_migpuma year) //for those that gain treatment, the total target pop increases with treatment
+est store in_target1
+* Plot with separate colors for pre- and post-event coefficients
+coefplot ///
+	(in_target1 , keep(gain_ry_minus* o.gain_ry_minus1) msymbol(circle ) mcolor(midblue) msize(1.25) ciopts(lcolor(midblue) lwidth(0.3) recast(rcap))) ///
+	(in_target1 , keep(gain_ry_plus* ) msymbol(circle ) mcolor(navy) msize(1.25) ciopts(lcolor(navy) lwidth(0.3) recast(rcap))) ///
+	, nooffsets xline(6, lcolor(gray) lpattern(solid))  yline(0, lcolor(gray) lpattern(dash))  ///
+	omit vertical ///
+	eqlabels(, labels) graphregion(color(white))  ///
+	xtitle("Relative year")   ytitle("Total placebo population (thousands)") ///
+	title("(a) Gained treatment") ///
+	legend(order(4 "Active treatment" 2 "No treatment") row(1) pos(6)) xsize(5)
+graph export "$oo/final/ingain_placebo_nowt.png", replace
+
+
+************* losers YES weights
+reghdfe placebo1_k lost_ry_minus6 lost_ry_minus5 lost_ry_minus4 lost_ry_minus3 lost_ry_minus2 o.lost_ry_minus1 ///
+lost_ry_plus0 lost_ry_plus1 lost_ry_plus2 lost_ry_plus3 lost_ry_plus4 lost_ry_plus5 lost_ry_plus6 exp_any_state ///
+	if ever_gain_exp_migpuma==0, ///
+	vce(cluster geoid_migpuma) absorb(geoid_migpuma year)
+est store in_target3
+* Plot 
+coefplot ///
+	(in_target3 , keep(lost_ry_minus* o.lost_ry_minus1) msymbol(circle ) mcolor(navy) msize(1.25) ciopts(lcolor(navy) lwidth(0.3) recast(rcap))) ///
+	(in_target3 , keep(lost_ry_plus* ) msymbol(circle ) mcolor(midblue) msize(1.25) ciopts(lcolor(midblue) lwidth(0.3) recast(rcap))) ///
+	, nooffsets xline(6, lcolor(gray) lpattern(solid))  yline(0, lcolor(gray) lpattern(dash))  ///
+	omit vertical ///
+	eqlabels(, labels) graphregion(color(white))  ///
+	xtitle("Relative year")   ytitle("Total placebo population (thousands)") ///
+	title("(b) Lost treatment")  ///
+	legend(order(2 "Active treatment" 4 "No treatment") row(1) pos(6)) xsize(5)
+graph export "$oo/final/inlost_placebo_nowt.png", replace
+
+
+
+
 ************** target POPULATION as a share of total pop
-gen total_targetpop2_sh = total_targetpop2 / total_pop
 
 ************ gainers YES weights, no controls $covars $invars
 reghdfe total_targetpop2_sh gain_ry_minus6 gain_ry_minus5 gain_ry_minus4 gain_ry_minus3 gain_ry_minus2 o.gain_ry_minus1 ///
@@ -348,10 +400,10 @@ coefplot ///
 	, nooffsets xline(6, lcolor(gray) lpattern(solid))  yline(0, lcolor(gray) lpattern(dash))  ///
 	omit vertical ///
 	eqlabels(, labels) graphregion(color(white))  ///
-	xtitle("Relative year")   ytitle("Total target population (thousands)") ///
+	xtitle("Relative year")   ytitle("Share of target population") ///
 	title("(a) Gained treatment") ///
 	legend(order(4 "Active treatment" 2 "No treatment") row(1) pos(6)) xsize(5)
-graph export "$oo/final/ingain_total_target_nowt.png", replace
+graph export "$oo/final/ingain_sh_target_nowt.png", replace
 
 
 ************* losers YES weights
@@ -367,10 +419,10 @@ coefplot ///
 	, nooffsets xline(6, lcolor(gray) lpattern(solid))  yline(0, lcolor(gray) lpattern(dash))  ///
 	omit vertical ///
 	eqlabels(, labels) graphregion(color(white))  ///
-	xtitle("Relative year")   ytitle("Total target population (thousands)") ///
+	xtitle("Relative year")   ytitle("Share of target population") ///
 	title("(b) Lost treatment")  ///
 	legend(order(2 "Active treatment" 4 "No treatment") row(1) pos(6)) xsize(5)
-graph export "$oo/final/inlost_total_target_nowt.png", replace
+graph export "$oo/final/inlost_sh_target_nowt.png", replace
 
 
 ************** TOTAL MOVERS
