@@ -114,32 +114,12 @@ These results suggest there are differential effects in migration for the non-ci
 \bibliography{bib_287.bib}
 
 \newpage
-\section{Figures and Tables}    
+\section{Tables and figures}    
 
-
-%% figure 1
-\begin{figure}[h]
-\centering
-\caption{Yearly count and geographic distribution of MIGPUMAs with active 287(g) agreements}
-\label{tab:agreement_count}
-\begin{center}
-\adjustbox{ width=\linewidth}{
-\label{fig:treatdistribution}
-    \includegraphics{output/final/bar_active_agreements.png}
-}
-\end{center}
-\justifying
-\begin{spacing}{1}
-\begin{footnotesize}
-\noindent \textit{Notes:} This graph shows yearly trends of MIGPUMAs with active agreements from 2012-2019.
-
-\end{footnotesize}
-\end{spacing}
-\end{figure}
 
 
 %% table 1
-\newpage
+
 \begin{table}[h]
 \centering
 \caption{ICE Removals from a 287(g) apprehension}
@@ -210,7 +190,7 @@ These results suggest there are differential effects in migration for the non-ci
 \newpage
 \begin{table}[h]
 \centering
-\caption{Difference-in-difference: Probability of mobility by gainer and loser status}
+\caption{Difference-in-difference: Probability of mobility by gainer and loser status (separate regressions)}
 \label{tab:regtp}
 \adjustbox{ width=0.7\linewidth}{
     \input{output/final/in_gain_lost}
@@ -273,9 +253,9 @@ These results suggest there are differential effects in migration for the non-ci
 \newpage
 \begin{table}[h]
 \centering
-\caption{Joint difference-in-difference for log total targeted and placebo populations by gainer and loser status}
+\caption{Difference-in-difference for log total targeted and placebo populations by gainer and loser status, separate regression}
 \label{tab:regtp}
-\adjustbox{ width=0.7\linewidth}{
+\adjustbox{ width=\linewidth}{
     \input{output/final/in_gain_lost_logpop}
 }
 
@@ -292,7 +272,47 @@ These results suggest there are differential effects in migration for the non-ci
 
 
 
+\newpage
+\begin{table}[h]
+\centering
+\caption{Joint difference-in-difference for log total targeted and placebo populations by gainer and loser status, same regression}
+\label{tab:regtp}
+\adjustbox{ width=\linewidth}{
+    \input{output/final/in_gain_lost_join_log}
+}
 
+\justifying
+\begin{spacing}{1}
+\begin{footnotesize}
+
+
+\noindent \textit{Notes:} This table compares . p $<$ 0.01 ***, p $<$ 0.05 **, p $<$0.1 *. 
+
+\end{footnotesize}
+\end{spacing}
+\end{table}
+
+
+%% figure 1
+\newpage
+\begin{figure}[h]
+\centering
+\caption{Yearly count and geographic distribution of MIGPUMAs with active 287(g) agreements}
+\label{tab:agreement_count}
+\begin{center}
+\adjustbox{ width=\linewidth}{
+\label{fig:treatdistribution}
+    \includegraphics{output/final/bar_active_agreements.png}
+}
+\end{center}
+\justifying
+\begin{spacing}{1}
+\begin{footnotesize}
+\noindent \textit{Notes:} This graph shows yearly trends of MIGPUMAs with active agreements from 2012-2019.
+
+\end{footnotesize}
+\end{spacing}
+\end{figure}
 
 \newpage
 \begin{landscape}
@@ -323,7 +343,7 @@ These results suggest there are differential effects in migration for the non-ci
 
 \begin{figure}[h]
 \centering
-\caption{In-migration effects of 287(g) migpuma exposure by gainers and losers}
+\caption{Event study of log total targeted and placebo populations by gainer and loser status, in separate regressions}
 \label{tab:es_in_any}
 
 \begin{minipage}{0.44\linewidth}
@@ -363,20 +383,26 @@ These results suggest there are differential effects in migration for the non-ci
 
 \begin{figure}[h]
 \centering
-\caption{Gainers and losers in same regression}
+\caption{Event study of log total targeted and placebo populations by gainer and loser status, in the same regressions}
 \label{tab:es_in_any}
 
 \begin{minipage}{0.44\linewidth}
 \centering
-
 \adjustbox{width=\linewidth}{\includegraphics{output/final/ingain_targetpop2_nowt_samereg_log.png}}
 \end{minipage}
-\hfill
 \begin{minipage}{0.44\linewidth}
 \centering
-
 \adjustbox{width=\linewidth}{\includegraphics{output/final/inlost_targetpop2_nowt_samereg_log.png}}
 \end{minipage}
+\begin{minipage}{0.44\linewidth}
+\centering
+\adjustbox{width=\linewidth}{\includegraphics{output/final/ingain_placebo_nowt_samereg_log.png}}
+\end{minipage}
+\begin{minipage}{0.44\linewidth}
+\centering
+\adjustbox{width=\linewidth}{\includegraphics{output/final/inlost_placebo_nowt_samereg_log.png}}
+\end{minipage}
+
 
 \justifying
 \begin{spacing}{1}
