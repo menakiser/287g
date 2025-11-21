@@ -110,7 +110,7 @@ To first test the parallel trends assumption, we can evaluate the effect of expo
 These results suggest there are differential effects in migration for the non-citizen targeted population, distinct from similar citizens. However, the direction of the effect has the opposite of the sign expected. I initially hypothesized that areas in which 287(g) is currently enacted, targeted immigrants would be less likely to move to areas where these agreements have been recently enacted. We are seeing that areas with active MOAs are more likely to have newcomers from the targeted population. A possible explanation for this, is that deporting immigrants in this group creates job vacancies and may potentially increase wages if demand for low-skilled Hispanic workers is not met, thus immigrants move to these areas in pursue of better economic opportunities. To validate this new hypothesis we must also check economic outcomes.
 
 
- 
+\newpage 
 \bibliography{bib_287.bib}
 
 \newpage
@@ -150,7 +150,7 @@ These results suggest there are differential effects in migration for the non-ci
 }
 
 \justifying
-\
+
 \begin{spacing}{1}
 \begin{footnotesize}
 \noindent \textit{Notes:} This table summarizes characteristics of foreign citizens removed by ICE following a 287(g) apprehension from 2013-2019. Latin American citizenship is identified through the top 50 reported countries. Citizenship reports only the leading 5 countries of citizenship. Source: TRAC Immigration Tools \citep{trac24}.
@@ -162,14 +162,17 @@ These results suggest there are differential effects in migration for the non-ci
 %% table 1
 \newpage
 \begin{table}[h]
-\centering
+\begin{center}
+
 \caption{Summary statistics by exposure and target group}
 \label{fig:balance}
 \adjustbox{ width=0.7\linewidth}{
     \input{output/final/balancetable}
 }
+\end{center}
 
 \justifying
+
 \begin{spacing}{1}
 \begin{footnotesize}
 \noindent \textit{Notes:} This table summarizes main characteristics by exposure and population type. Columns 1-2 and 5-6 restrict the sample to immigrants likely targeted by 287(g) agreements: foreign-born non-citizen, Hispanic, male, of ages 18-39, with High School degree or less, that immigrated after 2007, have been in the US for 10 years or less, and are not currently married. Columns 3-4 and 7-8 restricts the sample to comparable individuals, meeting all criteria from the targeted sample except they must be US-born citizens (thus no immigration time requirements). Odd-numbered columns restrict the sample to (untreated) zero exposure counties and even-numbered columns restrict the sample to non-zero exposure counties. Columns 1-4 apply probability weights as extracted from ACS, while columns 5-8 apply weights obtained from propensity score matching.
@@ -194,7 +197,7 @@ These results suggest there are differential effects in migration for the non-ci
 \begin{footnotesize}
 
 
-\noindent \textit{Notes:} This table compares the effect of exposure to a 287(g) program across targeted population and a placebo population defined by those who meet all criteria of targeted population except they are US-born citizens. Columns 3-4 adjust the ACS weights by the propensity score. Each cell represents a different regression. Individual controls are included in all regressions: age, race, educational attainment, english language states, having health insurance, being in school, and owning a home. Standard errors are set at the migpuma-year level.  Panel A absorbs current migpuma and year fixed effects and Panel B previous year migpuma and year fixed effects. p $<$ 0.01 ***, p $<$ 0.05 **, p $<$0.1 *. 
+\noindent \textit{Notes:} This table compares . p $<$ 0.01 ***, p $<$ 0.05 **, p $<$0.1 *. 
 
 \end{footnotesize}
 \end{spacing}
@@ -209,14 +212,14 @@ These results suggest there are differential effects in migration for the non-ci
 \centering
 \caption{Gainers vs loser}
 \label{tab:regtp}
-\adjustbox{ width=\linewidth}{
+\adjustbox{ width=0.7\linewidth}{
     \input{output/final/in_gain_lost}
 }
 
 \justifying
 \begin{spacing}{1}
 \begin{footnotesize}
-\noindent \textit{Notes:} This table compares the effect of exposure to a 287(g) program across targeted population and a placebo population defined by those who meet all criteria of targeted population except they are US-born citizens. Columns 3-4 adjust the ACS weights by the propensity score. Each cell represents a different regression. Individual controls are included in all regressions: age, race, educational attainment, english language states, having health insurance, being in school, and owning a home. Standard errors are set at the migpuma-year level.  Panel A absorbs current migpuma and year fixed effects and Panel B previous year migpuma and year fixed effects. p $<$ 0.01 ***, p $<$ 0.05 **, p $<$0.1 *. 
+\noindent \textit{Notes:} This table compares . p $<$ 0.01 ***, p $<$ 0.05 **, p $<$0.1 *. 
 
 \end{footnotesize}
 \end{spacing}
