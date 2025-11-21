@@ -151,6 +151,42 @@ coefplot ///
 graph export "$oo/final/inlost_targetpop2_nowt.png", replace
 
 
+
+********** In same regression
+**** GAINERS, NO WEIGHT
+reghdfe move_migpuma gain_ry_minus6 gain_ry_minus5 gain_ry_minus4 gain_ry_minus3 gain_ry_minus2 o.gain_ry_minus1 ///
+	gain_ry_plus0 gain_ry_plus1 gain_ry_plus2 gain_ry_plus3  ///
+	lost_ry_minus6 lost_ry_minus5 lost_ry_minus4 lost_ry_minus3 lost_ry_minus2 o.lost_ry_minus1 ///
+	lost_ry_plus0 lost_ry_plus1 lost_ry_plus2 lost_ry_plus3 lost_ry_plus4 lost_ry_plus5 lost_ry_plus6 ///
+	$invars  $covars [pw=perwt]  if targetpop2==1 , ///
+	vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+est store in_target1
+
+**** REDUCE WIDTH
+coefplot ///
+	(in_target1 , keep(gain_ry_minus* o.gain_ry_minus1) msymbol(circle ) mcolor(midblue) msize(1.25) ciopts(lcolor(midblue) lwidth(0.3) recast(rcap))) ///
+	(in_target1 , keep(gain_ry_plus* ) msymbol(circle ) mcolor(navy) msize(1.25) ciopts(lcolor(navy) lwidth(0.3) recast(rcap))) ///
+	, nooffsets xline(6, lcolor(gray) lpattern(solid))  yline(0, lcolor(gray) lpattern(dash))  ///
+	omit vertical ///
+	eqlabels(, labels) graphregion(color(white)) ///
+	xtitle("Relative year")   ytitle("Move migpuma") ///
+	title("(a) Gained treatment") ///
+	legend(order(4 "Active treatment" 2 "No treatment") row(1) pos(6)) xsize(5)
+graph export "$oo/final/ingain_targetpop2_nowt_samereg.png", replace
+
+**** LOSERS, NO WEIGHT
+coefplot ///
+	(in_target1 , keep(lost_ry_minus* o.lost_ry_minus1) msymbol(circle ) mcolor(navy) msize(1.25) ciopts(lcolor(navy) lwidth(0.3) recast(rcap))) ///
+	(in_target1 , keep(lost_ry_plus* ) msymbol(circle ) mcolor(midblue) msize(1.25) ciopts(lcolor(midblue) lwidth(0.3) recast(rcap))) ///
+	, nooffsets xline(6, lcolor(gray) lpattern(solid))  yline(0, lcolor(gray) lpattern(dash))  ///
+	omit vertical ///
+	eqlabels(, labels) graphregion(color(white))  ///
+	xtitle("Relative year")   ytitle("Share of target population") ///
+	title("(b) Lost treatment")  ///
+	legend(order(2 "Active treatment" 4 "No treatment") row(1) pos(6)) xsize(5)
+graph export "$oo/final/inlost_targetpop2_nowt_samereg.png", replace
+
+
 /**************************************************************
 TOTAL NUMBER OF TARGET POP
 **************************************************************/
