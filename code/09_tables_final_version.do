@@ -376,25 +376,76 @@ file write sumstat " Controls &  & X &  & X \\" _n
 file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4'  \\" _n 
 file write sumstat " Untreated mean & `um1' & `um2' & `um3' & `um4'  \\" _n 
 file write sumstat "Sample Size & `n1' & `n2' & `n3' & `n4'  \\" _n
+file write sumstat "\bottomrule" _n
+file write sumstat "\bottomrule" _n
 file write sumstat "\\" _n 
-file write sumstat "\bottomrule" _n
-file write sumstat "\bottomrule" _n
 file write sumstat "\end{tabular}"
 file close sumstat
 
 
 
-
-
-* with controls 
+**** trying doug's suggestion
+cap mat drop intarget
+* no controls 
 reghdfe move_migpuma exp_gain_migpuma exp_lost_migpuma  [pw=perwt]  if targetpop2==1,  vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
 reg_to_mat, depvar( move_migpuma ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget) wt(perwt) wttype(pw)
-* with propensity weights
 * with controls 
 reghdfe move_migpuma exp_gain_migpuma exp_lost_migpuma  $covars $invars [pw=perwt]  if targetpop2==1,  vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
 reg_to_mat, depvar( move_migpuma ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget) wt(perwt) wttype(pw)
+cap mat drop intarget
+* no controls 
+reghdfe move_migpuma exp_gain_migpuma exp_lost_migpuma  [pw=perwt]  if placebo1==1,  vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+reg_to_mat, depvar( move_migpuma ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget) wt(perwt) wttype(pw)
+* with controls 
+reghdfe move_migpuma exp_gain_migpuma exp_lost_migpuma  $covars $invars [pw=perwt]  if placebo1==1,  vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+reg_to_mat, depvar( move_migpuma ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget) wt(perwt) wttype(pw)
 
 
+
+* Create table
+cap file close sumstat
+file open sumstat using "$oo/final/in_gain_lost_join.tex", write replace
+file write sumstat "\begin{tabular}{lcccc}" _n
+file write sumstat "\toprule" _n
+file write sumstat "\toprule" _n
+file write sumstat " & \multicolumn{2}{c}{Target population} & \multicolumn{2}{c}{Placebo}  \\" _n
+file write sumstat "Move migpuma & (1) & (2)  & (3) & (4) \\" _n
+file write sumstat "\midrule " _n
+
+global varnames `"  "Gain treatment" "Lose treatment" "'
+local row = 1
+forval i = 1/2 {
+    local varname : word `i' of $varnames
+    forval c = 1/4  {
+        local b`c' = string(intarget[`row',`c'], "%12.4fc" )
+        local temp = intarget[`row',`c']/intarget[5,`c']*100
+        local bmean`c' = string(`temp', "%12.2fc" )
+        local++ row
+        local p`c' = intarget[`row',`c']
+        local stars_abs`c' = cond(`p`c'' < 0.01, "***", cond(`p`c'' < 0.05, "**", cond(`p`c'' < 0.1, "*", "")))
+        local++ row
+        local sd`c' = string(intarget[`row',`c'], "%12.4fc" )
+        
+    }
+    file write sumstat " `varname' & `b1'`stars_abs1' & `b2'`stars_abs2' & `b3'`stars_abs3' & `b4'`stars_abs4' \\" _n 
+    file write sumstat "  & [`bmean1'$\%$] & [`bmean2'$\%$] & [`bmean3'$\%$] & [`bmean4'$\%$] \\" _n 
+    file write sumstat " & (`sd1') & (`sd2') & (`sd3') & (`sd4') \\" _n 
+}
+file write sumstat "\\" _n 
+file write sumstat " Controls &  & X &  & X \\" _n 
+forval c = 1/4  {
+    local r`c' = string(intarget[7,`c'], "%12.4fc" )
+    local um`c' = string(intarget[8,`c'], "%12.4fc" )
+    local n`c' = string(intarget[9,`c'], "%12.0fc" )
+}
+file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4'  \\" _n 
+file write sumstat " Untreated mean & `um1' & `um2' & `um3' & `um4'  \\" _n 
+file write sumstat "Sample Size & `n1' & `n2' & `n3' & `n4'  \\" _n
+file write sumstat "\bottomrule" _n
+file write sumstat "\bottomrule" _n
+file write sumstat "\\" _n 
+file write sumstat "\end{tabular}"
+file close sumstat
 
 
 /**************************************************************
