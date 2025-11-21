@@ -166,7 +166,7 @@ These results suggest there are differential effects in migration for the non-ci
 
 \caption{Summary statistics by exposure and target group}
 \label{fig:balance}
-\adjustbox{ width=0.7\linewidth}{
+\adjustbox{ width=\linewidth}{
     \input{output/final/balancetable}
 }
 \end{center}
@@ -186,9 +186,9 @@ These results suggest there are differential effects in migration for the non-ci
 \newpage
 \begin{table}[h]
 \centering
-\caption{Exposure to 287(g)  on targeted and placebo populations}
+\caption{Net effect of 287(g) on probability of mobility among targeted and placebo populations}
 \label{tab:regtp}
-\adjustbox{ width=0.7\linewidth}{
+\adjustbox{ width=\linewidth}{
     \input{output/final/in_migration_target2}
 }
 
@@ -210,7 +210,7 @@ These results suggest there are differential effects in migration for the non-ci
 \newpage
 \begin{table}[h]
 \centering
-\caption{Gainers vs loser}
+\caption{Difference-in-difference: Probability of mobility by gainer and loser status}
 \label{tab:regtp}
 \adjustbox{ width=0.7\linewidth}{
     \input{output/final/in_gain_lost}
@@ -229,9 +229,9 @@ These results suggest there are differential effects in migration for the non-ci
 \newpage
 \begin{table}[h]
 \centering
-\caption{Gainers vs loser in same regression}
+\caption{Joint difference-in-difference for probability of mobility by gainer and loser status}
 \label{tab:regtp}
-\adjustbox{ width=0.8\linewidth}{
+\adjustbox{ width=\linewidth}{
     \input{output/final/in_gain_lost_join}
 }
 
@@ -249,9 +249,9 @@ These results suggest there are differential effects in migration for the non-ci
 \newpage
 \begin{table}[h]
 \centering
-\caption{Exposure to 287(g)  on LOG TOTAL targeted and placebo populations}
+\caption{Net effect of 287(g) on log total targeted and placebo populations}
 \label{tab:regtp}
-\adjustbox{ width=0.7\linewidth}{
+\adjustbox{ width=\linewidth}{
     \input{output/final/logpop_reg}
 }
 
@@ -273,7 +273,7 @@ These results suggest there are differential effects in migration for the non-ci
 \newpage
 \begin{table}[h]
 \centering
-\caption{Exposure to 287(g)  on LOG TOTAL targeted and placebo populations BY GAINERS AND LOSERS}
+\caption{Joint difference-in-difference for log total targeted and placebo populations by gainer and loser status}
 \label{tab:regtp}
 \adjustbox{ width=0.7\linewidth}{
     \input{output/final/in_gain_lost_logpop}
@@ -290,26 +290,6 @@ These results suggest there are differential effects in migration for the non-ci
 \end{spacing}
 \end{table}
 
-
-
-
-\newpage
-\begin{table}[h]
-\centering
-\caption{Heterogeneity of reesults}
-\label{tab:regtp}
-\adjustbox{ width=0.8\linewidth}{
-    \input{output/final/move_het}
-}
-
-\justifying
-\begin{spacing}{1}
-\begin{footnotesize}
-\noindent \textit{Notes:} This table compares the effect of exposure to a 287(g) program across targeted population and a placebo population defined by those who meet all criteria of targeted population except they are US-born citizens. Columns 3-4 adjust the ACS weights by the propensity score. Each cell represents a different regression. Individual controls are included in all regressions: age, race, educational attainment, english language states, having health insurance, being in school, and owning a home. Standard errors are set at the migpuma-year level.  Panel A absorbs current migpuma and year fixed effects and Panel B previous year migpuma and year fixed effects. p $<$ 0.01 ***, p $<$ 0.05 **, p $<$0.1 *. 
-
-\end{footnotesize}
-\end{spacing}
-\end{table}
 
 
 
@@ -382,13 +362,13 @@ These results suggest there are differential effects in migration for the non-ci
 \begin{minipage}{0.44\linewidth}
 \centering
 
-\adjustbox{width=\linewidth}{\includegraphics{output/final/ingain_targetpop2_nowt_samereg.png}}
+\adjustbox{width=\linewidth}{\includegraphics{output/final/ingain_targetpop2_nowt_samereg_log.png}}
 \end{minipage}
 \hfill
 \begin{minipage}{0.44\linewidth}
 \centering
 
-\adjustbox{width=\linewidth}{\includegraphics{output/final/inlost_targetpop2_nowt_samereg.png}}
+\adjustbox{width=\linewidth}{\includegraphics{output/final/inlost_targetpop2_nowt_samereg_log.png}}
 \end{minipage}
 
 \justifying
