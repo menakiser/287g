@@ -6,6 +6,8 @@
 \usepackage[utf8]{inputenc}
 \usepackage[square,sort,comma,numbers]{natbib}
 \bibliographystyle{agsm}
+\usepackage{caption, subcaption}
+\usepackage{amsmath}
 \bibpunct{(}{)}{;}{a}{,}{,}
 \usepackage{graphicx, adjustbox, rotating}
 \usepackage{booktabs, url}
@@ -36,64 +38,103 @@
     287(g) agreements create partnerships between state and local agencies and ICE, allowing for deputized officers to perform some of ICE duties; this program led to deportations of immigrants of Hispanic origin burgeoning between 2011-2014. Out of fear of racial discrimination, Hispanic non-citizens may be more prone to moving out of counties with active 287(g) agreements. I explore this through a staggered difference-in-difference design evaluating the effect of living in a county with an active 287(g) agreement among the population targeted by this policy. As counties can volunteer into this agreement, I address selection concerns by applying a propensity score weights using parameters determinant of a county being exposed to the program at any point during our period of observation.
 \end{abstract}
 
-%\section{Introduction}
+\section{Introduction}
 
-\section{287(g) Agreements}
-The 287(g) program establishes partnerships between state and local enforcement agencies and ICE for local officers to exercise ICE duties to some extent. Agencies can voluntarily request participation in the program and ICE ultimately decides which agencies are included in the program and enters negotiations for an agreement. Agreements are negotiated between DHS and local agencies and supervised by ICE; they establish delegation of authority to a determined number of officers. After an agreement expires, DHS is not obligated to renew it. Not all agreements include a specific expiration date, and once an agreement is entered into, it may be terminated at any time by either party.
+% 287g information
+The 287(g) program establishes partnerships between state and local enforcement agencies and ICE for local officers to exercise ICE duties. Agencies can voluntarily request participation in the program and ICE ultimately decides which agencies are included in the program and enters negotiations for an agreement. Agreements are negotiated between DHS and local agencies and supervised by ICE, establishing delegation of authority to a determined number of officers. After an agreement expires, DHS is not obligated to renew it. Not all agreements include a specific expiration date, and once an agreement is entered into, it may be terminated at any time by either party.
 
-This policy was officially enacted in 1996 as part of the Illegal Immigration Reform and Immigrant Responsibility Act (IIRIRA); however, no agencies joined the program until 2002 (Figure \ref{fig:timeline}). In 2008, ICE created a standard template for Memorandum of Agreements (MOA), simplifying the process for LEAs to enroll. Between 2006 and 2009, at least 56 agencies joined the program, partially due to the simplification of the process. In September of 2025, DHS reported over 1,000 current agreements, most of which were entered starting 2019. Changes in recruiting, funding, and ICE and DHS priorities for identifying undocumented immigrants may change the program's intensity.
+This policy was officially enacted in 1996 as part of the Illegal Immigration Reform and Immigrant Responsibility Act (IIRIRA); however, no agencies joined the program until 2002 (SOURCE XX). The number of participating agencies varies depending on changes to standard templates of agreements and differences in recruiting and funding. Between 2006 and 2009, at least 56 agencies joined the program, partially due to the simplification of the contract negotiating process. In September of 2025, DHS reported over 1,000 current agreements, most of which were entered starting 2019. Changes in recruiting, funding, and ICE and DHS priorities for identifying undocumented immigrants may change the program's intensity.
 
-This program can take three different models (and hybrids of these) based on the needs, capacity, and interest of the agency and ICE, we can continuously observe only one type, jail enforcement modality, for the full extent of our period of observation (2013-2019). Under this type of agreement local officers can interrogate and place detainers (requests to maintain in custody for up to 48 hours) for suspected noncitizens who have been arrested. The task force model allows local officers to interrogate suspected noncitizens encounter in every day activities was rescinded in 2012\footnote{The decision to rescind this model was largely due to concerns of racial discrimination. The rescission entailed task force agreements would not be renewed but we observe some counties had an active agreement up to 2013.} and reinstated in 2025. The warrant service officer model, under which local officers to receive ICE training to execute immigration warrants, was first introduced in May 2019. We define exposure to a 287(g) agreement as being exposed to any model of 287(g), understanding that jail enforcement modality is the predominant model being captured during this period. 
+This program can take three different models (and hybrids of these) based on the needs, capacity, and interest of the agency and ICE, we can continuously observe only one type, jail enforcement modality, for the full extent of our period of observation (2012-2019). Under this type of agreement local officers can interrogate and place detainers (requests to maintain in custody for up to 48 hours) for suspected noncitizens who have been arrested. The task force model allows local officers to interrogate suspected noncitizens encounter in every day activities was rescinded in 2012\footnote{The decision to rescind this model was largely due to concerns of racial discrimination. The rescission entailed task force agreements would not be renewed but we observe some counties had an active agreement up to 2013.} and reinstated in 2025. The warrant service officer model, under which local officers to receive ICE training to execute immigration warrants, was first introduced in May 2019. We define our treatment as having an active 287(g) agreement in an individual locality as being exposed to any model of 287(g), understanding that jail enforcement modality is the predominant model being captured during this period. 
+
+% branch 1: research on the effect of 287g
+
+% branch 2: research on the effect of reducing or increasing the risk of deportation
+
+% branch 3: research specific to mobility
+
+This study is novel as it uncovers the effects of 287(g) over a span of 8 years at a national level and it focuses on mobility outcomes that could explain the labor market mechanism seen in the literature. 
 
 \section{Data}
-The main datasets used in this paper come from the ICE websites,  Syracuse University Transactional Records Access Clearinghouse (TRAC) reports, and the American Community Survey (ACS). 
+The main datasets used in this paper come from the ICE websites and the American Community Survey (ACS). 
 
-Through the Internet Archive's Wayback Machine, I can extract snapshots from ICE websites listing LEAs with current 287(g) agreements starting. These lists are retrievable starting in 2011. All lists include the name of the agency, the date it was signed, and the type of agreement entered. For each year, I can obtain a minimum of 3 snapshots from different days in different months, as seen in Table \ref{tab:retrievals}. Having access to multiple observations within a year allows me to identify the dates when agreements were terminated, as indicated by their absence from subsequent retrievals. I match agencies to their local geographic area by name using a Bureau of Justice Statistics (\citeyear{data:leaxwalk}) crosswalk from local enforcement agency to county. Exposure to the 287(g) program is defined as having any active agreement in the county of residence during the survey year. I distinct between local agreememts and state agreements as they may have different effects and following....
+Obtaining a yearly list of active 287(g) agreements has posed an issue to other researchers (e.g. XX). Through the Internet Archive's Wayback Machine (XX), I can extract snapshots from ICE websites listing agencies with current 287(g) agreements, retrievable starting 2011. All lists include the name of the agency, the date it was signed, and the type of agreement entered. I then match this to the only ICE list listing signed 287(g) covering multiple years (2012, 2013, 2019) and find a 100\% match in agency names (CITATION XXX). I match agencies to their local geographic area using a Bureau of Justice Statistics (\citeyear{data:leaxwalk}) crosswalk and then use a GEOCORR crosswalk to obtain a match to a PUMA (2010 version). For each year, I can observe if a given locality had an active agreement. Following XXX CITATION, I distinct between local agreements and state agreements (i.e. state-level departments of corrections) as they have different enforcement mechanisms and enforcement to outcomes of interest.
 
+I obtain details on the demographics of those targeted by 287(g) from the Transactional Records Access Clearinghouse (\citeyear{trac24}), an organization distributing statistics obtained from government agencies through the Freedom of Information Act (FOIA). From reports on ICE removals from 2012--2019 initiated with a 287(g) Program apprehension, summarized in Table \ref{tab:removals}, we can see that 76\% of the deportees were of ages 18--39, 98\% had citizenship in a Latin American country, and 96\% were male. We use these characteristics to identify the population targeted by this policy: males, Latin American country of origin, ages 18-39, foreign-born, non-citizen. We can also observe yearly trends in removals, as illustrated in Figure XXX, and we can see that during our period of observation 2012 removals reached close to 20,000. Though this number is small relative to the total population of targeted immigrants (XX\%, using 2012 totals from our ACS sample), research has shown how the fear induced by this policy is salient among Hispanic communities, and leads to changes in labor market decisions such as XX.
 
-I obtain details on the demographics of those targeted by 287(g) from the Transactional Records Access Clearinghouse (\citeyear{trac24}), an organization founded by the Syracuse University that gathers and distributes immigration statistics obtained from government agencies through the Freedom of Information Act (FOIA). From reports on ICE removals from 2013--2019 initiated with a 287(g) Program apprehension, summarized in Table \ref{tab:removals}, we can see that 76\% of the deportees were of ages 18--39, 98\% had citizenship in a Latin American country, and 96\% were male. We use these characteristics to identify the population targeted by this policy: males, Latin American country of origin, ages 18-39, foreign-born, non-citizen.
+Individual characteristics are extracted from the 2012-2019 American Community Survey (ACS), obtained through the Integrated Public Use Microdata Series (IPUMS) \citep{data:acs}. The ACS is a yearly cross-sectional, one percent, annual survey of households in the United States. Through this survey we can identify foreign-born respondents using place of birth and citizenship status; however, this survey does not ask about current legal status or status at entry. I specify the targeted population using the predominant characteristics of removed immigrants (males, Latin American country of origin, ages 18-39, foreign-born, non-citizen) and further restrict this sample to those with a U.S. arrival after 2007 to rule out DACA eligibility. As we focus in migration patterns we focus on individuals mobile individuals: not currently married, also ruling out citizenship eligibility through a spouse, and those with less than ten years in the country, and low-skill individual (educational attainment of High School degree or less).  The ACS defines Public Use Microdata Areas (PUMAs), non-overlapping, statistical geographic areas that partition each state or equivalent entity into geographic areas containing no fewer than 100,000 people each--thus this is never missing for any individual. Migration indicators provide information using migration PUMAs (migpumas), a geographic unit that aggregates one or multiple PUMAs. We use migpuma as our geographic unit of analysis as we are able to identify treatment and mobility at this level. 
 
-Individual characteristics are extracted from the 2013-2019 American Community Survey (ACS), obtained through the Integrated Public Use Microdata Series (IPUMS) \citep{data:acs}. The ACS is a yearly cross-sectional, one percent, annual survey of households in the United States. Through this survey we can identify foreign-born respondents using place of birth and citizenship status; however, this survey does not ask about current legal status or status at entry. I restrict the targeted population to those with a U.S. arrival after 2007 to rule out DACA eligibility.
-To hone into a mobile population, I restrict the targeted population to those with low-skill (educational attainment of High School degree or less), those not currently married, those without own children in the household, and recent arrivals (with 10 years or less in the country)\footnote{Restricting to those with high school or less rules out international students pursuing a college degree. Excluding those not currently married rules out those eligible to legal permanent status through their spouse.}. In Table \ref{tab:sumstat}, we can observe characteristics of the targeted population across level of exposure.
+ In Table \ref{tab:sumstat}, we can observe characteristics of the targeted population across never treated migpumas and treated migpumas. We can see minor differences in X and Y while Y and Z are also relevant.
 
-The ACS includes an individual's state and county of current residence and previous year residence. The smallest geographic unit in the ACS is PUMA; however
+During our period of observation (2012--2019), we can observe migpumas that gain treatment (an active 287(g) agreement), lose an agreement, that never receive an agreement, or always have an active agreement. A total of 118 migpumas are treated at any point between 2012--2019, of these, 26 are always treated, 73 gain treatment, and 21 lose treatment. We can observe the yearly trends in number of treated migpumas and the geographic distribution of these in Figure \ref{fig:treatdistribution}. 
 
-This source also provides  place of work county, commuting time, current occupation, industry, earnings, and more which will help us understand other effects of this policy.
 
 
 \section{Empirical design}
-To identify the effects of this policy, I use a difference-in-difference design interacting being part of the target population and exposure, as shown in Equation \ref{eq:did}. However, as treatment is quite unbalanced, I use a propensity score matching to re-weight untreated counties. Through a logit estimation regressing on a county's share of targeted population, low skill population, foreign population, young population, total population, mean income, house price (either rent or mortgage), and being a predominantly red state. The predicted exposure score along with the original non-zero scores are applied to the untreated. 
-As the cross-sectional data from ACS uses probability weights, I multiply these by the propensity score obtained and apply this for all analysis. In Table \ref{tab:sumstat}, we can observe how relevant characteristics for the treated and untreated groups changes when applying the propensity score weights.
-\begin{equation}
-    \label{eq:did}
-    in-migration_{icy} = \beta_{0} + \beta_{1}exposure_{cy}*targeted_{i} +  \beta_{2}exposure_{cy} + \beta_{3}targeted_{i} + \beta_{42}W_{y} + \beta_{53}Z_{c} + \epsilon_{cy} 
-\end{equation}
 
-To first test the parallel trends assumption, we can evaluate the effect of exposure on migration decisions, following Equation \ref{eq:reg1}, in which in--migration can take any move (including within county), moving counties, and moving states. I include the results for this estimation in Table \ref{tab:regtp}. We can see that in the targeted population, 287(g) exposure increases mobility within county, across counties, and across states, with a higher significance level at county level. These results become stronger and more significant when applying propensity weights. In the placebo population, we observe mostly negative effects and not-statistically significant effects of 287(g) programs in mobility.
+The main sample of observation spans from 2012--2019 and focuses on the targeted population detailed in the data section. To identify the effects of this policy on in-migration, I start with a regression analysis evaluating the effect of having an active 287(g) agreement in any given year on an individual's in migration decisions. I detail this design in Equation  \ref{eq:reg1},  in which the $Y$, outcome variables, is a dummy for having moved in the past year for an individual \textit{i}, currently residing in migpuma \textit{m}, during year \textit{y}. The treatment is defined by having an active agreement in the migpuma of residence during the focus year. I also include individual controls $X_{i}$ (age, race, high school attained, currently in school, poor level of English, and a dummy for owning a house) migpuma fixed effects $W_{m} $ and year fixed effects $Z_{y}$ and cluster standard errors at the migpuma and year level. The coefficient of interest $\beta_{1}$ informs us of the net effect of having an active agreement on the chances of having moved to the migpuma of observation. 
 \begin{equation}
     \label{eq:reg1}
-    in-migration_{imy} = \beta_{0} + \beta_{1}exposure_{m}*post_{my} +  \beta_{2}W_{y} + \beta_{3}Z_{m} + \epsilon_{my} 
+    Y_{imy} = \beta_{0} + \beta_{1}\text{active agreement}_{my} + \alpha_{1}X_{i} +  \alpha_{2}W_{m} + \alpha_{3}Z_{y} + \epsilon_{my} 
 \end{equation}
+
+To identify the effect of gaining and losing treatment we implement a staggered difference-in-difference approach detailed in Equation \ref{eq:gain_did} and 3. The $\text{gains treatment}_{m}$ ($\text{loses treatment}_{m}$ ) indicator is assigned at the migpuma level and the $\text{post}_{my}$ indicator is a dummy for the focus year being greater or equal than the year in which the treatment was gained (lost) in the focus migpuma during a given year. In Equation \ref{eq:gain_did}, the coefficient of interest $\beta'_{1}$ describes the effect of gaining 287(g) treatment relative to the never treated, as we exclude those that ever lose treatment. In Equation 3, the coefficient of interest $\beta''_{1}$ captures the effect of losing 287(g) treatment relative to the never treated, as we exclude those that ever gain treatment.
+ \begin{align}
+    \label{eq:gain_did}
+    Y_{imy} &= \beta'_{0} + \beta'_{1}\text{gains treatment}_{m}*\text{post}_{my} + \alpha'_{1}X_{i} +  \alpha'_{2}W_{m} + \alpha'_{3}Z_{y} + \epsilon_{my}  \\
+    Y_{imy} &= \beta''_{0} + \beta''_{1}\text{lose treatment}_{m}*\text{post}_{my} + \alpha''_{1}X_{i} +  \alpha''_{2}W_{m} + \alpha''_{3}Z_{y} + \epsilon_{my} 
+ \end{align}
+
+By evaluating the effect of gaining and losing treatment we are able to evaluate the parallel trends assumption through an event study design.
+ \begin{equation}
+    \label{eq:joindid}
+    Y_{imy} = \beta^{(3)}_{0} + \beta^{(3)}_{1}\text{gains treatment}_{m}*\text{post}_{my} + \beta^{(3)}_{2}\text{loses treatment}_{m}*\text{post}_{my} +  \alpha^{(3)}_{1}W_{m} + 
+    \alpha^{(3)}_{1}X_{i} +  \alpha^{(3)}_{2}W_{m} + \alpha^{(3)}_{3}Z_{y} + \epsilon_{my} 
+\end{equation}
+
+Alternatively, we can jointly evaluate the effect of gaining an losing treatment in Equation \ref{eq:joindid}. In this case, $\beta^{(3)}_{1}$ captures the effect of gaining 287(g) treatment and $\beta^{(3)}_{2}$ captures the effect of gaining treatment, while the comparison group includes the never treated; those that will lose treatment, but before they lose it; and those that will gain treatment, but before they gain it. So our comparison group actually includes migpumas that have an active 287(g) treatment but before they lose it. This analysis allows us to identify the effect of obtaining or losing the treatment.
+
+In addition to evaluating the effect in newcomers (in-migration) as a share of the target population, I evaluate the effect in (log) total target population in the residing in the focus migpuma. This would uncover the issue of the denominator. In this case, the outcome is established at the migpuma-year level, and as opposed to including controls at the individual level we include controls at the migpuma-year level, including share of young adults, race composition, high school attainment, currently in school, poor level of English, and homeowners. <<<< I'M CONFUSED ON THIS ACTUALLY
+
+
+
+ \section{Results}
+
+In Table , we start by evaluating Equation \ref{eq:reg1} for the target population in panel A and for a placebo population in panel B. We find puzzling results that though distinguishable from the placebo effects point to a different direction from expected. We explore this further by focusing on total target population in later tables. 
+
+In Table , we evaluate Equation \ref{eq:joindid} and find results in the same direction though insignificant.
+
+To first test the parallel trends assumption, we can evaluate the effect of exposure on migration decisions, following Equation \ref{eq:reg1}, in which in--migration can take any move (including within county), moving counties, and moving states. I include the results for this estimation in Table \ref{tab:regtp}. We can see that in the targeted population, 287(g) exposure increases mobility within county, across counties, and across states, with a higher significance level at county level. These results become stronger and more significant when applying propensity weights. In the placebo population, we observe mostly negative effects and not-statistically significant effects of 287(g) programs in mobility.
+
 
 These results suggest there are differential effects in migration for the non-citizen targeted population, distinct from similar citizens. However, the direction of the effect has the opposite of the sign expected. I initially hypothesized that areas in which 287(g) is currently enacted, targeted immigrants would be less likely to move to areas where these agreements have been recently enacted. We are seeing that areas with active MOAs are more likely to have newcomers from the targeted population. A possible explanation for this, is that deporting immigrants in this group creates job vacancies and may potentially increase wages if demand for low-skilled Hispanic workers is not met, thus immigrants move to these areas in pursue of better economic opportunities. To validate this new hypothesis we must also check economic outcomes.
 
-\begin{comment}
 
-in migration: previous year is different from the current year
-\begin{equation}
-    in-migration_{icy} = \beta_{0} + \beta_{1}exposure_{cy}*targeted_{i} +  \beta_{2}exposure_{cy} + \beta_{3}targeted_{i} + \beta_{42}W_{y} + \beta_{53}Z_{c} + \epsilon_{cy} 
-\end{equation}
-
-out migration 
-\begin{equation}
-    out-migration_{ic'y'} = \beta'_{0} + \beta'_{1}exposure_{c'y'}*targeted_{i} + \beta'_{2}exposure_{c'y'} + \beta'_{3}targeted_{i} + \beta'_{42}W_{y'} + \beta'_{43}Z_{c'} + \epsilon_{c'y'} 
-\end{equation}
-\end{comment}
-
+ 
 \bibliography{bib_287.bib}
 
 \newpage
-\section{Tables and Figures}
+\section{Figures and Tables}    
+\begin{figure}[h]
+\centering
+\caption{Yearly count and geographic distribution of MIGPUMAs with active 287(g) agreements}
+\label{tab:agreement_count}
+\begin{center}
+\adjustbox{ width=\linewidth}{
+\label{fig:treatdistribution}
+    \includegraphics{output/final/bar_active_agreements.png}
+}
+\end{center}
+\justifying
+\begin{spacing}{1}
+\begin{footnotesize}
+\noindent \textit{Notes:} This graph shows yearly trends of MIGPUMAs with active agreements from 2012-2019.
+
+\end{footnotesize}
+\end{spacing}
+\end{figure}
+
+
 
 \begin{table}[h]
 \centering
@@ -101,6 +142,7 @@ out migration
 \label{tab:removals}
 \adjustbox{ width=0.5\linewidth}{
     \input{output/removaltable}
+    
 }
 \end{table}
 
@@ -111,48 +153,6 @@ out migration
 \noindent \textit{Notes:} This table summarizes characteristics of foreign citizens removed by ICE following a 287(g) apprehension from 2013-2019. Latin American citizenship is identified through the top 50 reported countries. Citizenship reports only the leading 5 countries of citizenship. Source: TRAC Immigration Tools \citep{trac24}.
 \end{footnotesize}
 \end{spacing}
-
-
-\begin{table}[h]
-\centering
-\caption{Retrievals of active Memorandum of Agreements}
-\label{tab:retrievals}
-\adjustbox{ width=0.4\linewidth}{
-    \input{output/t1_retrievals}
-}
-\end{table}
-
-\justifying
-\
-\begin{spacing}{1}
-\begin{footnotesize}
-\noindent \textit{Notes:} This table quantifies the number of retrievals from distinctive days, months, and pertaining different Local Enforcement Agencies (LEAs).
-\end{footnotesize}
-\end{spacing}
-
-
-
-\newpage
-\begin{table}[h]
-\centering
-\caption{Balance table}
-\label{fig:timeline}
-\adjustbox{ width=\linewidth}{
-    \input{output/final/balancetable}
-}
-\end{table}
-
-
-
-\newpage
-\begin{table}[h]
-\centering
-\caption{Balance table move}
-\label{fig:timeline}
-\adjustbox{ width=\linewidth}{
-    \input{output/final/balancetable_move}
-}
-\end{table}
 
 
 \newpage
