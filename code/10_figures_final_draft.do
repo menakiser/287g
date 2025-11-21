@@ -444,3 +444,248 @@ coefplot ///
 	legend(order(2 "Active treatment" 4 "No treatment") row(1) pos(6)) xsize(5)
 graph export "$oo/final/inlost_movetotal_target_nowt.png", replace
 */
+
+
+
+
+/**************************************************************
+Table 3: in migration Regressions POPULATION
+**************************************************************/
+global covars "age r_white r_black r_asian hs in_school no_english ownhome"
+global invars "exp_any_state " //SC_any
+global outvars "prev_exp_any_state " //prev_SC_any
+
+
+use "$oi/working_acs", clear 
+keep if year >= 2012
+drop if always_treated_migpuma==1
+* define propensity weights
+merge m:1 statefip current_migpuma  using  "$oi/propensity_weights2012migpuma_t2" , nogen keep(3) keepusing( phat wt)
+gen perwt_wt = perwt*wt
+drop if mi(perwt_wt)
+gen placebo1 = sex==1 & lowskill==1 & hispan!=0 & born_abroad==0 & young==1  & marst>=3  //hispanic citizens born in the usa
+
+gen total_targetpop2 = perwt if targetpop2==1
+gen total_targetpop2_wwt = perwt_wt if targetpop2==1
+gen total_pop = perwt if age>=18 & age<=65
+gen total_pop_wwt = perwt_wt if age>=18 & age<=65
+
+
+gen relative_year_gain =  year - gain_exp_year
+replace relative_year_gain = . if gain_exp_year == 0
+
+* get moving totals
+gen move_target = move_migpuma*total_targetpop2
+gen move_target_wwt = move_migpuma*total_targetpop2
+
+gen move_migpuma_wwt = perwt_wt*move_migpuma
+replace move_migpuma = perwt*move_migpuma
+
+*** create relative year for losers
+gen relative_year_lost =  year - lost_exp_year
+replace relative_year_lost = . if lost_exp_year == 0
+
+replace placebo1 = placebo1*perwt 
+gen placebo1_wwt = placebo1*wt 
+
+* age
+gen int_age1 = inrange(age, 0, 9) 
+gen int_age2 = inrange(age, 10, 19) 
+gen int_age3 = inrange(age, 20, 29)
+gen int_age4 = inrange(age, 30, 39)
+gen int_age5 = inrange(age, 40, 49)
+gen int_age6 = inrange(age, 50, 59)
+gen int_age7 = inrange(age, 60, 69)
+gen int_age8 = inrange(age, 70, 100)
+
+global covarsPOP "int_age1 int_age2 int_age3 int_age4 int_age5 int_age6 r_white r_black r_asian hs in_school no_english ownhome"
+
+foreach v in $covarsPOP {
+    replace `v' = `v'*perwt
+}
+
+collapse (sum) move_target move_migpuma move_target_wwt move_migpuma_wwt total_targetpop2 total_targetpop2_wwt total_pop total_pop_wwt placebo1 placebo1_wwt perwt ///
+	(mean) $covarsPOP ///
+	(max) exp_any_migpuma  ever_treated_migpuma ever_lost_exp_migpuma ever_gain_exp_migpuma lost_exp_year gain_exp_year ///
+	relative_year_gain relative_year_lost geoid_migpuma $invars ///
+	, by(current_migpuma statefip year)
+
+foreach v in $covarsPOP {
+    replace `v' = log(`v' + 1)
+}
+
+gen exp_lost_migpuma = (year>=lost_exp_year)*(ever_lost_exp_migpuma==1)
+gen exp_gain_migpuma = (year>=gain_exp_year)*(ever_gain_exp_migpuma==1)
+
+
+* event-time indicators
+forval n = 1/7 {
+	gen gain_ry_plus`n'  = (relative_year_gain == `n')
+	gen gain_ry_minus`n' = (relative_year_gain == -`n')
+}
+* event time = 0
+gen gain_ry_plus0 = (relative_year_gain == 0)
+
+* event-time indicators
+forval n = 1/7 {
+	gen lost_ry_plus`n'  = (relative_year_lost == `n')
+	gen lost_ry_minus`n' = (relative_year_lost == -`n')
+}
+* event time = 0
+gen lost_ry_plus0 = (relative_year_lost == 0)
+
+* label years
+forval n = 1/7 {
+	label var gain_ry_plus`n' "+`n'"
+	label var gain_ry_minus`n' "-`n'"
+	label var lost_ry_plus`n' "+`n'"
+	label var lost_ry_minus`n' "-`n'"
+}
+label var gain_ry_plus0 "0"
+label var lost_ry_plus0 "0"
+
+replace gain_ry_minus6 = gain_ry_minus6 | gain_ry_minus7
+
+format total_targetpop2 %12.2fc
+gen total_targetpop2_k = total_targetpop2/1000
+gen total_targetpop2_wwt_k = total_targetpop2_wwt/1000
+gen total_pop2012K = total_pop/1000 if year==2012
+bys statefip current_migpuma: ereplace total_pop2012K = mode(total_pop2012K)
+
+format move_target_wwt %12.0fc
+gen move_target_wwt_k = move_target_wwt/1000
+gen move_target_k = move_target/1000
+
+gen total_targetpop2_sh = total_targetpop2 / total_pop
+
+gen total_pop_k = total_pop /1000
+
+gen placebo1_k = placebo1/1000
+
+
+gen log_total_pop = log(total_pop + 1)
+gen log_total_targetpop2 = log(total_targetpop2 + 1) 
+gen log_total_placebo1 = log(placebo1 + 1)
+
+egen group_id_migpuma = group(geoid_migpuma year) 
+
+
+
+
+************** TOTAL POPULATION of target pop
+
+************ gainers YES weights, no controls $covars $invars
+reghdfe log_total_targetpop2 gain_ry_minus6 gain_ry_minus5 gain_ry_minus4 gain_ry_minus3 gain_ry_minus2 o.gain_ry_minus1 ///
+gain_ry_plus0 gain_ry_plus1 gain_ry_plus2 gain_ry_plus3 $covarsPOP $invars ///
+	   if ever_lost_exp_migpuma==0, ///
+	vce(cluster geoid_migpuma) absorb(geoid_migpuma year) //for those that gain treatment, the total target pop increases with treatment
+est store in_target1
+* Plot with separate colors for pre- and post-event coefficients
+coefplot ///
+	(in_target1 , keep(gain_ry_minus* o.gain_ry_minus1) msymbol(circle ) mcolor(midblue) msize(1.25) ciopts(lcolor(midblue) lwidth(0.3) recast(rcap))) ///
+	(in_target1 , keep(gain_ry_plus* ) msymbol(circle ) mcolor(navy) msize(1.25) ciopts(lcolor(navy) lwidth(0.3) recast(rcap))) ///
+	, nooffsets xline(6, lcolor(gray) lpattern(solid))  yline(0, lcolor(gray) lpattern(dash))  ///
+	omit vertical ///
+	eqlabels(, labels) graphregion(color(white))  ///
+	xtitle("Relative year")   ytitle("Total target population (thousands)") ///
+	title("(a) Gained treatment") ///
+	legend(order(4 "Active treatment" 2 "No treatment") row(1) pos(6)) xsize(5)
+graph export "$oo/final/ingain_total_target_nowt_log.png", replace
+
+
+************* losers YES weights
+reghdfe log_total_targetpop2 lost_ry_minus6 lost_ry_minus5 lost_ry_minus4 lost_ry_minus3 lost_ry_minus2 o.lost_ry_minus1 ///
+lost_ry_plus0 lost_ry_plus1 lost_ry_plus2 lost_ry_plus3 lost_ry_plus4 lost_ry_plus5 lost_ry_plus6 $covarsPOP $invars ///
+	if ever_gain_exp_migpuma==0, ///
+	vce(cluster geoid_migpuma) absorb(geoid_migpuma year)
+est store in_target3
+* Plot 
+coefplot ///
+	(in_target3 , keep(lost_ry_minus* o.lost_ry_minus1) msymbol(circle ) mcolor(navy) msize(1.25) ciopts(lcolor(navy) lwidth(0.3) recast(rcap))) ///
+	(in_target3 , keep(lost_ry_plus* ) msymbol(circle ) mcolor(midblue) msize(1.25) ciopts(lcolor(midblue) lwidth(0.3) recast(rcap))) ///
+	, nooffsets xline(6, lcolor(gray) lpattern(solid))  yline(0, lcolor(gray) lpattern(dash))  ///
+	omit vertical ///
+	eqlabels(, labels) graphregion(color(white))  ///
+	xtitle("Relative year")   ytitle("Total target population (thousands)") ///
+	title("(b) Lost treatment")  ///
+	legend(order(2 "Active treatment" 4 "No treatment") row(1) pos(6)) xsize(5)
+graph export "$oo/final/inlost_total_target_nowt_log.png", replace
+
+
+
+
+************** TOTAL PLACEBO POPULATION 
+
+************ gainers YES weights, no controls $covars $invars
+reghdfe log_total_placebo1 gain_ry_minus6 gain_ry_minus5 gain_ry_minus4 gain_ry_minus3 gain_ry_minus2 o.gain_ry_minus1 ///
+gain_ry_plus0 gain_ry_plus1 gain_ry_plus2 gain_ry_plus3 $covarsPOP $invars ///
+	   if ever_lost_exp_migpuma==0, ///
+	vce(cluster geoid_migpuma) absorb(geoid_migpuma year) //for those that gain treatment, the total target pop increases with treatment
+est store in_target1
+* Plot with separate colors for pre- and post-event coefficients
+coefplot ///
+	(in_target1 , keep(gain_ry_minus* o.gain_ry_minus1) msymbol(circle ) mcolor(midblue) msize(1.25) ciopts(lcolor(midblue) lwidth(0.3) recast(rcap))) ///
+	(in_target1 , keep(gain_ry_plus* ) msymbol(circle ) mcolor(navy) msize(1.25) ciopts(lcolor(navy) lwidth(0.3) recast(rcap))) ///
+	, nooffsets xline(6, lcolor(gray) lpattern(solid))  yline(0, lcolor(gray) lpattern(dash))  ///
+	omit vertical ///
+	eqlabels(, labels) graphregion(color(white))  ///
+	xtitle("Relative year")   ytitle("Total placebo population (thousands)") ///
+	title("(a) Gained treatment") ///
+	legend(order(4 "Active treatment" 2 "No treatment") row(1) pos(6)) xsize(5)
+graph export "$oo/final/ingain_placebo_nowt_log.png", replace
+
+
+************* losers YES weights
+reghdfe log_total_placebo1 lost_ry_minus6 lost_ry_minus5 lost_ry_minus4 lost_ry_minus3 lost_ry_minus2 o.lost_ry_minus1 ///
+lost_ry_plus0 lost_ry_plus1 lost_ry_plus2 lost_ry_plus3 lost_ry_plus4 lost_ry_plus5 lost_ry_plus6 $covarsPOP $invars ///
+	if ever_gain_exp_migpuma==0, ///
+	vce(cluster geoid_migpuma) absorb(geoid_migpuma year)
+est store in_target3
+* Plot 
+coefplot ///
+	(in_target3 , keep(lost_ry_minus* o.lost_ry_minus1) msymbol(circle ) mcolor(navy) msize(1.25) ciopts(lcolor(navy) lwidth(0.3) recast(rcap))) ///
+	(in_target3 , keep(lost_ry_plus* ) msymbol(circle ) mcolor(midblue) msize(1.25) ciopts(lcolor(midblue) lwidth(0.3) recast(rcap))) ///
+	, nooffsets xline(6, lcolor(gray) lpattern(solid))  yline(0, lcolor(gray) lpattern(dash))  ///
+	omit vertical ///
+	eqlabels(, labels) graphregion(color(white))  ///
+	xtitle("Relative year")   ytitle("Total placebo population (thousands)") ///
+	title("(b) Lost treatment")  ///
+	legend(order(2 "Active treatment" 4 "No treatment") row(1) pos(6)) xsize(5)
+graph export "$oo/final/inlost_placebo_nowt_log.png", replace
+
+
+
+
+********** In same regression
+**** GAINERS, NO WEIGHT
+reghdfe log_total_placebo1 gain_ry_minus6 gain_ry_minus5 gain_ry_minus4 gain_ry_minus3 gain_ry_minus2 o.gain_ry_minus1 ///
+	gain_ry_plus0 gain_ry_plus1 gain_ry_plus2 gain_ry_plus3  ///
+	lost_ry_minus6 lost_ry_minus5 lost_ry_minus4 lost_ry_minus3 lost_ry_minus2 o.lost_ry_minus1 ///
+	lost_ry_plus0 lost_ry_plus1 lost_ry_plus2 lost_ry_plus3 lost_ry_plus4 lost_ry_plus5 lost_ry_plus6 ///
+	$covarsPOP $invars , ///
+	vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+est store in_target1
+
+**** REDUCE WIDTH
+coefplot ///
+	(in_target1 , keep(gain_ry_minus* o.gain_ry_minus1) msymbol(circle ) mcolor(midblue) msize(1.25) ciopts(lcolor(midblue) lwidth(0.3) recast(rcap))) ///
+	(in_target1 , keep(gain_ry_plus* ) msymbol(circle ) mcolor(navy) msize(1.25) ciopts(lcolor(navy) lwidth(0.3) recast(rcap))) ///
+	, nooffsets xline(6, lcolor(gray) lpattern(solid))  yline(0, lcolor(gray) lpattern(dash))  ///
+	omit vertical ///
+	eqlabels(, labels) graphregion(color(white)) ///
+	xtitle("Relative year")   ytitle("Move migpuma") ///
+	title("(a) Gained treatment") ///
+	legend(order(4 "Active treatment" 2 "No treatment") row(1) pos(6)) xsize(5)
+graph export "$oo/final/ingain_targetpop2_nowt_samereg_log.png", replace
+
+**** LOSERS, NO WEIGHT
+coefplot ///
+	(in_target1 , keep(lost_ry_minus* o.lost_ry_minus1) msymbol(circle ) mcolor(navy) msize(1.25) ciopts(lcolor(navy) lwidth(0.3) recast(rcap))) ///
+	(in_target1 , keep(lost_ry_plus* ) msymbol(circle ) mcolor(midblue) msize(1.25) ciopts(lcolor(midblue) lwidth(0.3) recast(rcap))) ///
+	, nooffsets xline(6, lcolor(gray) lpattern(solid))  yline(0, lcolor(gray) lpattern(dash))  ///
+	omit vertical ///
+	eqlabels(, labels) graphregion(color(white))  ///
+	xtitle("Relative year")   ytitle("Share of target population") ///
+	title("(b) Lost treatment")  ///
+	legend(order(2 "Active treatment" 4 "No treatment") row(1) pos(6)) xsize(5)
+graph export "$oo/final/inlost_targetpop2_nowt_samereg_log.png", replace

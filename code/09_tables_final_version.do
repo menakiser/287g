@@ -652,7 +652,7 @@ collapse (sum) move_target move_migpuma move_target_wwt move_migpuma_wwt total_t
 	, by(current_migpuma statefip year)
 
 foreach v in $covarsPOP {
-    replace `v' = log(`v')
+    replace `v' = log(`v' + 1)
 }
 
 gen exp_lost_migpuma = (year>=lost_exp_year)*(ever_lost_exp_migpuma==1)
