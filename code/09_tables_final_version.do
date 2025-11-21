@@ -392,7 +392,6 @@ reg_to_mat, depvar( move_migpuma ) indvars( exp_gain_migpuma exp_lost_migpuma) m
 * with controls 
 reghdfe move_migpuma exp_gain_migpuma exp_lost_migpuma  $covars $invars [pw=perwt]  if targetpop2==1,  vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
 reg_to_mat, depvar( move_migpuma ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget) wt(perwt) wttype(pw)
-cap mat drop intarget
 * no controls 
 reghdfe move_migpuma exp_gain_migpuma exp_lost_migpuma  [pw=perwt]  if placebo1==1,  vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
 reg_to_mat, depvar( move_migpuma ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget) wt(perwt) wttype(pw)
@@ -413,10 +412,11 @@ file write sumstat "Move migpuma & (1) & (2)  & (3) & (4) \\" _n
 file write sumstat "\midrule " _n
 
 global varnames `"  "Gain treatment" "Lose treatment" "'
-local row = 1
+
 forval i = 1/2 {
     local varname : word `i' of $varnames
     forval c = 1/4  {
+        local row = 1 +3*(`i'-1)
         local b`c' = string(intarget[`row',`c'], "%12.4fc" )
         local temp = intarget[`row',`c']/intarget[5,`c']*100
         local bmean`c' = string(`temp', "%12.2fc" )
