@@ -115,6 +115,9 @@ These results suggest there are differential effects in migration for the non-ci
 
 \newpage
 \section{Figures and Tables}    
+
+
+%% figure 1
 \begin{figure}[h]
 \centering
 \caption{Yearly count and geographic distribution of MIGPUMAs with active 287(g) agreements}
@@ -135,7 +138,8 @@ These results suggest there are differential effects in migration for the non-ci
 \end{figure}
 
 
-
+%% table 1
+\newpage
 \begin{table}[h]
 \centering
 \caption{ICE Removals from a 287(g) apprehension}
@@ -144,7 +148,6 @@ These results suggest there are differential effects in migration for the non-ci
     \input{output/removaltable}
     
 }
-\end{table}
 
 \justifying
 \
@@ -153,17 +156,18 @@ These results suggest there are differential effects in migration for the non-ci
 \noindent \textit{Notes:} This table summarizes characteristics of foreign citizens removed by ICE following a 287(g) apprehension from 2013-2019. Latin American citizenship is identified through the top 50 reported countries. Citizenship reports only the leading 5 countries of citizenship. Source: TRAC Immigration Tools \citep{trac24}.
 \end{footnotesize}
 \end{spacing}
+\end{table}
 
 
+%% table 1
 \newpage
 \begin{table}[h]
 \centering
 \caption{Summary statistics by exposure and target group}
-\label{fig:timeline}
-\adjustbox{ width=\linewidth}{
-    \input{output/t2_sumstat}
+\label{fig:balance}
+\adjustbox{ width=0.7\linewidth}{
+    \input{output/final/balancetable}
 }
-\end{table}
 
 \justifying
 \begin{spacing}{1}
@@ -171,6 +175,7 @@ These results suggest there are differential effects in migration for the non-ci
 \noindent \textit{Notes:} This table summarizes main characteristics by exposure and population type. Columns 1-2 and 5-6 restrict the sample to immigrants likely targeted by 287(g) agreements: foreign-born non-citizen, Hispanic, male, of ages 18-39, with High School degree or less, that immigrated after 2007, have been in the US for 10 years or less, and are not currently married. Columns 3-4 and 7-8 restricts the sample to comparable individuals, meeting all criteria from the targeted sample except they must be US-born citizens (thus no immigration time requirements). Odd-numbered columns restrict the sample to (untreated) zero exposure counties and even-numbered columns restrict the sample to non-zero exposure counties. Columns 1-4 apply probability weights as extracted from ACS, while columns 5-8 apply weights obtained from propensity score matching.
 \end{footnotesize}
 \end{spacing}
+\end{table}
 
 
 
@@ -183,15 +188,17 @@ These results suggest there are differential effects in migration for the non-ci
 \adjustbox{ width=0.7\linewidth}{
     \input{output/final/in_migration_target2}
 }
-\end{table}
 
 \justifying
 \begin{spacing}{1}
 \begin{footnotesize}
+
+
 \noindent \textit{Notes:} This table compares the effect of exposure to a 287(g) program across targeted population and a placebo population defined by those who meet all criteria of targeted population except they are US-born citizens. Columns 3-4 adjust the ACS weights by the propensity score. Each cell represents a different regression. Individual controls are included in all regressions: age, race, educational attainment, english language states, having health insurance, being in school, and owning a home. Standard errors are set at the migpuma-year level.  Panel A absorbs current migpuma and year fixed effects and Panel B previous year migpuma and year fixed effects. p $<$ 0.01 ***, p $<$ 0.05 **, p $<$0.1 *. 
 
 \end{footnotesize}
 \end{spacing}
+\end{table}
 
 
 
@@ -205,7 +212,6 @@ These results suggest there are differential effects in migration for the non-ci
 \adjustbox{ width=\linewidth}{
     \input{output/final/in_gain_lost}
 }
-\end{table}
 
 \justifying
 \begin{spacing}{1}
@@ -214,25 +220,7 @@ These results suggest there are differential effects in migration for the non-ci
 
 \end{footnotesize}
 \end{spacing}
-
-
-\newpage
-\begin{table}[h]
-\centering
-\caption{Out: Exposure to 287(g)  on targeted and placebo populations}
-\label{tab:regtp}
-\adjustbox{ width=0.7\linewidth}{
-    \input{output/final/out_migration_target2}
-}
 \end{table}
-
-\justifying
-\begin{spacing}{1}
-\begin{footnotesize}
-\noindent \textit{Notes:} This table compares the effect of exposure to a 287(g) program across targeted population and a placebo population defined by those who meet all criteria of targeted population except they are US-born citizens. Columns 3-4 adjust the ACS weights by the propensity score. Each cell represents a different regression. Individual controls are included in all regressions: age, race, educational attainment, english language states, having health insurance, being in school, and owning a home. Standard errors are set at the migpuma-year level.  Panel A absorbs current migpuma and year fixed effects and Panel B previous year migpuma and year fixed effects. p $<$ 0.01 ***, p $<$ 0.05 **, p $<$0.1 *. 
-
-\end{footnotesize}
-\end{spacing}
 
 
 
@@ -245,7 +233,6 @@ These results suggest there are differential effects in migration for the non-ci
 \adjustbox{ width=0.8\linewidth}{
     \input{output/final/move_het}
 }
-\end{table}
 
 \justifying
 \begin{spacing}{1}
@@ -254,28 +241,7 @@ These results suggest there are differential effects in migration for the non-ci
 
 \end{footnotesize}
 \end{spacing}
-
-
-
-
-\newpage
-\begin{table}[h]
-\centering
-\caption{Heterogeneity of opp}
-\label{tab:regtp}
-\adjustbox{ width=0.8\linewidth}{
-    \input{output/final/opportunity}
-}
 \end{table}
-
-\justifying
-\begin{spacing}{1}
-\begin{footnotesize}
-\noindent \textit{Notes:} This table compares the effect of exposure to a 287(g) program across targeted population and a placebo population defined by those who meet all criteria of targeted population except they are US-born citizens. Columns 3-4 adjust the ACS weights by the propensity score. Each cell represents a different regression. Individual controls are included in all regressions: age, race, educational attainment, english language states, having health insurance, being in school, and owning a home. Standard errors are set at the migpuma-year level.  Panel A absorbs current migpuma and year fixed effects and Panel B previous year migpuma and year fixed effects. p $<$ 0.01 ***, p $<$ 0.05 **, p $<$0.1 *. 
-
-\end{footnotesize}
-\end{spacing}
-
 
 
 
@@ -301,6 +267,8 @@ These results suggest there are differential effects in migration for the non-ci
 \end{spacing}
 \end{figure}
 \end{landscape}
+
+
 
 \newpage
 \begin{landscape}
