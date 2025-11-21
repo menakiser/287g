@@ -630,23 +630,34 @@ replace placebo1 = placebo1*perwt
 gen placebo1_wwt = placebo1*wt 
 
 * age
-gen int_age1 = inrange(age, 0, 9)
-gen int_age2 = inrange(age, 10, 19)
+gen int_age1 = inrange(age, 0, 9) 
+gen int_age2 = inrange(age, 10, 19) 
 gen int_age3 = inrange(age, 20, 29)
 gen int_age4 = inrange(age, 30, 39)
 gen int_age5 = inrange(age, 40, 49)
-gen int_age4 = inrange(age, 50, 59)
-gen int_age5 = inrange(age, 60, 69)
-gen int_age6 = inrange(age, 70, 100)
+gen int_age6 = inrange(age, 50, 59)
+gen int_age7 = inrange(age, 60, 69)
+gen int_age8 = inrange(age, 70, 100)
 
 global covarsPOP "int_age1 int_age2 int_age3 int_age4 int_age5 int_age6 r_white r_black r_asian hs in_school no_english ownhome"
 
+foreach v in $covarsPOP {
+    replace `v' = `v'*perwt
+}
 
-collapse (sum) move_target move_migpuma move_target_wwt move_migpuma_wwt total_targetpop2 total_targetpop2_wwt total_pop total_pop_wwt placebo1 placebo1_wwt ///
+collapse (sum) move_target move_migpuma move_target_wwt move_migpuma_wwt total_targetpop2 total_targetpop2_wwt total_pop total_pop_wwt placebo1 placebo1_wwt perwt ///
 	(mean) $covarsPOP ///
-	(max) exp_any_migpuma  ever_treated_migpuma ever_lost_exp_migpuma ever_gain_exp_migpuma ///
+	(max) exp_any_migpuma  ever_treated_migpuma ever_lost_exp_migpuma ever_gain_exp_migpuma lost_exp_year gain_exp_year ///
 	relative_year_gain relative_year_lost geoid_migpuma $invars ///
 	, by(current_migpuma statefip year)
+
+foreach v in $covarsPOP {
+    replace `v' = log(`v')
+}
+
+gen exp_lost_migpuma = (year>=lost_exp_year)*(ever_lost_exp_migpuma==1)
+gen exp_gain_migpuma = (year>=gain_exp_year)*(ever_gain_exp_migpuma==1)
+
 
 * event-time indicators
 forval n = 1/7 {
@@ -872,6 +883,76 @@ file write sumstat "  & [`bmean1'$\%$] & [`bmean2'$\%$] & [`bmean3'$\%$] & [`bme
 file write sumstat " & (`sd1') & (`sd2') & (`sd3') & (`sd4') \\" _n 
 file write sumstat "\\" _n 
 file write sumstat " Controls &  & X &  & X \\" _n 
+file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4'  \\" _n 
+file write sumstat " Untreated mean & `um1' & `um2' & `um3' & `um4'  \\" _n 
+file write sumstat "Sample Size & `n1' & `n2' & `n3' & `n4'  \\" _n
+file write sumstat "\bottomrule" _n
+file write sumstat "\bottomrule" _n
+file write sumstat "\\" _n 
+file write sumstat "\end{tabular}"
+file close sumstat
+
+
+
+
+
+
+
+
+**** trying doug's suggestion
+cap mat drop intarget
+* no controls 
+reghdfe log_total_targetpop2 exp_gain_migpuma exp_lost_migpuma ,  vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+reg_to_mat, depvar( log_total_targetpop2 ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget) 
+* with controls 
+reghdfe log_total_targetpop2 exp_gain_migpuma exp_lost_migpuma  $covarsPOP $invars ,  vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+reg_to_mat, depvar( log_total_targetpop2 ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget) 
+* no controls 
+reghdfe log_total_placebo1 exp_gain_migpuma exp_lost_migpuma  ,  vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+reg_to_mat, depvar( log_total_placebo1 ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget) 
+* with controls 
+reghdfe log_total_placebo1 exp_gain_migpuma exp_lost_migpuma  $covarsPOP $invars,  vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+reg_to_mat, depvar( log_total_placebo1 ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget) 
+
+
+
+* Create table
+cap file close sumstat
+file open sumstat using "$oo/final/in_gain_lost_join_log.tex", write replace
+file write sumstat "\begin{tabular}{lcccc}" _n
+file write sumstat "\toprule" _n
+file write sumstat "\toprule" _n
+file write sumstat " & \multicolumn{2}{c}{Target population} & \multicolumn{2}{c}{Placebo}  \\" _n
+file write sumstat "Move migpuma & (1) & (2)  & (3) & (4) \\" _n
+file write sumstat "\midrule " _n
+
+global varnames `"  "Gain treatment" "Lose treatment" "'
+
+forval i = 1/2 {
+    local varname : word `i' of $varnames
+    forval c = 1/4  {
+        local row = 1 +3*(`i'-1)
+        local b`c' = string(intarget[`row',`c'], "%12.4fc" )
+        local temp = intarget[`row',`c']/intarget[5,`c']*100
+        local bmean`c' = string(`temp', "%12.2fc" )
+        local++ row
+        local p`c' = intarget[`row',`c']
+        local stars_abs`c' = cond(`p`c'' < 0.01, "***", cond(`p`c'' < 0.05, "**", cond(`p`c'' < 0.1, "*", "")))
+        local++ row
+        local sd`c' = string(intarget[`row',`c'], "%12.4fc" )
+        
+    }
+    file write sumstat " `varname' & `b1'`stars_abs1' & `b2'`stars_abs2' & `b3'`stars_abs3' & `b4'`stars_abs4' \\" _n 
+    file write sumstat "  & [`bmean1'$\%$] & [`bmean2'$\%$] & [`bmean3'$\%$] & [`bmean4'$\%$] \\" _n 
+    file write sumstat " & (`sd1') & (`sd2') & (`sd3') & (`sd4') \\" _n 
+}
+file write sumstat "\\" _n 
+file write sumstat " Controls &  & X &  & X \\" _n 
+forval c = 1/4  {
+    local r`c' = string(intarget[7,`c'], "%12.4fc" )
+    local um`c' = string(intarget[8,`c'], "%12.4fc" )
+    local n`c' = string(intarget[9,`c'], "%12.0fc" )
+}
 file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4'  \\" _n 
 file write sumstat " Untreated mean & `um1' & `um2' & `um3' & `um4'  \\" _n 
 file write sumstat "Sample Size & `n1' & `n2' & `n3' & `n4'  \\" _n
