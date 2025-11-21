@@ -589,304 +589,151 @@ file close sumstat
 
 
 
-
-
-
-cap program drop storemean
-program define storemean
-syntax, varname(str) mat(str) restriction(str) tosum(str) [cond(str)]
-    qui reg `varname' `restriction' [pw=perwt] , `cond'
-    local m = _b[`tosum']
-    local sd = _se[`tosum']
-    local n = e(N)
-    mat `mat' = nullmat(`mat') \ (`m' , `sd', `n')
-end
-
-cap program drop storecoeff
-program define storecoeff
-syntax, mat(str) row(int) cols(str)
-    local rb = `row'
-    local rp = `rb' + 1
-    local rse = `rp' + 1
-    * coefficient with stars
-    foreach col in `cols' {
-        if `mat'[`rb',`col'] != 9999 {
-            local b = string(`mat'[`rb',`col'], "%12.3fc")
-            local pval = string(`mat'[`rp',`col'], "%12.3fc")
-            local stars_abs = cond(`pval' < 0.01, "***", cond(`pval' < 0.05, "**", cond(`pval' < 0.1, "*", "")))
-            file write sumstat " & `b'`stars_abs'  "
-        }
-        if `mat'[`rb',`col'] == 9999 {
-            file write sumstat " &  "
-        }
-    }
-    file write sumstat "\\" _n
-    * standard errors
-    foreach col in `cols' {
-        if `mat'[`rb',`col'] != 9999 {
-            local se = string(`mat'[`rse',`col'], "%12.3fc")
-            file write sumstat " & (`se')  "
-        }
-        if `mat'[`rb',`col'] == 9999 {
-            file write sumstat " &   "
-        }
-    }
-    file write sumstat "\\" _n
-end
-
-
-
-
-
 /**************************************************************
-Balance table with differences
-**************************************************************/
-
-* import clean ACS data ready for regressions
-use "$oi/working_acs", clear 
-gen rentprice = rent if ownhome==0
-gen mortprice = mortamt1 if ownhome==1
-
-* restrict sample 
-keep if year >= 2012
-drop if always_treated_migpuma==1 //ruling out always treated counties
-
-* define propensity weights for hispanic singles
-merge m:1 statefip current_migpuma  using  "$oi/propensity_weights2012migpuma_t2" , nogen keep(3) keepusing(phat wt)
-rename (phat wt) (phat2 wt2)
-gen perwt_wt2 = perwt*wt2
-drop if mi(perwt_wt2)
-
-//remember you see some effects in migration for born_abroad==1 & citizen!=3
-* create summary values
-cap mat drop sumstat
-cap mat drop matse
-cap mat drop matpval
-foreach v in  age r_white r_black hs no_english in_school nchild employed incwage ownhome  {
-    di in red "Processing `v'"
-    * TARGET POPULATION FOR HISPANICS
-    * Ever exposed
-    qui reg `v' targetpop2 [pw=perwt_wt2] if ever_treated_migpuma==1 , nocons 
-    local m1 = _b[targetpop]
-    local se1 = _se[targetpop]
-    local pval1 = 9999
-   
-   * Difference without prop score
-    qui reg `v' ever_treated_migpuma [pw=perwt] if targetpop2==1, robust
-    local m2 = _b[ever_treated_migpuma]
-    local se2 = _se[ever_treated_migpuma]
-    local t = _b[ever_treated_migpuma] / _se[ever_treated_migpuma]
-    local pval2 =  2*ttail(e(df_r), abs(`t'))
-   
-    * Difference with prop score
-    qui reg `v' ever_treated_migpuma [pw=perwt_wt2] if targetpop2==1, robust
-    local m3 = _b[ever_treated_migpuma]
-    local se3 = _se[ever_treated_migpuma]
-    local t = _b[ever_treated_migpuma] / _se[ever_treated_migpuma]
-    local pval3 =  2*ttail(e(df_r), abs(`t'))
-    
-
-    mat sumstat = nullmat(sumstat) \ (`m1', `m2', `m3' )
-    mat matse = nullmat(matse) \ (`se1', `se2', `se3' )
-    mat matpval = nullmat(matpval) \ (`pval1' , `pval2', `pval3' )
-}
-
-qui count if targetpop2==1 & exp_any_migpuma==1
-local m1 = r(N)
-qui count if targetpop2==1 
-local m2 = r(N)
-qui count if targetpop2==1 
-local m3 = r(N)
-
-mat sumstat = nullmat(sumstat) \ (`m1', `m2', `m3' )
-
-
-
-* Create table
-cap file close sumstat
-file open sumstat using "$oo/final/balancetable.tex", write replace
-file write sumstat "\begin{tabular}{lccc}" _n
-file write sumstat "\toprule" _n
-file write sumstat "\toprule" _n
-file write sumstat " &  & Difference & Difference \\" _n
-file write sumstat " & Treated & (unweighted) & (weighted)   \\" _n
-file write sumstat " & (1) & (2) & (3)  \\" _n
-file write sumstat "\midrule " _n
- 
-global varnames `" "Age" "Race: White" "Race: Black" "High School" "Poor English" "In School" "Number of children" "Employed"  "Wage income" "Owns a home" "'
-local i = 1
-forval r = 1/10 {
-	local varname : word `i' of $varnames
-	file write sumstat " `varname' "
-	di "Writing row `r'"
-    * mean
-	forval c = 1/3 {
-		di "Writing column `c'"
-		local a = string(sumstat[`r',`c'], "%12.2fc" )
-        local pval = matpval[`r', `c']
-        local stars_abs = cond(`pval' < 0.01, "***", cond(`pval' < 0.05, "**", cond(`pval' < 0.1, "*", "")))
-        file write sumstat " & `a'`stars_abs' "
-	}
-	file write sumstat "\\" _n 
-    * se
-    forval c = 1/3 {
-        local a = string(matse[`r',`c'], "%12.2fc" )
-        file write sumstat " & (`a')"
-    }
-	file write sumstat "\\" _n 
-	local++ i
-}
-local a1 = string(sumstat[11,1], "%12.0fc" )
-local a2 = string(sumstat[11,2], "%12.0fc" )
-local a3 = string(sumstat[11,3], "%12.0fc" )
-file write sumstat "Sample size & `a1' & `a2' & `a3' \\" _n
-file write sumstat "\bottomrule" _n
-file write sumstat "\bottomrule" _n
-file write sumstat "\end{tabular}"
-file close sumstat
-
-
-
-//MOBILITY VARS
-
-//remember you see some effects in migration for born_abroad==1 & citizen!=3
-* create summary values
-cap mat drop sumstat
-cap mat drop matse
-cap mat drop matpval
-foreach v in  move_any move_migpuma move_state move_abroad  {
-    di in red "Processing `v'"
-    * TARGET POPULATION FOR HISPANICS
-    * Ever exposed
-    qui reg `v' targetpop2 [pw=perwt_wt2] if ever_treated_migpuma==1 , nocons 
-    local m1 = _b[targetpop]
-    local se1 = _se[targetpop]
-    local pval1 = 9999
-   
-   * Difference without prop score
-    qui reg `v' ever_treated_migpuma [pw=perwt] if targetpop2==1, robust
-    local m2 = _b[ever_treated_migpuma]
-    local se2 = _se[ever_treated_migpuma]
-    local t = _b[ever_treated_migpuma] / _se[ever_treated_migpuma]
-    local pval2 =  2*ttail(e(df_r), abs(`t'))
-   
-    * Difference with prop score
-    qui reg `v' ever_treated_migpuma [pw=perwt_wt2] if targetpop2==1, robust
-    local m3 = _b[ever_treated_migpuma]
-    local se3 = _se[ever_treated_migpuma]
-    local t = _b[ever_treated_migpuma] / _se[ever_treated_migpuma]
-    local pval3 =  2*ttail(e(df_r), abs(`t'))
-    
-
-    mat sumstat = nullmat(sumstat) \ (`m1', `m2', `m3' )
-    mat matse = nullmat(matse) \ (`se1', `se2', `se3' )
-    mat matpval = nullmat(matpval) \ (`pval1' , `pval2', `pval3' )
-}
-
-qui count if targetpop2==1 & exp_any_migpuma==1
-local m1 = r(N)
-qui count if targetpop2==1 
-local m2 = r(N)
-qui count if targetpop2==1 
-local m3 = r(N)
-
-mat sumstat = nullmat(sumstat) \ (`m1', `m2', `m3' )
-
-
-
-* Create table
-cap file close sumstat
-file open sumstat using "$oo/final/balancetable_move.tex", write replace
-file write sumstat "\begin{tabular}{lccc}" _n
-file write sumstat "\toprule" _n
-file write sumstat "\toprule" _n
-file write sumstat " &  & Difference & Difference \\" _n
-file write sumstat " & Treated & (unweighted) & (weighted)   \\" _n
-file write sumstat " & (1) & (2) & (3)  \\" _n
-file write sumstat "\midrule " _n
- 
-global varnames `" "Any move" "Move migpuma" "Move state" "Move from abroad"  "'
-local i = 1
-forval r = 1/4 {
-	local varname : word `i' of $varnames
-	file write sumstat " `varname' "
-	di "Writing row `r'"
-    * mean
-	forval c = 1/3 {
-		di "Writing column `c'"
-		local a = string(sumstat[`r',`c'], "%12.2fc" )
-        local pval = matpval[`r', `c']
-        local stars_abs = cond(`pval' < 0.01, "***", cond(`pval' < 0.05, "**", cond(`pval' < 0.1, "*", "")))
-        file write sumstat " & `a'`stars_abs' "
-	}
-	file write sumstat "\\" _n 
-    * se
-    forval c = 1/3 {
-        local a = string(matse[`r',`c'], "%12.2fc" )
-        file write sumstat " & (`a')"
-    }
-	file write sumstat "\\" _n 
-	local++ i
-}
-local a1 = string(sumstat[5,1], "%12.0fc" )
-local a2 = string(sumstat[5,2], "%12.0fc" )
-local a3 = string(sumstat[5,3], "%12.0fc" )
-file write sumstat "Sample size & `a1' & `a2' & `a3' \\" _n
-file write sumstat "\bottomrule" _n
-file write sumstat "\bottomrule" _n
-file write sumstat "\end{tabular}"
-file close sumstat
-
-
-
-
-
-
-/**************************************************************
-Moving to better prospects
+Table 3: in migration Regressions POPULATION
 **************************************************************/
 global covars "age r_white r_black r_asian hs in_school no_english ownhome"
 global invars "exp_any_state " //SC_any
 global outvars "prev_exp_any_state " //prev_SC_any
 
+
 use "$oi/working_acs", clear 
 keep if year >= 2012
 drop if always_treated_migpuma==1
-* define propensity weights for target population 2
+* define propensity weights
 merge m:1 statefip current_migpuma  using  "$oi/propensity_weights2012migpuma_t2" , nogen keep(3) keepusing( phat wt)
-rename (phat wt) (phat2 wt2)
-gen perwt_wt2 = perwt*wt
-drop if mi(perwt_wt2)
+gen perwt_wt = perwt*wt
+drop if mi(perwt_wt)
+gen placebo1 = sex==1 & lowskill==1 & hispan!=0 & born_abroad==0 & young==1  & marst>=3  //hispanic citizens born in the usa
+
+gen total_targetpop2 = perwt if targetpop2==1
+gen total_targetpop2_wwt = perwt_wt if targetpop2==1
+gen total_pop = perwt if age>=18 & age<=65
+gen total_pop_wwt = perwt_wt if age>=18 & age<=65
+
+
+gen relative_year_gain =  year - gain_exp_year
+replace relative_year_gain = . if gain_exp_year == 0
+
+* get moving totals
+gen move_target = move_migpuma*total_targetpop2
+gen move_target_wwt = move_migpuma*total_targetpop2
+
+gen move_migpuma_wwt = perwt_wt*move_migpuma
+replace move_migpuma = perwt*move_migpuma
+
+*** create relative year for losers
+gen relative_year_lost =  year - lost_exp_year
+replace relative_year_lost = . if lost_exp_year == 0
+
+replace placebo1 = placebo1*perwt 
+gen placebo1_wwt = placebo1*wt 
+
+* age
+gen int_age1 = inrange(age, 0, 9)
+gen int_age2 = inrange(age, 10, 19)
+gen int_age3 = inrange(age, 20, 29)
+gen int_age4 = inrange(age, 30, 39)
+gen int_age5 = inrange(age, 40, 49)
+gen int_age4 = inrange(age, 50, 59)
+gen int_age5 = inrange(age, 60, 69)
+gen int_age6 = inrange(age, 70, 100)
+
+global covarsPOP "int_age1 int_age2 int_age3 int_age4 int_age5 int_age6 r_white r_black r_asian hs in_school no_english ownhome"
+
+
+collapse (sum) move_target move_migpuma move_target_wwt move_migpuma_wwt total_targetpop2 total_targetpop2_wwt total_pop total_pop_wwt placebo1 placebo1_wwt ///
+	(mean) $covarsPOP ///
+	(max) exp_any_migpuma  ever_treated_migpuma ever_lost_exp_migpuma ever_gain_exp_migpuma ///
+	relative_year_gain relative_year_lost geoid_migpuma $invars ///
+	, by(current_migpuma statefip year)
+
+* event-time indicators
+forval n = 1/7 {
+	gen gain_ry_plus`n'  = (relative_year_gain == `n')
+	gen gain_ry_minus`n' = (relative_year_gain == -`n')
+}
+* event time = 0
+gen gain_ry_plus0 = (relative_year_gain == 0)
+
+* event-time indicators
+forval n = 1/7 {
+	gen lost_ry_plus`n'  = (relative_year_lost == `n')
+	gen lost_ry_minus`n' = (relative_year_lost == -`n')
+}
+* event time = 0
+gen lost_ry_plus0 = (relative_year_lost == 0)
+
+* label years
+forval n = 1/7 {
+	label var gain_ry_plus`n' "+`n'"
+	label var gain_ry_minus`n' "-`n'"
+	label var lost_ry_plus`n' "+`n'"
+	label var lost_ry_minus`n' "-`n'"
+}
+label var gain_ry_plus0 "0"
+label var lost_ry_plus0 "0"
+
+replace gain_ry_minus6 = gain_ry_minus6 | gain_ry_minus7
+
+format total_targetpop2 %12.2fc
+gen total_targetpop2_k = total_targetpop2/1000
+gen total_targetpop2_wwt_k = total_targetpop2_wwt/1000
+gen total_pop2012K = total_pop/1000 if year==2012
+bys statefip current_migpuma: ereplace total_pop2012K = mode(total_pop2012K)
+
+format move_target_wwt %12.0fc
+gen move_target_wwt_k = move_target_wwt/1000
+gen move_target_k = move_target/1000
+
+gen total_targetpop2_sh = total_targetpop2 / total_pop
+
+gen total_pop_k = total_pop /1000
+
+gen placebo1_k = placebo1/1000
+
+
+gen log_total_pop = log(total_pop + 1)
+gen log_total_targetpop2 = log(total_targetpop2 + 1) 
+gen log_total_placebo1 = log(placebo1 + 1)
+
+egen group_id_migpuma = group(geoid_migpuma year) 
 
 **** IN MIGRATION FOR TARGET POPULATION
 cap mat drop intarget
-foreach v in employed incwage uhrswork {
-    * with controls no weights
-    reghdfe `v' exp_any_migpuma $covars $invars [pw=perwt]  if targetpop2==1 , vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-    reg_to_mat, depvar( `v' ) indvars( exp_any_migpuma ) mat(intarget) wt(perwt) wttype(pw)
-    * with controls yes weights
-    reghdfe `v' exp_any_migpuma $covars $invars [pw=perwt_wt]  if targetpop2==1 , vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-    reg_to_mat, depvar( `v' ) indvars( exp_any_migpuma ) mat(intarget) wt(perwt_wt) wttype(pw)
-}
+* with simple weights
+* without controls
+reghdfe log_total_targetpop2 exp_any_migpuma , vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+reg_to_mat, depvar( log_total_targetpop2 ) indvars( exp_any_migpuma ) mat(intarget)
+* with controls 
+reghdfe log_total_targetpop2 exp_any_migpuma $covarsPOP $invars, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+reg_to_mat, depvar( log_total_targetpop2 ) indvars( exp_any_migpuma ) mat(intarget)
+
+**** IN MIGRATION FOR PLACEBO POPULATION
+* with simple weights
+* without controls
+reghdfe log_total_placebo1 exp_any_migpuma , vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+reg_to_mat, depvar( log_total_placebo1 ) indvars( exp_any_migpuma ) mat(intarget)
+* with controls 
+reghdfe log_total_placebo1 exp_any_migpuma $covarsPOP $invars, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+reg_to_mat, depvar( log_total_placebo1 ) indvars( exp_any_migpuma ) mat(intarget)
 
 
 * Create table
 cap file close sumstat
-file open sumstat using "$oo/final/opportunity.tex", write replace
-file write sumstat "\begin{tabular}{lcccccc}" _n
+file open sumstat using "$oo/final/logpop_reg.tex", write replace
+file write sumstat "\begin{tabular}{lcccc}" _n
 file write sumstat "\toprule" _n
 file write sumstat "\toprule" _n
 * Panel A
-file write sumstat " \multicolumn{6}{c}{Panel A: Target population}  \\" _n
-file write sumstat "\midrule " _n
-file write sumstat " Outcome & \multicolumn{2}{c}{Employed} & \multicolumn{2}{c}{Wage income} & \multicolumn{2}{c}{Usual hours}   \\" _n
-file write sumstat " & Unweighted & Weighted & Unweighted & Weighted & Unweighted & Weighted \\" _n
-file write sumstat " & (1) & (2)  & (3) & (4) & (5)  & (6) \\" _n
+file write sumstat " & \multicolumn{2}{c}{Target population} & \multicolumn{2}{c}{Placebo}  \\" _n
+file write sumstat " Move migpuma & (1) & (2)  & (3) & (4)  \\" _n
 file write sumstat "\midrule " _n
 
 global varnames `"  "Treated migpuma" "'
+
 local varname : word 1 of $varnames
-forval c = 1/6  {
+forval c = 1/4  {
     local b`c' = string(intarget[1,`c'], "%12.4fc" )
     local temp = intarget[1,`c']/intarget[5,`c']*100
     local bmean`c' = string(`temp', "%12.2fc" )
@@ -897,17 +744,139 @@ forval c = 1/6  {
     local um`c' = string(intarget[5,`c'], "%12.4fc" )
 	local n`c' = string(intarget[6,`c'], "%12.0fc" )
 }
-file write sumstat " `varname' & `b1'`stars_abs1' & `b2'`stars_abs2' & `b3'`stars_abs3' & `b4'`stars_abs4' & `b5'`stars_abs5' & `b6'`stars_abs6' \\" _n 
-file write sumstat "  & [`bmean1'$\%$] & [`bmean2'$\%$] & [`bmean3'$\%$] & [`bmean4'$\%$]  & [`bmean5'$\%$] & [`bmean6'$\%$]  \\" _n 
-file write sumstat " & (`sd1') & (`sd2') & (`sd3') & (`sd4') & (`sd5') & (`sd6') \\" _n 
+file write sumstat " `varname' & `b1'`stars_abs1' & `b2'`stars_abs2' & `b3'`stars_abs3' & `b4'`stars_abs4' \\" _n 
+file write sumstat "  & [`bmean1'$\%$] & [`bmean2'$\%$] & [`bmean3'$\%$] & [`bmean4'$\%$] \\" _n 
+file write sumstat " & (`sd1') & (`sd2') & (`sd3') & (`sd4') \\" _n 
 file write sumstat "\\" _n 
-file write sumstat " Controls & X & X & X & X & X & X \\" _n 
-file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4' & `r5' & `r6'  \\" _n 
-file write sumstat " Untreated mean & `um1' & `um2' & `um3' & `um4' & `um5' & `um6'   \\" _n 
-file write sumstat "Sample Size & `n1' & `n2' & `n3' & `n4' & `n5' & `n6'  \\" _n
+file write sumstat " Controls &  & X &  & X \\" _n 
+file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4'  \\" _n 
+file write sumstat " Untreated mean & `um1' & `um2' & `um3' & `um4'  \\" _n 
+file write sumstat "Sample Size & `n1' & `n2' & `n3' & `n4'  \\" _n
 file write sumstat "\\" _n 
 file write sumstat "\bottomrule" _n
 file write sumstat "\bottomrule" _n
+
 file write sumstat "\end{tabular}"
 file close sumstat
 
+
+**** gainers vs losers separately 
+
+**** IN MIGRATION FOR TARGET POPULATION
+cap mat drop intarget
+* GAIINERS + NEVER TREATED
+* with simple weights
+* with controls 
+reghdfe log_total_targetpop2 exp_any_migpuma  if ever_lost_exp_migpuma==0,  vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+reg_to_mat, depvar( log_total_targetpop2 ) indvars(exp_any_migpuma) mat(intarget) 
+* with propensity weights
+* with controls 
+reghdfe log_total_targetpop2 exp_any_migpuma $covarsPOP $invars if ever_lost_exp_migpuma==0, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+reg_to_mat, depvar( log_total_targetpop2 ) indvars( exp_any_migpuma ) mat(intarget) 
+
+* LOSERS + NEVER TREATED
+* with simple weights
+* with controls 
+reghdfe log_total_targetpop2 exp_any_migpuma if ever_gain_exp_migpuma==0, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+reg_to_mat, depvar( log_total_targetpop2 ) indvars( exp_any_migpuma ) mat(intarget) 
+* with propensity weights
+* with controls 
+reghdfe log_total_targetpop2 exp_any_migpuma $covarsPOP $invars if ever_gain_exp_migpuma==0, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+reg_to_mat, depvar( log_total_targetpop2 ) indvars( exp_any_migpuma ) mat(intarget) 
+
+**** IN MIGRATION FOR PLACEBO POPULATION
+cap mat drop inplacebo
+** GAINERS ONLY
+* with simple weights
+* with controls 
+reghdfe log_total_placebo1 exp_any_migpuma  if ever_lost_exp_migpuma==0,  vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+reg_to_mat, depvar( log_total_placebo1 ) indvars( exp_any_migpuma ) mat(inplacebo)
+* with propensity weights
+* with controls 
+reghdfe log_total_placebo1 exp_any_migpuma $covarsPOP $invars  if ever_lost_exp_migpuma==0, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+reg_to_mat, depvar( log_total_placebo1 ) indvars( exp_any_migpuma ) mat(inplacebo)
+
+* LOOSERS ONLY 
+* with simple weights
+* with controls 
+reghdfe log_total_placebo1 exp_any_migpuma if ever_gain_exp_migpuma==0, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+reg_to_mat, depvar( log_total_placebo1 ) indvars( exp_any_migpuma ) mat(inplacebo)
+* with propensity weights
+* with controls 
+reghdfe log_total_placebo1 exp_any_migpuma $covarsPOP $invars if ever_gain_exp_migpuma==0, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+reg_to_mat, depvar( log_total_placebo1 ) indvars( exp_any_migpuma ) mat(inplacebo)
+
+
+
+* Create table
+cap file close sumstat
+file open sumstat using "$oo/final/in_gain_lost_logpop.tex", write replace
+file write sumstat "\begin{tabular}{lcccc}" _n
+file write sumstat "\toprule" _n
+file write sumstat "\toprule" _n
+* Panel A
+file write sumstat " \multicolumn{5}{c}{Panel A: Target population}  \\" _n
+file write sumstat "\midrule " _n
+file write sumstat " & \multicolumn{2}{c}{Only gainers} & \multicolumn{2}{c}{Only losers}  \\" _n
+file write sumstat "Move migpuma & (1) & (2)  & (3) & (4) \\" _n
+file write sumstat "\midrule " _n
+
+global varnames `"  "Treated migpuma" "'
+
+local varname : word 1 of $varnames
+forval c = 1/4  {
+    local b`c' = string(intarget[1,`c'], "%12.4fc" )
+    local temp = intarget[1,`c']/intarget[5,`c']*100
+    local bmean`c' = string(`temp', "%12.2fc" )
+    local p`c' = intarget[2,`c']
+    local stars_abs`c' = cond(`p`c'' < 0.01, "***", cond(`p`c'' < 0.05, "**", cond(`p`c'' < 0.1, "*", "")))
+    local sd`c' = string(intarget[3,`c'], "%12.4fc" )
+    local r`c' = string(intarget[4,`c'], "%12.4fc" )
+    local um`c' = string(intarget[5,`c'], "%12.4fc" )
+	local n`c' = string(intarget[6,`c'], "%12.0fc" )
+}
+file write sumstat " `varname' & `b1'`stars_abs1' & `b2'`stars_abs2' & `b3'`stars_abs3' & `b4'`stars_abs4' \\" _n 
+file write sumstat "  & [`bmean1'$\%$] & [`bmean2'$\%$] & [`bmean3'$\%$] & [`bmean4'$\%$] \\" _n 
+file write sumstat " & (`sd1') & (`sd2') & (`sd3') & (`sd4') \\" _n 
+file write sumstat "\\" _n 
+file write sumstat " Controls &  & X &  & X \\" _n 
+file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4'  \\" _n 
+file write sumstat " Untreated mean & `um1' & `um2' & `um3' & `um4'  \\" _n 
+file write sumstat "Sample Size & `n1' & `n2' & `n3' & `n4'  \\" _n
+file write sumstat "\\" _n 
+file write sumstat "\midrule" _n
+file write sumstat "\midrule" _n
+
+* panel b placebo
+file write sumstat " \multicolumn{5}{c}{Panel B: Placebo}  \\" _n
+file write sumstat "\midrule " _n
+file write sumstat " & \multicolumn{2}{c}{Only gainers} & \multicolumn{2}{c}{Only losers}  \\" _n
+file write sumstat "Move migpuma & (5) & (6)  & (7) & (8) \\" _n
+file write sumstat "\midrule " _n
+
+global varnames `"   "Treated migpuma" "'
+local varname : word 1 of $varnames
+forval c = 1/4  {
+    local b`c' = string(inplacebo[1,`c'], "%12.4fc" )
+    local temp = inplacebo[1,`c']/inplacebo[5,`c']*100
+    local bmean`c' = string(`temp', "%12.2fc" )
+    local p`c' = inplacebo`i'[2,`c']
+    local stars_abs`c' = cond(`p`c'' < 0.01, "***", cond(`p`c'' < 0.05, "**", cond(`p`c'' < 0.1, "*", "")))
+    local sd`c' = string(inplacebo[3,`c'], "%12.4fc" )
+    local r`c' = string(inplacebo[4,`c'], "%12.4fc" )
+    local um`c' = string(inplacebo[5,`c'], "%12.4fc" )
+    local n`c' = string(inplacebo[6,`c'], "%12.0fc" )
+}
+file write sumstat " `varname' & `b1'`stars_abs1' & `b2'`stars_abs2' & `b3'`stars_abs3' & `b4'`stars_abs4' \\" _n 
+file write sumstat "  & [`bmean1'$\%$] & [`bmean2'$\%$] & [`bmean3'$\%$] & [`bmean4'$\%$] \\" _n 
+file write sumstat " & (`sd1') & (`sd2') & (`sd3') & (`sd4') \\" _n 
+file write sumstat "\\" _n 
+file write sumstat " Controls &  & X &  & X \\" _n 
+file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4'  \\" _n 
+file write sumstat " Untreated mean & `um1' & `um2' & `um3' & `um4'  \\" _n 
+file write sumstat "Sample Size & `n1' & `n2' & `n3' & `n4'  \\" _n
+file write sumstat "\bottomrule" _n
+file write sumstat "\bottomrule" _n
+file write sumstat "\\" _n 
+file write sumstat "\end{tabular}"
+file close sumstat
