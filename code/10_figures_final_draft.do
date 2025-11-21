@@ -115,33 +115,6 @@ gain_ry_plus0 gain_ry_plus1 gain_ry_plus2 gain_ry_plus3  ///
 	$invars  $covars [pw=perwt]  if targetpop2==1 & ever_lost_exp_migpuma==0, ///
 	vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
 est store in_target1
-* Plot with separate colors for pre- and post-event coefficients
-coefplot ///
-	(in_target1 , keep(gain_ry_minus* gain_ry_plus* o.gain_ry_minus1) msymbol(circle ) mcolor(midblue) ciopts(lcolor(midblue) lwidth(0.1) recast(rcap))) ///
-	, nooffsets xline(6, lcolor(gray) lpattern(solid))  yline(0, lcolor(gray) lpattern(dash))  ///
-	omit vertical ///
-	eqlabels(, labels) graphregion(color(white)) legend(off) ///
-	xtitle("Relative year")   ytitle("Move migpuma")  ///
-	ylabel(-.2(.1).3)
-graph export "$oo/final/ingain_targetpop2_nowt.png", replace
-
-
-**** GAINERS, WITH WEIGHT
-reghdfe move_migpuma gain_ry_minus6 gain_ry_minus5 gain_ry_minus4 gain_ry_minus3 gain_ry_minus2 o.gain_ry_minus1 ///
-gain_ry_plus0 gain_ry_plus1 gain_ry_plus2 gain_ry_plus3  ///
-	$invars  $covars [pw=perwt_wt]  if targetpop2==1 & ever_lost_exp_migpuma==0, ///
-	vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-est store in_target2
-* Plot with separate colors for pre- and post-event coefficients
-coefplot ///
-	(in_target2 , keep(gain_ry_minus* gain_ry_plus* o.gain_ry_minus1) msymbol(circle ) mcolor(midblue) ciopts(lcolor(midblue) lwidth(0.1) recast(rcap))) ///
-	, nooffsets xline(6, lcolor(gray) lpattern(solid))  yline(0, lcolor(gray) lpattern(dash))  ///
-	omit vertical ///
-	eqlabels(, labels) graphregion(color(white)) legend(off) ///
-	xtitle("Relative year")   ytitle("Move migpuma")  ///
-	ylabel(-.2(.1).3)
-graph export "$oo/final/ingain_targetpop2_wwt.png", replace
-
 
 
 replace lost_ry_minus6 = lost_ry_minus7 | lost_ry_minus6
@@ -151,68 +124,31 @@ lost_ry_plus0 lost_ry_plus1 lost_ry_plus2 lost_ry_plus3 lost_ry_plus4 lost_ry_pl
 	$invars  $covars [pw=perwt]  if targetpop2==1 & ever_gain_exp_migpuma==0, ///
 	vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
 est store in_target3
-* Plot 
-coefplot ///
-	(in_target3 , keep(lost_ry_minus* lost_ry_plus* o.lost_ry_minus1) msymbol(circle ) mcolor(midblue) ciopts(lcolor(midblue) lwidth(0.1) recast(rcap))) ///
-	, nooffsets xline(6, lcolor(gray) lpattern(solid))  yline(0, lcolor(gray) lpattern(dash))  ///
-	omit vertical ///
-	eqlabels(, labels) graphregion(color(white)) legend(off) ///
-	xtitle("Relative year")   ytitle("Move migpuma") 
-graph export "$oo/final/inlost_targetpop2_nowt.png", replace
 
-
-**** LOSERS, WITH WEIGHT
-reghdfe move_migpuma lost_ry_minus6 lost_ry_minus5 lost_ry_minus4 lost_ry_minus3 lost_ry_minus2 o.lost_ry_minus1 ///
-lost_ry_plus0 lost_ry_plus1 lost_ry_plus2 lost_ry_plus3 lost_ry_plus4 lost_ry_plus5 lost_ry_plus6  ///
-	$invars  $covars [pw=perwt_wt]  if targetpop2==1 & ever_gain_exp_migpuma==0, ///
-	vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-est store in_target4
-* Plot
-coefplot ///
-	(in_target4 , keep(lost_ry_minus* lost_ry_plus* o.lost_ry_minus1) msymbol(circle ) mcolor(midblue) ciopts(lcolor(midblue) lwidth(0.1) recast(rcap))) ///
-	, nooffsets xline(7, lcolor(gray) lpattern(solid))  yline(0, lcolor(gray) lpattern(dash))  ///
-	omit vertical ///
-	eqlabels(, labels) graphregion(color(white)) legend(off) ///
-	xtitle("Relative year")   ytitle("Move migpuma") 
-graph export "$oo/final/inlost_targetpop2_wwt.png", replace 
 
 **** REDUCE WIDTH
 coefplot ///
-	(in_target1 , keep(gain_ry_minus* gain_ry_plus* o.gain_ry_minus1) msymbol(circle ) mcolor(navy) msize(1.25) ciopts(lcolor(navy) lwidth(0.3) recast(rcap))) ///
+	(in_target1 , keep(gain_ry_minus* o.gain_ry_minus1) msymbol(circle ) mcolor(midblue) msize(1.25) ciopts(lcolor(midblue) lwidth(0.3) recast(rcap))) ///
+	(in_target1 , keep(gain_ry_plus* ) msymbol(circle ) mcolor(navy) msize(1.25) ciopts(lcolor(navy) lwidth(0.3) recast(rcap))) ///
 	, nooffsets xline(6, lcolor(gray) lpattern(solid))  yline(0, lcolor(gray) lpattern(dash))  ///
 	omit vertical ///
-	eqlabels(, labels) graphregion(color(white)) legend(off) ///
-	xtitle("Relative year")   ytitle("Move migpuma") title("(a): Unweighted") ///
-	ylabel(-.2(.1).3) xsize(5)
+	eqlabels(, labels) graphregion(color(white)) ///
+	xtitle("Relative year")   ytitle("Move migpuma") ///
+	title("(a) Gained treatment") ///
+	legend(order(4 "Active treatment" 2 "No treatment") row(1) pos(6))
 graph export "$oo/final/ingain_targetpop2_nowt.png", replace
-
-coefplot ///
-	(in_target2 ,keep(gain_ry_minus* gain_ry_plus* o.gain_ry_minus1) msymbol(circle ) mcolor(navy) msize(1.25) ciopts(lcolor(navy) lwidth(0.3) recast(rcap))) ///
-	, nooffsets xline(6, lcolor(gray) lpattern(solid))  yline(0, lcolor(gray) lpattern(dash))  ///
-	omit vertical ///
-	eqlabels(, labels) graphregion(color(white)) legend(off) ///
-	xtitle("Relative year")   ytitle("Move migpuma") title("(b): Propensity weighted")  ///
-	ylabel(-.2(.1).3) xsize(5)
-graph export "$oo/final/ingain_targetpop2_wwt.png", replace
 
 **** LOSERS, NO WEIGHT
 coefplot ///
-	(in_target3 , keep(lost_ry_minus* lost_ry_plus* o.lost_ry_minus1) msymbol(circle ) mcolor(navy) msize(1.25) ciopts(lcolor(navy) lwidth(0.25) recast(rcap))) ///
+	(in_target3 , keep(lost_ry_minus* o.lost_ry_minus1) msymbol(circle ) mcolor(navy) msize(1.25) ciopts(lcolor(navy) lwidth(0.3) recast(rcap))) ///
+	(in_target3 , keep(lost_ry_plus* ) msymbol(circle ) mcolor(midblue) msize(1.25) ciopts(lcolor(midblue) lwidth(0.3) recast(rcap))) ///
 	, nooffsets xline(6, lcolor(gray) lpattern(solid))  yline(0, lcolor(gray) lpattern(dash))  ///
 	omit vertical ///
-	eqlabels(, labels) graphregion(color(white)) legend(off) ///
-	xtitle("Relative year")   ytitle("Move migpuma") title("(a): Unweighted") ///
-	ylabel(-.2(.1).3) xsize(5)
+	eqlabels(, labels) graphregion(color(white))  ///
+	xtitle("Relative year")   ytitle("Share of target population") ///
+	title("(b) Lost treatment")  ///
+	legend(order(2 "Active treatment" 4 "No treatment") row(1) pos(6)) 
 graph export "$oo/final/inlost_targetpop2_nowt.png", replace
-coefplot ///
-	(in_target4 , keep(lost_ry_minus* lost_ry_plus* o.lost_ry_minus1) msymbol(circle ) mcolor(navy) msize(1.25) ciopts(lcolor(navy) lwidth(0.25) recast(rcap))) ///
-	, nooffsets xline(6, lcolor(gray) lpattern(solid))  yline(0, lcolor(gray) lpattern(dash))  ///
-	omit vertical ///
-	eqlabels(, labels) graphregion(color(white)) legend(off) ///
-	xtitle("Relative year")   ytitle("Move migpuma") title("(b): Propensity weighted") ///
-	ylabel(-.2(.1).3) xsize(5)
-graph export "$oo/final/inlost_targetpop2_wwt.png", replace
-
 
 
 /**************************************************************
