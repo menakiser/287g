@@ -36,10 +36,13 @@ global outvars "prev_exp_any_state " //prev_SC_any
 use "$oi/working_acs", clear 
 keep if year >= 2012
 
-keep statefip current_migpuma year exp_any_migpuma always_treated_migpuma
+keep statefip current_migpuma year exp_any_migpuma always_treated_migpuma ever_gain_exp_migpuma ever_lost_exp_migpuma ever_treated_migpuma
 duplicates drop 
 
-collapse (sum) exp_any_migpuma always_treated_migpuma, by(year)
+compress
+export delimited using "$oi/list_migpumas_treatment", replace
+
+collapse (sum) exp_any_migpuma always_treated_migpuma ever_gain_exp_migpuma ever_lost_exp_migpuma, by(year)
 gen not_always = exp_any_migpuma - always_treated_migpuma
 
 twoway (bar always_treated_migpuma year, barw(0.6)  color(gs9) ) ///

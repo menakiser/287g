@@ -43,6 +43,12 @@ bys statefip current_migpuma (year): ereplace lost_exp_year = max(lost_exp_year)
 bys statefip current_migpuma (year): egen ever_gain_exp_migpuma = max(gain_exp_migpuma)
 bys statefip current_migpuma (year): egen ever_lost_exp_migpuma = max(lost_exp_migpuma)
 
+tab exp_any_migpuma if year>=gain_exp_year & ever_gain_exp_migpuma==1 //all 1
+tab exp_any_migpuma if year<gain_exp_year & ever_gain_exp_migpuma==1 //all zero except for two migpumas
+
+tab exp_any_migpuma if year<lost_exp_year & ever_lost_exp_migpuma==1 //all 1
+tab exp_any_migpuma if year>=lost_exp_year & ever_lost_exp_migpuma==1 //all zero except for two migpumas
+
 drop exp_any_migpuma
 
 * save for all current migpuma
