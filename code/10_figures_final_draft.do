@@ -587,7 +587,7 @@ coefplot ///
 	, nooffsets xline(6, lcolor(gray) lpattern(solid))  yline(0, lcolor(gray) lpattern(dash))  ///
 	omit vertical ///
 	eqlabels(, labels) graphregion(color(white))  ///
-	xtitle("Relative year")   ytitle("Total target population (thousands)") ///
+	xtitle("Relative year")   ytitle("Log of total target population") ///
 	title("(a) Gained treatment") ///
 	legend(order(4 "Active treatment" 2 "No treatment") row(1) pos(6)) xsize(5)
 graph export "$oo/final/ingain_total_target_nowt_log.png", replace
@@ -606,7 +606,7 @@ coefplot ///
 	, nooffsets xline(6, lcolor(gray) lpattern(solid))  yline(0, lcolor(gray) lpattern(dash))  ///
 	omit vertical ///
 	eqlabels(, labels) graphregion(color(white))  ///
-	xtitle("Relative year")   ytitle("Total target population (thousands)") ///
+	xtitle("Relative year")   ytitle("Log of total target population") ///
 	title("(b) Lost treatment")  ///
 	legend(order(2 "Active treatment" 4 "No treatment") row(1) pos(6)) xsize(5)
 graph export "$oo/final/inlost_total_target_nowt_log.png", replace
@@ -615,45 +615,6 @@ graph export "$oo/final/inlost_total_target_nowt_log.png", replace
 
 
 ************** TOTAL PLACEBO POPULATION 
-
-************ gainers YES weights, no controls $covars $invars
-reghdfe log_total_placebo1 gain_ry_minus6 gain_ry_minus5 gain_ry_minus4 gain_ry_minus3 gain_ry_minus2 o.gain_ry_minus1 ///
-gain_ry_plus0 gain_ry_plus1 gain_ry_plus2 gain_ry_plus3 $invars ///
-	   if ever_lost_exp_migpuma==0, ///
-	vce(cluster geoid_migpuma) absorb(geoid_migpuma year) //for those that gain treatment, the total target pop increases with treatment
-est store in_target1
-* Plot with separate colors for pre- and post-event coefficients
-coefplot ///
-	(in_target1 , keep(gain_ry_minus* o.gain_ry_minus1) msymbol(circle ) mcolor(midblue) msize(1.25) ciopts(lcolor(midblue) lwidth(0.3) recast(rcap))) ///
-	(in_target1 , keep(gain_ry_plus* ) msymbol(circle ) mcolor(navy) msize(1.25) ciopts(lcolor(navy) lwidth(0.3) recast(rcap))) ///
-	, nooffsets xline(6, lcolor(gray) lpattern(solid))  yline(0, lcolor(gray) lpattern(dash))  ///
-	omit vertical ///
-	eqlabels(, labels) graphregion(color(white))  ///
-	xtitle("Relative year")   ytitle("Total placebo population (thousands)") ///
-	title("(c) Gained treatment - Placebo") ///
-	legend(order(4 "Active treatment" 2 "No treatment") row(1) pos(6)) xsize(5)
-graph export "$oo/final/ingain_placebo_nowt_log.png", replace
-
-
-************* losers YES weights
-reghdfe log_total_placebo1 lost_ry_minus6 lost_ry_minus5 lost_ry_minus4 lost_ry_minus3 lost_ry_minus2 o.lost_ry_minus1 ///
-lost_ry_plus0 lost_ry_plus1 lost_ry_plus2 lost_ry_plus3 lost_ry_plus4 lost_ry_plus5 lost_ry_plus6 $invars ///
-	if ever_gain_exp_migpuma==0, ///
-	vce(cluster geoid_migpuma) absorb(geoid_migpuma year)
-est store in_target3
-* Plot 
-coefplot ///
-	(in_target3 , keep(lost_ry_minus* o.lost_ry_minus1) msymbol(circle ) mcolor(navy) msize(1.25) ciopts(lcolor(navy) lwidth(0.3) recast(rcap))) ///
-	(in_target3 , keep(lost_ry_plus* ) msymbol(circle ) mcolor(midblue) msize(1.25) ciopts(lcolor(midblue) lwidth(0.3) recast(rcap))) ///
-	, nooffsets xline(6, lcolor(gray) lpattern(solid))  yline(0, lcolor(gray) lpattern(dash))  ///
-	omit vertical ///
-	eqlabels(, labels) graphregion(color(white))  ///
-	xtitle("Relative year")   ytitle("Total placebo population (thousands)") ///
-	title("(d) Lost treatment - Placebo")  ///
-	legend(order(2 "Active treatment" 4 "No treatment") row(1) pos(6)) xsize(5)
-graph export "$oo/final/inlost_placebo_nowt_log.png", replac
-
-
 
 ************ gainers YES weights, no controls $covars $invars
 reghdfe log_total_placebo1 gain_ry_minus6 gain_ry_minus5 gain_ry_minus4 gain_ry_minus3 gain_ry_minus2 o.gain_ry_minus1 ///
@@ -668,10 +629,10 @@ coefplot ///
 	, nooffsets xline(6, lcolor(gray) lpattern(solid))  yline(0, lcolor(gray) lpattern(dash))  ///
 	omit vertical ///
 	eqlabels(, labels) graphregion(color(white))  ///
-	xtitle("Relative year")   ytitle("Total placebo population (thousands)") ///
-	title("(c) Gained treatment - with controls") ///
+	xtitle("Relative year")   ytitle("Log of total placebo population") ///
+	title("(c) Gained treatment - Placebo") ///
 	legend(order(4 "Active treatment" 2 "No treatment") row(1) pos(6)) xsize(5)
-graph export "$oo/final/ingain_placebo_nowt_log_log_wcontrols.png", replace
+graph export "$oo/final/ingain_placebo_nowt_log.png", replace
 
 
 ************* losers YES weights
@@ -687,15 +648,54 @@ coefplot ///
 	, nooffsets xline(6, lcolor(gray) lpattern(solid))  yline(0, lcolor(gray) lpattern(dash))  ///
 	omit vertical ///
 	eqlabels(, labels) graphregion(color(white))  ///
-	xtitle("Relative year")   ytitle("Total placebo population (thousands)") ///
-	title("(d) Lost treatment - with controls")  ///
+	xtitle("Relative year")   ytitle("Log of total placebo population") ///
+	title("(d) Lost treatment - Placebo")  ///
 	legend(order(2 "Active treatment" 4 "No treatment") row(1) pos(6)) xsize(5)
-graph export "$oo/final/inlost_placebo_nowt_log_wcontrols.png", replace
+graph export "$oo/final/inlost_placebo_nowt_log.png", replace
+
 
 
 
 
 ********** In same regression
+**** GAINERS, NO WEIGHT
+reghdfe log_total_targetpop2 gain_ry_minus6 gain_ry_minus5 gain_ry_minus4 gain_ry_minus3 gain_ry_minus2 o.gain_ry_minus1 ///
+	gain_ry_plus0 gain_ry_plus1 gain_ry_plus2 gain_ry_plus3  ///
+	lost_ry_minus6 lost_ry_minus5 lost_ry_minus4 lost_ry_minus3 lost_ry_minus2 o.lost_ry_minus1 ///
+	lost_ry_plus0 lost_ry_plus1 lost_ry_plus2 lost_ry_plus3 lost_ry_plus4 lost_ry_plus5 lost_ry_plus6 ///
+	$covarsPOP $invars , ///
+	vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+est store in_target1
+
+**** REDUCE WIDTH
+coefplot ///
+	(in_target1 , keep(gain_ry_minus* o.gain_ry_minus1) msymbol(circle ) mcolor(midblue) msize(1.25) ciopts(lcolor(midblue) lwidth(0.3) recast(rcap))) ///
+	(in_target1 , keep(gain_ry_plus* ) msymbol(circle ) mcolor(navy) msize(1.25) ciopts(lcolor(navy) lwidth(0.3) recast(rcap))) ///
+	, nooffsets xline(6, lcolor(gray) lpattern(solid))  yline(0, lcolor(gray) lpattern(dash))  ///
+	omit vertical ///
+	eqlabels(, labels) graphregion(color(white)) ///
+	xtitle("Relative year")   ytitle("Log of total target population") ///
+	title("(a) Gained treatment") ///
+	legend(order(4 "Active treatment" 2 "No treatment") row(1) pos(6)) xsize(5)
+graph export "$oo/final/ingain_targetpop2_nowt_samereg_log.png", replace
+
+**** LOSERS, NO WEIGHT
+coefplot ///
+	(in_target1 , keep(lost_ry_minus* o.lost_ry_minus1) msymbol(circle ) mcolor(navy) msize(1.25) ciopts(lcolor(navy) lwidth(0.3) recast(rcap))) ///
+	(in_target1 , keep(lost_ry_plus* ) msymbol(circle ) mcolor(midblue) msize(1.25) ciopts(lcolor(midblue) lwidth(0.3) recast(rcap))) ///
+	, nooffsets xline(6, lcolor(gray) lpattern(solid))  yline(0, lcolor(gray) lpattern(dash))  ///
+	omit vertical ///
+	eqlabels(, labels) graphregion(color(white))  ///
+	xtitle("Relative year")   ytitle("Log of total target population") ///
+	title("(b) Lost treatment")  ///
+	legend(order(2 "Active treatment" 4 "No treatment") row(1) pos(6)) xsize(5)
+graph export "$oo/final/inlost_targetpop2_nowt_samereg_log.png", replace
+
+
+
+
+
+********** In same regression PLACEBO
 **** GAINERS, NO WEIGHT
 reghdfe log_total_placebo1 gain_ry_minus6 gain_ry_minus5 gain_ry_minus4 gain_ry_minus3 gain_ry_minus2 o.gain_ry_minus1 ///
 	gain_ry_plus0 gain_ry_plus1 gain_ry_plus2 gain_ry_plus3  ///
@@ -712,10 +712,10 @@ coefplot ///
 	, nooffsets xline(6, lcolor(gray) lpattern(solid))  yline(0, lcolor(gray) lpattern(dash))  ///
 	omit vertical ///
 	eqlabels(, labels) graphregion(color(white)) ///
-	xtitle("Relative year")   ytitle("Move migpuma") ///
-	title("(a) Gained treatment") ///
+	xtitle("Relative year")   ytitle("Log of total placebo population") ///
+	title("(b) Gained treatment - Placebo") ///
 	legend(order(4 "Active treatment" 2 "No treatment") row(1) pos(6)) xsize(5)
-graph export "$oo/final/ingain_targetpop2_nowt_samereg_log.png", replace
+graph export "$oo/final/ingain_placebo_nowt_samereg_log.png", replace
 
 **** LOSERS, NO WEIGHT
 coefplot ///
@@ -724,7 +724,7 @@ coefplot ///
 	, nooffsets xline(6, lcolor(gray) lpattern(solid))  yline(0, lcolor(gray) lpattern(dash))  ///
 	omit vertical ///
 	eqlabels(, labels) graphregion(color(white))  ///
-	xtitle("Relative year")   ytitle("Share of target population") ///
-	title("(b) Lost treatment")  ///
+	xtitle("Relative year")   ytitle("Log of total placebo population") ///
+	title("(d) Lost treatment - Placebo")  ///
 	legend(order(2 "Active treatment" 4 "No treatment") row(1) pos(6)) xsize(5)
-graph export "$oo/final/inlost_targetpop2_nowt_samereg_log.png", replace
+graph export "$oo/final/inlost_placebo_nowt_samereg_log.png", replace
