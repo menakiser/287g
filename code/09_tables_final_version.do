@@ -208,7 +208,7 @@ file write sumstat "\begin{tabular}{lcccc}" _n
 file write sumstat "\toprule" _n
 file write sumstat "\toprule" _n
 * Panel A
-file write sumstat " \multicolumn{2}{c}{Target population} & \multicolumn{2}{c}{Placebo}  \\" _n
+file write sumstat " & \multicolumn{2}{c}{Target population} & \multicolumn{2}{c}{Placebo}  \\" _n
 file write sumstat " Move migpuma & (1) & (2)  & (3) & (4)  \\" _n
 file write sumstat "\midrule " _n
 
