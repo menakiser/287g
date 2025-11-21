@@ -135,7 +135,7 @@ coefplot ///
 	eqlabels(, labels) graphregion(color(white)) ///
 	xtitle("Relative year")   ytitle("Move migpuma") ///
 	title("(a) Gained treatment") ///
-	legend(order(4 "Active treatment" 2 "No treatment") row(1) pos(6))
+	legend(order(4 "Active treatment" 2 "No treatment") row(1) pos(6)) xsize(5)
 graph export "$oo/final/ingain_targetpop2_nowt.png", replace
 
 **** LOSERS, NO WEIGHT
@@ -147,7 +147,7 @@ coefplot ///
 	eqlabels(, labels) graphregion(color(white))  ///
 	xtitle("Relative year")   ytitle("Share of target population") ///
 	title("(b) Lost treatment")  ///
-	legend(order(2 "Active treatment" 4 "No treatment") row(1) pos(6)) 
+	legend(order(2 "Active treatment" 4 "No treatment") row(1) pos(6)) xsize(5)
 graph export "$oo/final/inlost_targetpop2_nowt.png", replace
 
 
