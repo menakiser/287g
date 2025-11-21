@@ -231,7 +231,7 @@ These results suggest there are differential effects in migration for the non-ci
 \centering
 \caption{Gainers vs loser in same regression}
 \label{tab:regtp}
-\adjustbox{ width=0.7\linewidth}{
+\adjustbox{ width=0.8\linewidth}{
     \input{output/final/in_gain_lost_join}
 }
 
@@ -278,7 +278,7 @@ These results suggest there are differential effects in migration for the non-ci
 \label{tab:regtp}
 \begin{center}
 \adjustbox{ width=0.7\linewidth}{
-    \includegraphics{output/prop_score.png}
+    \includegraphics{output/final/prop_score.png}
 }
 \end{center}
 \justifying
@@ -298,7 +298,42 @@ These results suggest there are differential effects in migration for the non-ci
 
 \begin{figure}[h]
 \centering
-\caption{In-migration effects of 287(g) migpuma exposure}
+\caption{In-migration effects of 287(g) migpuma exposure by gainers and losers}
+\label{tab:es_in_any}
+
+\begin{minipage}{0.44\linewidth}
+\centering
+(a) Any move
+\adjustbox{width=\linewidth}{\includegraphics{output/final/ingain_targetpop2_nowt.png}}
+\end{minipage}
+\hfill
+\begin{minipage}{0.44\linewidth}
+\centering
+(b) Move migpuma
+\adjustbox{width=\linewidth}{\includegraphics{output/final/inlost_targetpop2_nowt.png}}
+\end{minipage}
+
+\justifying
+\begin{spacing}{1}
+\begin{footnotesize}
+\noindent \textit{Notes: This graph shows the density of the indicator for migpuma ever exposed.}
+\end{footnotesize}
+\end{spacing}
+
+\end{figure}
+
+\end{landscape}
+
+
+
+
+
+\newpage
+\begin{landscape}
+
+\begin{figure}[h]
+\centering
+\caption{In-migration effects of 287(g) migpuma exposure by gainers and losers}
 \label{tab:es_in_any}
 
 \begin{minipage}{0.44\linewidth}
@@ -313,14 +348,6 @@ These results suggest there are differential effects in migration for the non-ci
 \adjustbox{width=\linewidth}{\includegraphics{output/es_in_migpuma.png}}
 \end{minipage}
 
-\vspace{1em}
-
-\begin{minipage}{0.44\linewidth}
-\centering
-(c) Move state
-\adjustbox{width=\linewidth}{\includegraphics{output/es_in_state.png}}
-\end{minipage}
-
 \justifying
 \begin{spacing}{1}
 \begin{footnotesize}
@@ -334,44 +361,8 @@ These results suggest there are differential effects in migration for the non-ci
 
 
 
-\newpage
-\begin{landscape}
 
-\begin{figure}[h]
-\centering
-\caption{Out-migration effects of 287(g) migpuma exposure}
-\label{tab:es_in_any}
 
-\begin{minipage}{0.44\linewidth}
-\centering
-(a) Any move
-\adjustbox{width=\linewidth}{\includegraphics{output/es_out_any.png}}
-\end{minipage}
-\hfill
-\begin{minipage}{0.44\linewidth}
-\centering
-(b) Move migpuma
-\adjustbox{width=\linewidth}{\includegraphics{output/es_out_migpuma.png}}
-\end{minipage}
-
-\vspace{1em}
-
-\begin{minipage}{0.44\linewidth}
-\centering
-(c) Move state
-\adjustbox{width=\linewidth}{\includegraphics{output/es_out_state.png}}
-\end{minipage}
-
-\justifying
-\begin{spacing}{1}
-\begin{footnotesize}
-\noindent \textit{Notes: This graph shows the density of the indicator for migpuma ever exposed.}
-\end{footnotesize}
-\end{spacing}
-
-\end{figure}
-
-\end{landscape}
 
 
 \end{document}
