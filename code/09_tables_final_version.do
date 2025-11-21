@@ -282,8 +282,8 @@ reghdfe move_migpuma exp_any_migpuma [pw=perwt]  if targetpop2==1  & ever_gain_e
 reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(intarget) wt(perwt) wttype(pw)
 * with propensity weights
 * with controls 
-reghdfe move_migpuma exp_any_migpuma $covars $invars [pw=perwt_wt]  if targetpop2==1  & ever_gain_exp_migpuma==0, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(intarget) wt(perwperwtt_wt) wttype(pw)
+reghdfe move_migpuma exp_any_migpuma $covars $invars [pw=perwt]  if targetpop2==1  & ever_gain_exp_migpuma==0, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(intarget) wt(perwt) wttype(pw)
 
 **** IN MIGRATION FOR PLACEBO POPULATION
 cap mat drop inplacebo
