@@ -54,7 +54,7 @@ coefplot ///
 	eqlabels(, labels) graphregion(color(white)) ///
 	xtitle("Relative year")   ytitle("Log target population") ///
 	title("(a) Gained treatment, target") ///
-	legend(order(4 "Active 287(g)" 2 "No 287(g)") row(1) pos(6)) xsize(5) ///
+	legend(order(4 "Active 287(g)" 2 "No 287(g)") row(1) pos(6)) xsize(6) ///
 	ylabel(-1.5(0.5)1.5)
 graph export "$oo/final/logtargetpop_gain_estudy.png", replace
 
@@ -67,7 +67,7 @@ coefplot ///
 	eqlabels(, labels) graphregion(color(white))  ///
 	xtitle("Relative year")   ytitle("Log target population") ///
 	title("(b) Lost treatment, target") ///
-	legend(order(4 "Active 287(g)" 2 "No 287(g)") row(1) pos(6)) xsize(5) ///
+	legend(order(4 "Active 287(g)" 2 "No 287(g)") row(1) pos(6)) xsize(6) ///
 	ylabel(-1.5(0.5)1.5)
 graph export "$oo/final/logtargetpop_lost_estudy.png", replace
 
@@ -91,7 +91,7 @@ coefplot ///
 	eqlabels(, labels) graphregion(color(white)) ///
 	xtitle("Relative year")   ytitle("Log placebo population") ///
 	title("(c) Gained treatment, placebo") ///
-	legend(order(4 "Active 287(g)" 2 "No 287(g)") row(1) pos(6)) xsize(5) ///
+	legend(order(4 "Active 287(g)" 2 "No 287(g)") row(1) pos(6)) xsize(6) ///
 	ylabel(-1.5(0.5)1.5)
 graph export "$oo/final/logplacebopop_gain_estudy.png", replace
 
@@ -104,7 +104,7 @@ coefplot ///
 	eqlabels(, labels) graphregion(color(white))  ///
 	xtitle("Relative year")   ytitle("Log placebo population") ///
 	title("(d) Lost treatment, placebo") ///
-	legend(order(4 "Active 287(g)" 2 "No 287(g)") row(1) pos(6)) xsize(5) ///
+	legend(order(4 "Active 287(g)" 2 "No 287(g)") row(1) pos(6)) xsize(6) ///
 	ylabel(-1.5(0.5)1.5)
 graph export "$oo/final/logplacebopop_lost_estudy.png", replace
 
