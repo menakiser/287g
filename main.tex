@@ -164,6 +164,8 @@ These results suggest there are differential effects in migration for the non-ci
 
 
 \newpage
+
+
 \begin{table}[h]
 \centering
 \caption{Net effect of 287(g) on probability of mobility among targeted and placebo populations}
@@ -186,12 +188,13 @@ These results suggest there are differential effects in migration for the non-ci
 
 
 \newpage
+
 \begin{table}[h]
 \centering
 \caption{Net effect of 287(g) on log total targeted and placebo populations}
 \label{tab:regtp}
 \adjustbox{ width=\linewidth}{
-    \input{output/final/logpop_reg}
+    \input{output/final/logtargetpop_reg}
 }
 
 \justifying
@@ -215,29 +218,7 @@ These results suggest there are differential effects in migration for the non-ci
 \caption{Difference-in-difference for log total targeted and placebo populations by gainer and loser status, separate regression}
 \label{tab:regtp}
 \adjustbox{ width=\linewidth}{
-    \input{output/final/in_gain_lost_logpop}
-}
-
-\justifying
-\begin{spacing}{1}
-\begin{footnotesize}
-
-
-\noindent \textit{Notes:} This table compares . p $<$ 0.01 ***, p $<$ 0.05 **, p $<$0.1 *. 
-
-\end{footnotesize}
-\end{spacing}
-\end{table}
-
-
-
-\newpage
-\begin{table}[h]
-\centering
-\caption{Joint difference-in-difference for log total targeted and placebo populations by gainer and loser status, same regression}
-\label{tab:regtp}
-\adjustbox{ width=\linewidth}{
-    \input{output/final/in_gain_lost_join_log}
+    \input{output/final/logtargetpop_did}
 }
 
 \justifying
@@ -302,24 +283,24 @@ These results suggest there are differential effects in migration for the non-ci
 
 \begin{figure}[h]
 \centering
-\caption{Event study of log total targeted and placebo populations by gainer and loser status, in separate regressions}
+\caption{Event study of log total targeted and placebo populations by gainer and loser status, same regressions}
 \label{tab:es_in_any}
 
 \begin{minipage}{0.44\linewidth}
 \centering
-\adjustbox{width=\linewidth}{\includegraphics{output/final/ingain_total_target_nowt_log.png}}
+\adjustbox{width=\linewidth}{\includegraphics{output/final/logtargetpop_gain_estudy.png}}
 \end{minipage}
 \begin{minipage}{0.44\linewidth}
 \centering
-\adjustbox{width=\linewidth}{\includegraphics{output/final/inlost_total_target_nowt_log.png}}
+\adjustbox{width=\linewidth}{\includegraphics{output/final/logtargetpop_lost_estudy.png}}
 \end{minipage}
 \begin{minipage}{0.44\linewidth}
 \centering
-\adjustbox{width=\linewidth}{\includegraphics{output/final/ingain_placebo_nowt_log.png}}
+\adjustbox{width=\linewidth}{\includegraphics{output/final/logplacebopop_gain_estudy.png}}
 \end{minipage}
 \begin{minipage}{0.44\linewidth}
 \centering
-\adjustbox{width=\linewidth}{\includegraphics{output/final/inlost_placebo_nowt_log.png}}
+\adjustbox{width=\linewidth}{\includegraphics{output/final/logplacebopop_lost_estudy.png}}
 \end{minipage}
 
 \justifying
@@ -333,46 +314,6 @@ These results suggest there are differential effects in migration for the non-ci
 
 \end{landscape}
 
-
-
-
-
-\newpage
-\begin{landscape}
-
-\begin{figure}[h]
-\centering
-\caption{Event study of log total targeted and placebo populations by gainer and loser status, in the same regressions}
-\label{tab:es_in_any}
-
-\begin{minipage}{0.44\linewidth}
-\centering
-\adjustbox{width=\linewidth}{\includegraphics{output/final/ingain_targetpop2_nowt_samereg_log.png}}
-\end{minipage}
-\begin{minipage}{0.44\linewidth}
-\centering
-\adjustbox{width=\linewidth}{\includegraphics{output/final/inlost_targetpop2_nowt_samereg_log.png}}
-\end{minipage}
-\begin{minipage}{0.44\linewidth}
-\centering
-\adjustbox{width=\linewidth}{\includegraphics{output/final/ingain_placebo_nowt_samereg_log.png}}
-\end{minipage}
-\begin{minipage}{0.44\linewidth}
-\centering
-\adjustbox{width=\linewidth}{\includegraphics{output/final/inlost_placebo_nowt_samereg_log.png}}
-\end{minipage}
-
-
-\justifying
-\begin{spacing}{1}
-\begin{footnotesize}
-\noindent \textit{Notes: This graph shows the density of the indicator for migpuma ever exposed.}
-\end{footnotesize}
-\end{spacing}
-
-\end{figure}
-
-\end{landscape}
 
 
 
