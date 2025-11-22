@@ -72,35 +72,39 @@ During our period of observation (2012--2019), we can observe migpumas that gain
 
 \section{Empirical design}
 
-The main sample of observation spans from 2012--2019 and focuses on the targeted population detailed in the data section. To identify the effects of this policy on in-migration, I start with a regression analysis evaluating the effect of having an active 287(g) agreement in any given year on an individual's in migration decisions. I detail this design in Equation  \ref{eq:reg1},  in which the $Y$, outcome variables, is a dummy for having moved in the past year for an individual \textit{i}, currently residing in migpuma \textit{m}, during year \textit{y}. The treatment is defined by having an active agreement in the migpuma of residence during the focus year. I also include individual controls $X_{i}$ (age, race, high school attained, currently in school, poor level of English, and a dummy for owning a house) migpuma fixed effects $W_{m} $ and year fixed effects $Z_{y}$ and cluster standard errors at the migpuma and year level. The coefficient of interest $\beta_{1}$ informs us of the net effect of having an active agreement on the chances of having moved to the migpuma of observation. 
+Our main sample of observation spans from 2012-2019 and includes migpumas in states with migpumas with any 287(g) active agreement during this period. I focus on a population specially targeted and more responsive to policy changes, as detailed in the previous section, this includes immigrants with the following characteristics: males, ages 18-39, born in a Latin American country, not a U.S. citizen, that have spent 10 years or less in the country, that have a high school degree or less, and not currently married.
+
+To identify the effects of this policy on in-migration, I start with a regression analysis evaluating the effect of having an active 287(g) agreement in any given year on an individual's in migration decisions. I detail this design in Equation  \ref{eq:regpr},  in which the $Y$, outcome variables, is a dummy for having moved in the past year for an individual \textit{i}, currently residing in migpuma \textit{m}, during year \textit{y}. The treatment is defined by having an active agreement in the migpuma of residence during the focus year. I also include individual controls $X_{i}$ (age, race, high school attained, currently in school, poor level of English, and a dummy for owning a house) migpuma fixed effects $W_{m} $ and year fixed effects $Z_{y}$ and cluster standard errors at the migpuma and year level. The coefficient of interest $\beta_{1}$ informs us of the net effect of having an active agreement on the chances of having moved to the migpuma of observation. I focus on in-migration, rather than out-migration because it is possible some of these immigrants are leaving the country alltogether thus we would not be able to identify if they lived in treated migpuma the previous year.
 \begin{equation}
-    \label{eq:reg1}
+    \label{eq:regpr}
     Y_{imy} = \beta_{0} + \beta_{1}\text{active agreement}_{my} + \alpha_{1}X_{i} +  \alpha_{2}W_{m} + \alpha_{3}Z_{y} + \epsilon_{my} 
 \end{equation}
 
-To identify the effect of gaining and losing treatment we implement a staggered difference-in-difference approach detailed in Equation \ref{eq:gain_did} and 3. The $\text{gains treatment}_{m}$ ($\text{loses treatment}_{m}$ ) indicator is assigned at the migpuma level and the $\text{post}_{my}$ indicator is a dummy for the focus year being greater or equal than the year in which the treatment was gained (lost) in the focus migpuma during a given year. In Equation \ref{eq:gain_did}, the coefficient of interest $\beta'_{1}$ describes the effect of gaining 287(g) treatment relative to the never treated, as we exclude those that ever lose treatment. In Equation 3, the coefficient of interest $\beta''_{1}$ captures the effect of losing 287(g) treatment relative to the never treated, as we exclude those that ever gain treatment.
- \begin{align}
-    \label{eq:gain_did}
-    Y_{imy} &= \beta'_{0} + \beta'_{1}\text{gains treatment}_{m}*\text{post}_{my} + \alpha'_{1}X_{i} +  \alpha'_{2}W_{m} + \alpha'_{3}Z_{y} + \epsilon_{my}  \\
-    Y_{imy} &= \beta''_{0} + \beta''_{1}\text{lose treatment}_{m}*\text{post}_{my} + \alpha''_{1}X_{i} +  \alpha''_{2}W_{m} + \alpha''_{3}Z_{y} + \epsilon_{my} 
- \end{align}
-
-By evaluating the effect of gaining and losing treatment we are able to evaluate the parallel trends assumption through an event study design.
- \begin{equation}
-    \label{eq:joindid}
-    Y_{imy} = \beta^{(3)}_{0} + \beta^{(3)}_{1}\text{gains treatment}_{m}*\text{post}_{my} + \beta^{(3)}_{2}\text{loses treatment}_{m}*\text{post}_{my} +  \alpha^{(3)}_{1}W_{m} + 
-    \alpha^{(3)}_{1}X_{i} +  \alpha^{(3)}_{2}W_{m} + \alpha^{(3)}_{3}Z_{y} + \epsilon_{my} 
+As evaluating the probability of having moved to a treated migpuma relies in the overall number and composition (newcomers and stayers) of target immigrants in the locality, it is possible $\beta_{1}$ in Equation  \ref{eq:regpr} captures an outcome based on an evolving sample. Thus, I turn to evaluating the effect of the treatment in the total target population in an area. In this specification, detailed in Equation \ref{eq:regpop}, the outcome is the log target population at the migpuma and year level. The treatment, migpuma fixed effects, and year fixed effects are defined the same as in the previous equation. We add controls at the migpuma-year level, instead of at the individual level, these controls include log totals of population in different age distributions, race categories, high school attainment, in school status, and that are homeowners. These controls mirror those in the previous specification and are included to capture differences across areas with aging population, and changing in racial and education composition, or difficulty of owning a home. The coefficient of interest ($\beta'_{1}$) measures the percent change in the total target population in a migpuma when an active agreement is in place, relative to the same migpuma in untreated years and relative to contemporaneous changes in other migpumas, holding area-year controls and fixed effects constant.
+\begin{equation}
+    \label{eq:regpop}
+    Y_{my} = \beta'_{0} + \beta'_{1}\text{active agreement}_{my} + \alpha'_{1}X_{my} +  \alpha'_{2}W_{m} + \alpha'_{3}Z_{y} + \epsilon_{my} 
 \end{equation}
 
-Alternatively, we can jointly evaluate the effect of gaining an losing treatment in Equation \ref{eq:joindid}. In this case, $\beta^{(3)}_{1}$ captures the effect of gaining 287(g) treatment and $\beta^{(3)}_{2}$ captures the effect of gaining treatment, while the comparison group includes the never treated; those that will lose treatment, but before they lose it; and those that will gain treatment, but before they gain it. So our comparison group actually includes migpumas that have an active 287(g) treatment but before they lose it. This analysis allows us to identify the effect of obtaining or losing the treatment.
+To identify the effect of gaining and losing a 287(g) agreement in your local area, we implement a staggered difference-in-difference approach detailed in Equation \ref{eq:joindid}. The $\text{gains treatment}_{m}$ ($\text{loses treatment}_{m}$ ) indicator is assigned at the migpuma level and the $\text{post gain}_{my}$ ($\text{post loss}_{my}$) indicator is a dummy for the focus year being greater or equal than the year in which the treatment was gained (lost) in the focus migpuma. $\beta''_{1}$ captures the effect of gaining 287(g) treatment and $\beta''_{2}$ captures the effect of gaining treatment. The comparison group includes the never treated; those that will lose treatment, but before they lose it; and those that will gain treatment, but before they gain it. This setup allows us to identify the effect of obtaining or losing the treatment allowing for both events to be different from each other. The identifying assumption expects that treated migpumas, had not gained or lost treatment, would have perceived similar trends in totals of target population as never treated migpumas. I will evaluate this parallel trends assumption through an event study design.
+ \begin{equation}
+    \label{eq:joindid}
+    \begin{split}
+    Y_{my} = \beta''_{0} + \beta''_{1}\text{gains treatment}_{m}*\text{post gain}_{my} + \beta''_{2}\text{loses treatment}_{m}*\text{post loss}_{my} \\
+    +  \alpha''_{1}W_{m} + 
+    \alpha''_{1}X_{m} +  \alpha''_{2}W_{m} + \alpha''_{3}Z_{y} + \epsilon_{my} 
+    \end{split}
+\end{equation}
 
-In addition to evaluating the effect in newcomers (in-migration) as a share of the target population, I evaluate the effect in (log) total target population in the residing in the focus migpuma. This would uncover the issue of the denominator. In this case, the outcome is established at the migpuma-year level, and as opposed to including controls at the individual level we include controls at the migpuma-year level, including share of young adults, race composition, high school attainment, currently in school, poor level of English, and homeowners. <<<< I'M CONFUSED ON THIS ACTUALLY
+Though we focus on a population specifically targeted by 287(g) deportations, I also evaluate effects on a placebo population that is not affected by this policy: U.S. born citizens of Hispanic origin with similar non-immigration characteristics (males, ages 18-39, with a high school degree or less, not currently married). Evaluating a placebo population would allow us to discern if effects in the total population are distinguishable from those that are not affected. As a way to evaluate spillover effects, I can also evaluate a population that \textit{should not} be affected by the policy: foreign-born U.S. citizens from Hispanic descent, with similar non-immigration characteristics (males, ages 18-39, with a high school degree or less, not currently married).
 
-
-
+    
  \section{Results}
 
-In Table , we start by evaluating Equation \ref{eq:reg1} for the target population in panel A and for a placebo population in panel B. We find puzzling results that though distinguishable from the placebo effects point to a different direction from expected. We explore this further by focusing on total target population in later tables. 
+Table \ref{tab:regprob} evaluates Equation \ref{eq:regpr} in a sample restricted to the target population in Columns 1 and 2. 
+
+and restricted to the placebo population in Columns 2-4.
+We find puzzling results that though distinguishable from the placebo effects point to a different direction from expected. We explore this further by focusing on total target population in later tables. 
 
 In Table , we evaluate Equation \ref{eq:joindid} and find results in the same direction though insignificant.
 
@@ -167,7 +171,7 @@ These results suggest there are differential effects in migration for the non-ci
 \begin{table}[H]
 \centering
 \caption{Net effect of 287(g) on probability of mobility among targeted and placebo populations}
-\label{tab:regtp}
+\label{tab:regprob}
 \adjustbox{ width=\linewidth}{
     \input{output/final/prob_in_migration}
 }
@@ -190,7 +194,7 @@ These results suggest there are differential effects in migration for the non-ci
 \begin{table}[H]
 \centering
 \caption{Net effect of 287(g) on log total targeted and placebo populations}
-\label{tab:regtp}
+\label{tab:regpop}
 \adjustbox{ width=\linewidth}{
     \input{output/final/logtargetpop_reg}
 }
@@ -214,7 +218,7 @@ These results suggest there are differential effects in migration for the non-ci
 \begin{table}[H]
 \centering
 \caption{Difference-in-difference for log total targeted and placebo populations by gainer and loser status, separate regression}
-\label{tab:regtp}
+\label{tab:didpop}
 \adjustbox{ width=\linewidth}{
     \input{output/final/logtargetpop_did}
 }
@@ -258,21 +262,21 @@ These results suggest there are differential effects in migration for the non-ci
 \begin{figure}[H]
 \centering
 \caption{Event study of log total targeted and placebo populations by gainer and loser status}
-\label{tab:es_in_any}
+\label{fig:didpop}
 
-\begin{minipage}{0.4\linewidth}
+\begin{minipage}{0.44\linewidth}
 \centering
 \adjustbox{width=\linewidth}{\includegraphics{output/final/logtargetpop_gain_estudy.png}}
 \end{minipage}
-\begin{minipage}{0.4\linewidth}
+\begin{minipage}{0.44\linewidth}
 \centering
 \adjustbox{width=\linewidth}{\includegraphics{output/final/logtargetpop_lost_estudy.png}}
 \end{minipage}
-\begin{minipage}{0.4\linewidth}
+\begin{minipage}{0.44\linewidth}
 \centering
 \adjustbox{width=\linewidth}{\includegraphics{output/final/logplacebopop_gain_estudy.png}}
 \end{minipage}
-\begin{minipage}{0.4\linewidth}
+\begin{minipage}{0.44\linewidth}
 \centering
 \adjustbox{width=\linewidth}{\includegraphics{output/final/logplacebopop_lost_estudy.png}}
 \end{minipage}
