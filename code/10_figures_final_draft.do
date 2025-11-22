@@ -663,7 +663,7 @@ reghdfe log_total_targetpop2 gain_ry_minus6 gain_ry_minus5 gain_ry_minus4 gain_r
 	gain_ry_plus0 gain_ry_plus1 gain_ry_plus2 gain_ry_plus3  ///
 	lost_ry_minus6 lost_ry_minus5 lost_ry_minus4 lost_ry_minus3 lost_ry_minus2 o.lost_ry_minus1 ///
 	lost_ry_plus0 lost_ry_plus1 lost_ry_plus2 lost_ry_plus3 lost_ry_plus4 lost_ry_plus5 lost_ry_plus6 ///
-	$covarsPOP $invars , ///
+	 , ///
 	vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
 est store in_target1
 
