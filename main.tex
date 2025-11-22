@@ -117,10 +117,10 @@ These results suggest there are differential effects in migration for the non-ci
 \section{Tables and figures}    
 
 
+%%%%%% TABLES
 
 %% table 1
-
-\begin{table}[h]
+\begin{table}[H]
 \centering
 \caption{ICE Removals from a 287(g) apprehension}
 \label{tab:removals}
@@ -139,9 +139,9 @@ These results suggest there are differential effects in migration for the non-ci
 \end{table}
 
 
-%% table 1
+%% table 2
 \newpage
-\begin{table}[h]
+\begin{table}[H]
 \begin{center}
 
 \caption{Summary statistics by exposure and target group}
@@ -162,11 +162,9 @@ These results suggest there are differential effects in migration for the non-ci
 
 
 
-
+%% table 3
 \newpage
-
-
-\begin{table}[h]
+\begin{table}[H]
 \centering
 \caption{Net effect of 287(g) on probability of mobility among targeted and placebo populations}
 \label{tab:regtp}
@@ -187,9 +185,9 @@ These results suggest there are differential effects in migration for the non-ci
 
 
 
+%% table 4
 \newpage
-
-\begin{table}[h]
+\begin{table}[H]
 \centering
 \caption{Net effect of 287(g) on log total targeted and placebo populations}
 \label{tab:regtp}
@@ -213,7 +211,7 @@ These results suggest there are differential effects in migration for the non-ci
 
 
 \newpage
-\begin{table}[h]
+\begin{table}[H]
 \centering
 \caption{Difference-in-difference for log total targeted and placebo populations by gainer and loser status, separate regression}
 \label{tab:regtp}
@@ -233,72 +231,48 @@ These results suggest there are differential effects in migration for the non-ci
 \end{table}
 
 
+
+%%%%% FIGURES
 %% figure 1
 \newpage
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \caption{Yearly count and geographic distribution of MIGPUMAs with active 287(g) agreements}
-\label{tab:agreement_count}
+\label{fig:agreement_count}
 \begin{center}
-\adjustbox{ width=\linewidth}{
-\label{fig:treatdistribution}
-    \includegraphics{output/final/bar_active_agreements.png}
+\adjustbox{width=\linewidth}{
+    \includegraphics[width=\linewidth]{output/final/bar_active_agreements.png}
 }
 \end{center}
 \justifying
 \begin{spacing}{1}
 \begin{footnotesize}
 \noindent \textit{Notes:} This graph shows yearly trends of MIGPUMAs with active agreements from 2012-2019.
-
 \end{footnotesize}
 \end{spacing}
 \end{figure}
 
-\newpage
+
+%% figure 2 
 \begin{landscape}
-    
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
-\caption{Density of propensity score}
-\label{tab:regtp}
-\begin{center}
-\adjustbox{ width=0.7\linewidth}{
-    \includegraphics{output/final/prop_score.png}
-}
-\end{center}
-\justifying
-\begin{spacing}{1}
-\begin{footnotesize}
-\noindent \textit{Notes:} This graph shows the density of the indicator for migpuma ever exposed.
-
-\end{footnotesize}
-\end{spacing}
-\end{figure}
-\end{landscape}
-
-
-
-\newpage
-\begin{landscape}
-
-\begin{figure}[h]
-\centering
-\caption{Event study of log total targeted and placebo populations by gainer and loser status, same regressions}
+\caption{Event study of log total targeted and placebo populations by gainer and loser status}
 \label{tab:es_in_any}
 
-\begin{minipage}{0.44\linewidth}
+\begin{minipage}{0.4\linewidth}
 \centering
 \adjustbox{width=\linewidth}{\includegraphics{output/final/logtargetpop_gain_estudy.png}}
 \end{minipage}
-\begin{minipage}{0.44\linewidth}
+\begin{minipage}{0.4\linewidth}
 \centering
 \adjustbox{width=\linewidth}{\includegraphics{output/final/logtargetpop_lost_estudy.png}}
 \end{minipage}
-\begin{minipage}{0.44\linewidth}
+\begin{minipage}{0.4\linewidth}
 \centering
 \adjustbox{width=\linewidth}{\includegraphics{output/final/logplacebopop_gain_estudy.png}}
 \end{minipage}
-\begin{minipage}{0.44\linewidth}
+\begin{minipage}{0.4\linewidth}
 \centering
 \adjustbox{width=\linewidth}{\includegraphics{output/final/logplacebopop_lost_estudy.png}}
 \end{minipage}
@@ -316,6 +290,25 @@ These results suggest there are differential effects in migration for the non-ci
 
 
 
+
+\section{Appendix}
+%% figure 1
+\begin{figure}[H]
+\centering
+\caption{Density of propensity score}
+\label{fig:prop_score}
+\begin{center}
+\adjustbox{width=\linewidth}{
+    \includegraphics[width=\linewidth]{output/final/prop_score.png}
+}
+\end{center}
+\justifying
+\begin{spacing}{1}
+\begin{footnotesize}
+\noindent \textit{Notes:} This graph shows the density of the indicator for migpuma ever exposed.
+\end{footnotesize}
+\end{spacing}
+\end{figure}
 
 
 
