@@ -330,13 +330,13 @@ cap mat drop intarget
 reghdfe log_tot_targetpop2 exp_gain_migpuma exp_lost_migpuma $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
 reg_to_mat, depvar( log_tot_targetpop2 ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget) 
 * with controls for native populations
-reghdfe log_tot_targetpop2 exp_gain_migpuma exp_lost_migpuma $covarsnat $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
+reghdfe log_tot_targetpop2 exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
 reg_to_mat, depvar( log_tot_targetpop2 ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget) 
 * no controls 
 reghdfe log_tot_placebo1 exp_gain_migpuma exp_lost_migpuma $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
 reg_to_mat, depvar( log_tot_placebo1 ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget) 
 * with controls for native populations
-reghdfe log_tot_placebo1 exp_gain_migpuma exp_lost_migpuma $covarsnat $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
+reghdfe log_tot_placebo1 exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
 reg_to_mat, depvar( log_tot_placebo1 ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget) 
 
 
