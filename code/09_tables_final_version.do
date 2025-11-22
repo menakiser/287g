@@ -245,15 +245,16 @@ file close sumstat
 
 
 /**************************************************************
-LOG POPULATION RESULTS
+LOG POPULATION REGRESSION
 **************************************************************/
 global covarspop "log_tot_int_age1 log_tot_int_age2 log_tot_int_age3 log_tot_int_age4 log_tot_int_age5 log_tot_int_age6 log_tot_r_white log_tot_r_black log_tot_r_asian log_tot_hs log_tot_in_school log_tot_ownhome"
 global covarsnat "log_nat_int_age1 log_nat_int_age2 log_nat_int_age3 log_nat_int_age4 log_nat_int_age5 log_nat_int_age6 log_nat_r_white log_nat_r_black log_nat_r_asian log_nat_hs log_nat_in_school log_nat_ownhome"
+global invars "exp_any_state "
 
 
 use "$oi/migpuma_year_pops", clear
 
-**** IN MIGRATION FOR TARGET POPULATION
+********* IN MIGRATION FOR TARGET POPULATION
 cap mat drop intarget
 * with simple weights
 * without controls
@@ -314,159 +315,39 @@ file write sumstat "\end{tabular}"
 file close sumstat
 
 
-**** gainers vs losers separately 
 
-**** IN MIGRATION FOR TARGET POPULATION
-cap mat drop intarget
-* GAIINERS + NEVER TREATED
-* with simple weights
-* with controls 
-reghdfe log_total_targetpop2 exp_any_migpuma  if ever_lost_exp_migpuma==0,  vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-reg_to_mat, depvar( log_total_targetpop2 ) indvars(exp_any_migpuma) mat(intarget) 
-* with propensity weights
-* with controls 
-reghdfe log_total_targetpop2 exp_any_migpuma $covarsPOP $invars if ever_lost_exp_migpuma==0, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-reg_to_mat, depvar( log_total_targetpop2 ) indvars( exp_any_migpuma ) mat(intarget) 
+/**************************************************************
+LOG POPULATION DID GAINERS AND LOSERS IN SAME REGRESSION
+**************************************************************/
+global covarspop "log_tot_int_age1 log_tot_int_age2 log_tot_int_age3 log_tot_int_age4 log_tot_int_age5 log_tot_int_age6 log_tot_r_white log_tot_r_black log_tot_r_asian log_tot_hs log_tot_in_school log_tot_ownhome"
+global covarsnat "log_nat_int_age1 log_nat_int_age2 log_nat_int_age3 log_nat_int_age4 log_nat_int_age5 log_nat_int_age6 log_nat_r_white log_nat_r_black log_nat_r_asian log_nat_hs log_nat_in_school log_nat_ownhome"
+global invars "exp_any_state "
 
-* LOSERS + NEVER TREATED
-* with simple weights
-* with controls 
-reghdfe log_total_targetpop2 exp_any_migpuma if ever_gain_exp_migpuma==0, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-reg_to_mat, depvar( log_total_targetpop2 ) indvars( exp_any_migpuma ) mat(intarget) 
-* with propensity weights
-* with controls 
-reghdfe log_total_targetpop2 exp_any_migpuma $covarsPOP $invars if ever_gain_exp_migpuma==0, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-reg_to_mat, depvar( log_total_targetpop2 ) indvars( exp_any_migpuma ) mat(intarget) 
-
-**** IN MIGRATION FOR PLACEBO POPULATION
-cap mat drop inplacebo
-** GAINERS ONLY
-* with simple weights
-* with controls 
-reghdfe log_total_placebo1 exp_any_migpuma  if ever_lost_exp_migpuma==0,  vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-reg_to_mat, depvar( log_total_placebo1 ) indvars( exp_any_migpuma ) mat(inplacebo)
-* with propensity weights
-* with controls 
-reghdfe log_total_placebo1 exp_any_migpuma $covarsPOP $invars  if ever_lost_exp_migpuma==0, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-reg_to_mat, depvar( log_total_placebo1 ) indvars( exp_any_migpuma ) mat(inplacebo)
-
-* LOOSERS ONLY 
-* with simple weights
-* with controls 
-reghdfe log_total_placebo1 exp_any_migpuma if ever_gain_exp_migpuma==0, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-reg_to_mat, depvar( log_total_placebo1 ) indvars( exp_any_migpuma ) mat(inplacebo)
-* with propensity weights
-* with controls 
-reghdfe log_total_placebo1 exp_any_migpuma $covarsPOP $invars if ever_gain_exp_migpuma==0, vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-reg_to_mat, depvar( log_total_placebo1 ) indvars( exp_any_migpuma ) mat(inplacebo)
-
-
-
-* Create table
-cap file close sumstat
-file open sumstat using "$oo/final/in_gain_lost_logpop.tex", write replace
-file write sumstat "\begin{tabular}{lcccc}" _n
-file write sumstat "\toprule" _n
-file write sumstat "\toprule" _n
-* Panel A
-file write sumstat " \multicolumn{5}{c}{Panel A: Target population}  \\" _n
-file write sumstat "\midrule " _n
-file write sumstat " & \multicolumn{2}{c}{Only gainers} & \multicolumn{2}{c}{Only losers}  \\" _n
-file write sumstat "Move migpuma & (1) & (2)  & (3) & (4) \\" _n
-file write sumstat "\midrule " _n
-
-global varnames `"  "Treated migpuma" "'
-
-local varname : word 1 of $varnames
-forval c = 1/4  {
-    local b`c' = string(intarget[1,`c'], "%12.4fc" )
-    local temp = intarget[1,`c']/intarget[5,`c']*100
-    local bmean`c' = string(`temp', "%12.2fc" )
-    local p`c' = intarget[2,`c']
-    local stars_abs`c' = cond(`p`c'' < 0.01, "***", cond(`p`c'' < 0.05, "**", cond(`p`c'' < 0.1, "*", "")))
-    local sd`c' = string(intarget[3,`c'], "%12.4fc" )
-    local r`c' = string(intarget[4,`c'], "%12.4fc" )
-    local um`c' = string(intarget[5,`c'], "%12.4fc" )
-	local n`c' = string(intarget[6,`c'], "%12.0fc" )
-}
-file write sumstat " `varname' & `b1'`stars_abs1' & `b2'`stars_abs2' & `b3'`stars_abs3' & `b4'`stars_abs4' \\" _n 
-file write sumstat "  & [`bmean1'$\%$] & [`bmean2'$\%$] & [`bmean3'$\%$] & [`bmean4'$\%$] \\" _n 
-file write sumstat " & (`sd1') & (`sd2') & (`sd3') & (`sd4') \\" _n 
-file write sumstat "\\" _n 
-file write sumstat " Controls &  & X &  & X \\" _n 
-file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4'  \\" _n 
-file write sumstat " Untreated mean & `um1' & `um2' & `um3' & `um4'  \\" _n 
-file write sumstat "Sample Size & `n1' & `n2' & `n3' & `n4'  \\" _n
-file write sumstat "\\" _n 
-file write sumstat "\midrule" _n
-file write sumstat "\midrule" _n
-
-* panel b placebo
-file write sumstat " \multicolumn{5}{c}{Panel B: Placebo}  \\" _n
-file write sumstat "\midrule " _n
-file write sumstat " & \multicolumn{2}{c}{Only gainers} & \multicolumn{2}{c}{Only losers}  \\" _n
-file write sumstat "Move migpuma & (5) & (6)  & (7) & (8) \\" _n
-file write sumstat "\midrule " _n
-
-global varnames `"   "Treated migpuma" "'
-local varname : word 1 of $varnames
-forval c = 1/4  {
-    local b`c' = string(inplacebo[1,`c'], "%12.4fc" )
-    local temp = inplacebo[1,`c']/inplacebo[5,`c']*100
-    local bmean`c' = string(`temp', "%12.2fc" )
-    local p`c' = inplacebo`i'[2,`c']
-    local stars_abs`c' = cond(`p`c'' < 0.01, "***", cond(`p`c'' < 0.05, "**", cond(`p`c'' < 0.1, "*", "")))
-    local sd`c' = string(inplacebo[3,`c'], "%12.4fc" )
-    local r`c' = string(inplacebo[4,`c'], "%12.4fc" )
-    local um`c' = string(inplacebo[5,`c'], "%12.4fc" )
-    local n`c' = string(inplacebo[6,`c'], "%12.0fc" )
-}
-file write sumstat " `varname' & `b1'`stars_abs1' & `b2'`stars_abs2' & `b3'`stars_abs3' & `b4'`stars_abs4' \\" _n 
-file write sumstat "  & [`bmean1'$\%$] & [`bmean2'$\%$] & [`bmean3'$\%$] & [`bmean4'$\%$] \\" _n 
-file write sumstat " & (`sd1') & (`sd2') & (`sd3') & (`sd4') \\" _n 
-file write sumstat "\\" _n 
-file write sumstat " Controls &  & X &  & X \\" _n 
-file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4'  \\" _n 
-file write sumstat " Untreated mean & `um1' & `um2' & `um3' & `um4'  \\" _n 
-file write sumstat "Sample Size & `n1' & `n2' & `n3' & `n4'  \\" _n
-file write sumstat "\bottomrule" _n
-file write sumstat "\bottomrule" _n
-file write sumstat "\\" _n 
-file write sumstat "\end{tabular}"
-file close sumstat
-
-
-
-reghdfe log_total_targetpop2 exp_gain_migpuma exp_lost_migpuma ,  vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-
-
-
-
+use "$oi/migpuma_year_pops", clear
 **** trying doug's suggestion
 cap mat drop intarget
 * no controls 
-reghdfe log_total_targetpop2 exp_gain_migpuma exp_lost_migpuma [aw=total_targetpop2] ,  vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-reg_to_mat, depvar( log_total_targetpop2 ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget) 
-* with controls 
-reghdfe log_total_targetpop2 exp_gain_migpuma exp_lost_migpuma  $covarsPOP $invars ,  vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-reg_to_mat, depvar( log_total_targetpop2 ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget) 
+reghdfe log_tot_targetpop2 exp_gain_migpuma exp_lost_migpuma $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
+reg_to_mat, depvar( log_tot_targetpop2 ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget) 
+* with controls for native populations
+reghdfe log_tot_targetpop2 exp_gain_migpuma exp_lost_migpuma $covarsnat $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
+reg_to_mat, depvar( log_tot_targetpop2 ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget) 
 * no controls 
-reghdfe log_total_placebo1 exp_gain_migpuma exp_lost_migpuma  ,  vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-reg_to_mat, depvar( log_total_placebo1 ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget) 
-* with controls 
-reghdfe log_total_placebo1 exp_gain_migpuma exp_lost_migpuma  $covarsPOP $invars,  vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
-reg_to_mat, depvar( log_total_placebo1 ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget) 
-
+reghdfe log_tot_placebo1 exp_gain_migpuma exp_lost_migpuma $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
+reg_to_mat, depvar( log_tot_placebo1 ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget) 
+* with controls for native populations
+reghdfe log_tot_placebo1 exp_gain_migpuma exp_lost_migpuma $covarsnat $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
+reg_to_mat, depvar( log_tot_placebo1 ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget) 
 
 
 * Create table
 cap file close sumstat
-file open sumstat using "$oo/final/in_gain_lost_join_log.tex", write replace
+file open sumstat using "$oo/final/logtargetpop_did.tex", write replace
 file write sumstat "\begin{tabular}{lcccc}" _n
 file write sumstat "\toprule" _n
 file write sumstat "\toprule" _n
-file write sumstat " & \multicolumn{2}{c}{Target population} & \multicolumn{2}{c}{Placebo}  \\" _n
-file write sumstat "Move migpuma & (1) & (2)  & (3) & (4) \\" _n
+file write sumstat " & \multicolumn{2}{c}{Target population} & \multicolumn{2}{c}{Placebo population}  \\" _n
+file write sumstat "Log population & (1) & (2)  & (3) & (4) \\" _n
 file write sumstat "\midrule " _n
 
 global varnames `"  "Gain treatment" "Lose treatment" "'
