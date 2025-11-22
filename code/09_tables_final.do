@@ -184,7 +184,7 @@ gen placebo1 = sex==1 & lowskill==1 & hispan!=0 & born_abroad==0 & young==1  & m
 cap mat drop intarget
 * with simple weights
 * without controls
-reghdfe move_migpuma exp_any_migpuma  [pw=perwt]  if targetpop2==1 , vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+reghdfe move_migpuma exp_any_migpuma $invars [pw=perwt]  if targetpop2==1 , vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
 reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(intarget) wt(perwt) wttype(pw)
 
 * with controls 
@@ -194,7 +194,7 @@ reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(intarget) wt(p
 **** IN MIGRATION FOR PLACEBO POPULATION
 * with simple weights
 * without controls
-reghdfe move_migpuma exp_any_migpuma  [pw=perwt]  if placebo1==1 , vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
+reghdfe move_migpuma exp_any_migpuma $invars [pw=perwt]  if placebo1==1 , vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
 reg_to_mat, depvar( move_migpuma ) indvars( exp_any_migpuma ) mat(intarget) wt(perwt) wttype(pw)
 * with controls 
 reghdfe move_migpuma exp_any_migpuma $covars $invars [pw=perwt]  if placebo1==1 , vce(cluster group_id_migpuma) absorb(geoid_migpuma year)
@@ -234,10 +234,9 @@ file write sumstat " Controls &  & X &  & X \\" _n
 file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4'  \\" _n 
 file write sumstat " Untreated mean & `um1' & `um2' & `um3' & `um4'  \\" _n 
 file write sumstat "Sample Size & `n1' & `n2' & `n3' & `n4'  \\" _n
+file write sumstat "\bottomrule" _n
+file write sumstat "\bottomrule" _n
 file write sumstat "\\" _n 
-file write sumstat "\bottomrule" _n
-file write sumstat "\bottomrule" _n
-
 file write sumstat "\end{tabular}"
 file close sumstat
 
@@ -307,9 +306,9 @@ file write sumstat " Controls &  & X &  & X \\" _n
 file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4'  \\" _n 
 file write sumstat " Untreated mean & `um1' & `um2' & `um3' & `um4'  \\" _n 
 file write sumstat "Sample Size & `n1' & `n2' & `n3' & `n4'  \\" _n
+file write sumstat "\bottomrule" _n
+file write sumstat "\bottomrule" _n
 file write sumstat "\\" _n 
-file write sumstat "\bottomrule" _n
-file write sumstat "\bottomrule" _n
 
 file write sumstat "\end{tabular}"
 file close sumstat
