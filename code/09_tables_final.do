@@ -70,9 +70,11 @@ file write sumstat "\end{tabular}"
 file close sumstat
 
 */
-/*
+
+
+
 /**************************************************************
-Table 2: Summary Statistics
+Balance table with differences
 **************************************************************/
 
 * import clean ACS data ready for regressions
@@ -90,79 +92,144 @@ rename (phat wt) (phat2 wt2)
 gen perwt_wt2 = perwt*wt2
 drop if mi(perwt_wt2)
 
-gen placebo1 = sex==1 & lowskill==1 & hispan!=0 & born_abroad==0 & young==1  & marst>=3  //hispanic citizens born in the usa
 //remember you see some effects in migration for born_abroad==1 & citizen!=3
 * create summary values
 cap mat drop sumstat
-foreach v in exp_any_migpuma move_any move_migpuma move_state move_abroad age r_white r_black r_asian hs no_english in_school nchild employed wkswork1 uhrswork incwage ownhome rentprice mortprice {
+cap mat drop matse
+cap mat drop matpval
+
+foreach v in move_migpuma move_state move_abroad age nchild r_white r_black hs no_english in_school employed wkswork1 uhrswork incwage ownhome rentprice mortprice {
     di in red "Processing `v'"
     * TARGET POPULATION FOR HISPANICS
     * Ever exposed
     qui reg `v' targetpop2 [pw=perwt_wt2] if ever_treated_migpuma==1 , nocons 
     local m1 = _b[targetpop]
+    local se1 = _se[targetpop]
+    local pval1 = 9999
 
-    * Never exposed
-    qui reg `v' targetpop2 [pw=perwt] if ever_treated_migpuma==0 , nocons 
+    * never exposed
+    qui reg `v' targetpop2 [pw=perwt_wt2] if ever_treated_migpuma==0 , nocons 
     local m2 = _b[targetpop]
+    local se2 = _se[targetpop]
+    local pval2 = 9999
+   
+   * Difference without prop score
+    qui reg `v' ever_treated_migpuma [pw=perwt] if targetpop2==1, robust
+    local m3 = _b[ever_treated_migpuma]
+    local se3 = _se[ever_treated_migpuma]
+    local t = _b[ever_treated_migpuma] / _se[ever_treated_migpuma]
+    local pval3 =  2*ttail(e(df_r), abs(`t'))
 
-    * Difference
-
-    qui reg `v' targetpop2 [pw=perwt_wt2] if  ever_treated_migpuma==0 , nocons 
-    local m3 = _b[targetpop]
-
-
-    mat sumstat = nullmat(sumstat) \ (`m1', `m2', `m3',`m4', `m5', `m6'  )
+    mat sumstat = nullmat(sumstat) \ (`m1', `m2', `m3' )
+    mat matse = nullmat(matse) \ (`se1', `se2', `se3' )
+    mat matpval = nullmat(matpval) \ (`pval1' , `pval2', `pval3' )
 }
 
 qui count if targetpop2==1 & exp_any_migpuma==1
 local m1 = r(N)
-qui count if targetpop2==1 & exp_any_migpuma==0 
-local m2 = r(N)
 qui count if targetpop2==1 & exp_any_migpuma==0
+local m2 = r(N)
+qui count if targetpop2==1 
 local m3 = r(N)
 
-qui count if placebo1==1 & exp_any_migpuma==1
-local m4 = r(N)
-qui count if placebo1==1 & exp_any_migpuma==0 
-local m5 = r(N)
-qui count if placebo1==1 & exp_any_migpuma==0
-local m6 = r(N)
+mat sumstat = nullmat(sumstat) \ (`m1', `m2', `m3' )
 
-mat sumstat = nullmat(sumstat) \ (`m1', `m2', `m3',`m4', `m5', `m6'  )
 
 
 * Create table
 cap file close sumstat
-file open sumstat using "$oo/t2_sumstat.tex", write replace
-file write sumstat "\begin{tabular}{lccc|ccc}" _n
+file open sumstat using "$oo/final/balancetable.tex", write replace
+file write sumstat "\begin{tabular}{lccc}" _n
 file write sumstat "\toprule" _n
 file write sumstat "\toprule" _n
-file write sumstat " & \multicolumn{3}{c|}{Target Population} & \multicolumn{3}{c}{Placebo} \\" _n
+file write sumstat " & Treated & Untreated & Difference   \\" _n
+file write sumstat " & (1) & (2) & (3)  \\" _n
 file write sumstat "\midrule " _n
-file write sumstat " & Exposed & \multicolumn{2}{c|}{Never Exposed} & Exposed & \multicolumn{2}{c}{Never Exposed} \\" _n
-file write sumstat " &  &  & Propensity &  &  & Propensity \\" _n
-file write sumstat " &  &  & weighted &  &  & weighted \\" _n
-file write sumstat " & (1) & (2) & (3) & (4) & (5) & (6)  \\" _n
-file write sumstat "\midrule " _n
-
-global varnames `" "Exposure" "Any move" "Moved migpuma" "Moved state" "Moved from abroad" "Age" "Race: White" "Race: Black" "Race: Asian" "High School" "Poor English" "In School" "Number of children" "Employed" "Weeks worked" "Usual weekly hours worked" "Wage income" "Owns a home" "Rent price" "Mortgage price" "Sample size" "'
-forval r = 1/21 {
-	local varname : word `r' of $varnames
-	file write sumstat " `varname' "
-	di "Writing row `r'"
-	forval c = 1/6 {
-		di "Writing column `c'"
-		local a = string(sumstat[`r',`c'], "%12.2fc" )
-		file write sumstat " & `a'"
-		}
-	file write sumstat "\\" _n 
+ 
+file write sumstat " \textbf{Mobility} & & &   \\" _n
+global varnames `" "Moved migpuma" "Moved state" "Moved from abroad" "'
+local i = 1
+forval r = 1/3 {
+    local varname : word `i' of $varnames
+    file write sumstat " `varname' "
+    di "Writing row `r'"
+    * mean
+    forval c = 1/3 {
+        di "Writing column `c'"
+        local a = string(sumstat[`r',`c'], "%12.2fc" )
+        local pval = matpval[`r', `c']
+        local stars_abs = cond(`pval' < 0.01, "***", cond(`pval' < 0.05, "**", cond(`pval' < 0.1, "*", "")))
+        file write sumstat " & `a'`stars_abs' "
+    }
+    file write sumstat "\\" _n 
+    * se
+    forval c = 1/3 {
+        local a = string(matse[`r',`c'], "%12.2fc" )
+        file write sumstat " & (`a')"
+    }
+    file write sumstat "\\" _n 
+    local++ i
 }
+file write sumstat " \textbf{Demographics and education} & & &   \\" _n
+global varnames `" "Age" "Number of children" "Race: White" "Race: Black" "High School" "Poor English" "In School" "'
+local i = 1
+forval r = 4/10 {
+    local varname : word `i' of $varnames
+    file write sumstat " `varname' "
+    di "Writing row `r'"
+    * mean
+    forval c = 1/3 {
+        di "Writing column `c'"
+        local a = string(sumstat[`r',`c'], "%12.2fc" )
+        local pval = matpval[`r', `c']
+        local stars_abs = cond(`pval' < 0.01, "***", cond(`pval' < 0.05, "**", cond(`pval' < 0.1, "*", "")))
+        file write sumstat " & `a'`stars_abs' "
+    }
+    file write sumstat "\\" _n 
+    * se
+    forval c = 1/3 {
+        local a = string(matse[`r',`c'], "%12.2fc" )
+        file write sumstat " & (`a')"
+    }
+    file write sumstat "\\" _n 
+    local++ i
+}
+file write sumstat " \textbf{Employment and housing} & & &   \\" _n
+global varnames `" "Employed" "Weeks worked" "Usual weekly hours worked" "Wage income" "Owns a home" "Rent price" "Mortgage price" "'
+local i = 1
+forval r = 11/17 {
+    local varname : word `i' of $varnames
+    file write sumstat " `varname' "
+    di "Writing row `r'"
+    * mean
+    forval c = 1/3 {
+        di "Writing column `c'"
+        local a = string(sumstat[`r',`c'], "%12.2fc" )
+        local pval = matpval[`r', `c']
+        local stars_abs = cond(`pval' < 0.01, "***", cond(`pval' < 0.05, "**", cond(`pval' < 0.1, "*", "")))
+        file write sumstat " & `a'`stars_abs' "
+    }
+    file write sumstat "\\" _n 
+    * se
+    forval c = 1/3 {
+        local a = string(matse[`r',`c'], "%12.2fc" )
+        file write sumstat " & (`a')"
+    }
+    file write sumstat "\\" _n 
+    local++ i
+}
+
+local a1 = string(sumstat[18,1], "%12.0fc" )
+local a2 = string(sumstat[18,2], "%12.0fc" )
+local a3 = string(sumstat[18,3], "%12.0fc" )
+file write sumstat "Sample size & `a1' & `a2' & `a3' \\" _n
 file write sumstat "\bottomrule" _n
 file write sumstat "\bottomrule" _n
+file write sumstat "\\" _n 
 file write sumstat "\end{tabular}"
 file close sumstat
 
-*/
+
 
 /**************************************************************
 Probability of moving IN migpuma, simple Regressions
