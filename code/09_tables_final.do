@@ -102,13 +102,13 @@ foreach v in move_migpuma move_state move_abroad age nchild r_white r_black hs n
     di in red "Processing `v'"
     * TARGET POPULATION FOR HISPANICS
     * Ever exposed
-    qui reg `v' targetpop2 [pw=perwt_wt2] if ever_treated_migpuma==1 , nocons 
+    qui reg `v' targetpop2 [pw=perwt] if ever_treated_migpuma==1 , nocons 
     local m1 = _b[targetpop]
     local se1 = _se[targetpop]
     local pval1 = 9999
 
     * never exposed
-    qui reg `v' targetpop2 [pw=perwt_wt2] if ever_treated_migpuma==0 , nocons 
+    qui reg `v' targetpop2 [pw=perwt] if ever_treated_migpuma==0 , nocons 
     local m2 = _b[targetpop]
     local se2 = _se[targetpop]
     local pval2 = 9999
@@ -125,16 +125,14 @@ foreach v in move_migpuma move_state move_abroad age nchild r_white r_black hs n
     mat matpval = nullmat(matpval) \ (`pval1' , `pval2', `pval3' )
 }
 
-qui count if targetpop2==1 & exp_any_migpuma==1
+qui count if targetpop2==1 & ever_treated_migpuma==1
 local m1 = r(N)
-qui count if targetpop2==1 & exp_any_migpuma==0
+qui count if targetpop2==1 & ever_treated_migpuma==0
 local m2 = r(N)
 qui count if targetpop2==1 
 local m3 = r(N)
 
 mat sumstat = nullmat(sumstat) \ (`m1', `m2', `m3' )
-
-
 
 * Create table
 cap file close sumstat
@@ -142,6 +140,7 @@ file open sumstat using "$oo/final/balancetable.tex", write replace
 file write sumstat "\begin{tabular}{lccc}" _n
 file write sumstat "\toprule" _n
 file write sumstat "\toprule" _n
+file write sumstat " & \multicolumn{3}{c}{Target population} & \multicolumn{3}{c}{Migpuma}  \\" _n
 file write sumstat " & Treated & Untreated & Difference   \\" _n
 file write sumstat " & (1) & (2) & (3)  \\" _n
 file write sumstat "\midrule " _n
@@ -231,6 +230,179 @@ file close sumstat
 
 
 
+
+**** Create parameters at the migpuma and year level
+
+use "$oi/migpuma_year_pops", clear
+
+gen never_treated_migpuma = ever_treated_migpuma==0
+
+//remember you see some effects in migration for born_abroad==1 & citizen!=3
+* create summary values
+cap mat drop sumstat
+cap mat drop matse
+cap mat drop matpval
+
+foreach v in log_tot_pop log_tot_targetpop2 log_tot_placebo1 log_tot_spillover1  log_tot_male log_tot_age_0_17 log_tot_age_18_24 log_tot_age_25_34 log_tot_age_35_49 log_tot_age_50plus log_tot_r_white log_tot_r_black log_tot_r_asian log_tot_hs log_tot_no_english log_tot_in_school log_tot_employed log_tot_ownhome  {
+    di in red "Processing `v'"
+    * TARGET POPULATION FOR HISPANICS
+    * Ever exposed
+    * mean among ever-treated
+    qui reg `v' ever_treated_migpuma [aw=tot_targetpop2], nocons 
+    local m1  = _b[ever_treated_migpuma]
+    local se1 = _se[ever_treated_migpuma]
+    local pval1 = 9999
+
+    * mean among never-treated
+    qui reg `v' never_treated_migpuma [aw=tot_targetpop2], nocons 
+    local m2  = _b[never_treated_migpuma]
+    local se2 = _se[never_treated_migpuma]
+    local pval2 = 9999
+
+    * difference (ever - never)
+    qui reg `v' ever_treated_migpuma [aw=tot_targetpop2], robust
+    local m3 = _b[ever_treated_migpuma]
+    local se3 = _se[ever_treated_migpuma]
+    local t = _b[ever_treated_migpuma] / _se[ever_treated_migpuma]
+    local pval3 =  2*ttail(e(df_r), abs(`t'))
+
+    mat sumstat = nullmat(sumstat) \ (`m1', `m2', `m3' )
+    mat matse = nullmat(matse) \ (`se1', `se2', `se3' )
+    mat matpval = nullmat(matpval) \ (`pval1' , `pval2', `pval3' )
+}
+
+qui count if ever_treated_migpuma==1 & tot_targetpop2!=0
+local m1 = r(N)
+qui count if ever_treated_migpuma==0 & tot_targetpop2!=0
+local m2 = r(N)
+qui count if  tot_targetpop2!=0
+local m3 = r(N)
+
+mat sumstat = nullmat(sumstat) \ (`m1', `m2', `m3' )
+
+
+use "$oi/migpuma_year_pops", clear
+
+gen never_treated_migpuma = ever_treated_migpuma==0
+
+//remember you see some effects in migration for born_abroad==1 & citizen!=3
+* create summary values
+cap mat drop sumstat
+cap mat drop matse
+cap mat drop matpval
+
+foreach v in log_tot_pop log_tot_targetpop2 log_tot_placebo1 log_tot_spillover1  log_tot_male log_tot_age_0_17 log_tot_age_18_24 log_tot_age_25_34 log_tot_age_35_49 log_tot_age_50plus log_tot_r_white log_tot_r_black log_tot_r_asian log_tot_hs log_tot_no_english log_tot_in_school log_tot_employed log_tot_ownhome  {
+    di in red "Processing `v'"
+    * TARGET POPULATION FOR HISPANICS
+    * Ever exposed
+    * mean among ever-treated
+    qui reg `v' ever_treated_migpuma [aw=tot_targetpop2], nocons 
+    local m1  = _b[ever_treated_migpuma]
+    local se1 = _se[ever_treated_migpuma]
+    local pval1 = 9999
+
+    * mean among never-treated
+    qui reg `v' never_treated_migpuma [aw=tot_targetpop2], nocons 
+    local m2  = _b[never_treated_migpuma]
+    local se2 = _se[never_treated_migpuma]
+    local pval2 = 9999
+
+    * difference (ever - never)
+    qui reg `v' ever_treated_migpuma [aw=tot_targetpop2], robust
+    local m3 = _b[ever_treated_migpuma]
+    local se3 = _se[ever_treated_migpuma]
+    local t = _b[ever_treated_migpuma] / _se[ever_treated_migpuma]
+    local pval3 =  2*ttail(e(df_r), abs(`t'))
+
+    mat sumstat = nullmat(sumstat) \ (`m1', `m2', `m3' )
+    mat matse = nullmat(matse) \ (`se1', `se2', `se3' )
+    mat matpval = nullmat(matpval) \ (`pval1' , `pval2', `pval3' )
+}
+
+qui count if ever_treated_migpuma==1 & tot_targetpop2!=0
+local m1 = r(N)
+qui count if ever_treated_migpuma==0 & tot_targetpop2!=0
+local m2 = r(N)
+qui count if  tot_targetpop2!=0
+local m3 = r(N)
+
+mat sumstat = nullmat(sumstat) \ (`m1', `m2', `m3' )
+
+** create balance table for migpuma population comparisons
+
+* Create table
+cap file close sumstat
+file open sumstat using "$oo/final/logpop_balancetable.tex", write replace
+file write sumstat "\begin{tabular}{lccc}" _n
+file write sumstat "\toprule" _n
+file write sumstat "\toprule" _n
+file write sumstat " & \multicolumn{3}{c}{Target population} & \multicolumn{3}{c}{Migpuma}  \\" _n
+file write sumstat " & Treated & Untreated & Difference   \\" _n
+file write sumstat " & (1) & (2) & (3)  \\" _n
+file write sumstat "\midrule " _n
+
+file write sumstat " \textbf{Total population} & & &   \\" _n
+global varnames `" "Total" "Target" "Placebo" "Spillover" "'
+local i = 1
+forval r = 1/4 {
+    local varname : word `i' of $varnames
+    file write sumstat " `varname' "
+    di "Writing row `r'"
+    * mean
+    forval c = 1/3 {
+        di "Writing column `c'"
+        local a = string(sumstat[`r',`c'], "%12.2fc" )
+        local pval = matpval[`r', `c']
+        local stars_abs = cond(`pval' < 0.01, "***", cond(`pval' < 0.05, "**", cond(`pval' < 0.1, "*", "")))
+        file write sumstat " & `a'`stars_abs' "
+    }
+    file write sumstat "\\" _n 
+    * se
+    forval c = 1/3 {
+        local a = string(matse[`r',`c'], "%12.2fc" )
+        file write sumstat " & (`a')"
+    }
+    file write sumstat "\\" _n 
+    local++ i
+}
+file write sumstat " \textbf{Population composition} & & &   \\" _n
+global varnames `" "Male" "Age 0-17" "Age 18-24" "Age 25-34" "Age 35-49" "Age 50+" "Race: White" "Race: Black" "Race: Asian" "High School" "Poor English" "In School" "Employed" "Homeowner" "'
+local i = 1
+forval r = 5/18 {
+    local varname : word `i' of $varnames
+    file write sumstat " `varname' "
+    di "Writing row `r'"
+    * mean
+    forval c = 1/3 {
+        di "Writing column `c'"
+        local a = string(sumstat[`r',`c'], "%12.2fc" )
+        local pval = matpval[`r', `c']
+        local stars_abs = cond(`pval' < 0.01, "***", cond(`pval' < 0.05, "**", cond(`pval' < 0.1, "*", "")))
+        file write sumstat " & `a'`stars_abs' "
+    }
+    file write sumstat "\\" _n 
+    * se
+    forval c = 1/3 {
+        local a = string(matse[`r',`c'], "%12.2fc" )
+        file write sumstat " & (`a')"
+    }
+    file write sumstat "\\" _n 
+    local++ i
+}
+
+local a1 = string(sumstat[19,1], "%12.0fc" )
+local a2 = string(sumstat[19,2], "%12.0fc" )
+local a3 = string(sumstat[19,3], "%12.0fc" )
+file write sumstat "Sample size & `a1' & `a2' & `a3' \\" _n
+file write sumstat "\bottomrule" _n
+file write sumstat "\bottomrule" _n
+file write sumstat "\\" _n 
+file write sumstat "\end{tabular}"
+file close sumstat
+
+
+
+
 /**************************************************************
 Probability of moving IN migpuma, simple Regressions
 **************************************************************/
@@ -313,8 +485,8 @@ file close sumstat
 /**************************************************************
 LOG POPULATION REGRESSION
 **************************************************************/
-global covarspop "log_tot_int_age1 log_tot_int_age2 log_tot_int_age3 log_tot_int_age4 log_tot_int_age5 log_tot_int_age6 log_tot_r_white log_tot_r_black log_tot_r_asian log_tot_hs log_tot_in_school log_tot_ownhome"
-global covarsnat "log_nat_int_age1 log_nat_int_age2 log_nat_int_age3 log_nat_int_age4 log_nat_int_age5 log_nat_int_age6 log_nat_r_white log_nat_r_black log_nat_r_asian log_nat_hs log_nat_in_school log_nat_ownhome"
+global covarspop "log_tot_age_0_17 log_tot_age_18_24 log_tot_age_25_34 log_tot_age_35_49 log_tot_r_white log_tot_r_black log_tot_r_asian log_tot_hs log_tot_in_school log_tot_ownhome"
+global covarsnat "log_nat_age_0_17 log_nat_age_18_24 log_nat_age_25_34 log_nat_age_35_49 log_nat_r_white log_nat_r_black log_nat_r_asian log_nat_hs log_nat_in_school log_nat_ownhome"
 global invars "exp_any_state "
 
 
@@ -327,7 +499,7 @@ cap mat drop intarget
 reghdfe log_tot_targetpop2 exp_any_migpuma $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
 reg_to_mat, depvar( log_tot_targetpop2 ) indvars( exp_any_migpuma ) mat(intarget)
 * with controls for native
-reghdfe log_tot_targetpop2 exp_any_migpuma $covarsnat $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
+reghdfe log_tot_targetpop2 exp_any_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
 reg_to_mat, depvar( log_tot_targetpop2 ) indvars( exp_any_migpuma ) mat(intarget)
 
 **** IN MIGRATION FOR PLACEBO POPULATION
@@ -336,7 +508,7 @@ reg_to_mat, depvar( log_tot_targetpop2 ) indvars( exp_any_migpuma ) mat(intarget
 reghdfe log_tot_placebo1 exp_any_migpuma $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
 reg_to_mat, depvar( log_tot_placebo1 ) indvars( exp_any_migpuma ) mat(intarget)
 * with controls 
-reghdfe log_tot_placebo1 exp_any_migpuma $covarsnat $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
+reghdfe log_tot_placebo1 exp_any_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
 reg_to_mat, depvar( log_tot_placebo1 ) indvars( exp_any_migpuma ) mat(intarget)
 
 
@@ -366,7 +538,7 @@ forval c = 1/4  {
 	local n`c' = string(intarget[6,`c'], "%12.0fc" )
 }
 file write sumstat " `varname' & `b1'`stars_abs1' & `b2'`stars_abs2' & `b3'`stars_abs3' & `b4'`stars_abs4' \\" _n 
-file write sumstat "  & [`bmean1'$\%$] & [`bmean2'$\%$] & [`bmean3'$\%$] & [`bmean4'$\%$] \\" _n 
+//file write sumstat "  & [`bmean1'$\%$] & [`bmean2'$\%$] & [`bmean3'$\%$] & [`bmean4'$\%$] \\" _n 
 file write sumstat " & (`sd1') & (`sd2') & (`sd3') & (`sd4') \\" _n 
 file write sumstat "\\" _n 
 file write sumstat " Controls &  & X &  & X \\" _n 
@@ -385,8 +557,8 @@ file close sumstat
 /**************************************************************
 LOG POPULATION DID GAINERS AND LOSERS IN SAME REGRESSION
 **************************************************************/
-global covarspop "log_tot_int_age1 log_tot_int_age2 log_tot_int_age3 log_tot_int_age4 log_tot_int_age5 log_tot_int_age6 log_tot_r_white log_tot_r_black log_tot_r_asian log_tot_hs log_tot_in_school log_tot_ownhome"
-global covarsnat "log_nat_int_age1 log_nat_int_age2 log_nat_int_age3 log_nat_int_age4 log_nat_int_age5 log_nat_int_age6 log_nat_r_white log_nat_r_black log_nat_r_asian log_nat_hs log_nat_in_school log_nat_ownhome"
+global covarspop "log_tot_age_0_17 log_tot_age_18_24 log_tot_age_25_34 log_tot_age_35_49 log_tot_r_white log_tot_r_black log_tot_r_asian log_tot_hs log_tot_in_school log_tot_ownhome"
+global covarsnat "log_nat_age_0_17 log_nat_age_18_24 log_nat_age_25_34 log_nat_age_35_49 log_nat_r_white log_nat_r_black log_nat_r_asian log_nat_hs log_nat_in_school log_nat_ownhome"
 global invars "exp_any_state "
 
 use "$oi/migpuma_year_pops", clear
@@ -433,7 +605,7 @@ forval i = 1/2 {
         
     }
     file write sumstat " `varname' & `b1'`stars_abs1' & `b2'`stars_abs2' & `b3'`stars_abs3' & `b4'`stars_abs4' \\" _n 
-    file write sumstat "  & [`bmean1'$\%$] & [`bmean2'$\%$] & [`bmean3'$\%$] & [`bmean4'$\%$] \\" _n 
+    //file write sumstat "  & [`bmean1'$\%$] & [`bmean2'$\%$] & [`bmean3'$\%$] & [`bmean4'$\%$] \\" _n 
     file write sumstat " & (`sd1') & (`sd2') & (`sd3') & (`sd4') \\" _n 
 }
 file write sumstat "\\" _n 

@@ -33,27 +33,33 @@ gen target_movers = move_migpuma*targetpop2
 
 * Controls
 * age
-gen int_age1 = inrange(age, 0, 9) 
-gen int_age2 = inrange(age, 10, 19) 
-gen int_age3 = inrange(age, 20, 29)
-gen int_age4 = inrange(age, 30, 39)
-gen int_age5 = inrange(age, 40, 49)
-gen int_age6 = inrange(age, 50, 59)
-gen int_age7 = inrange(age, 60, 69)
-gen int_age8 = inrange(age, 70, 100)
+gen age_0_17   = inrange(age, 0, 17)
+gen age_18_24  = inrange(age, 18, 24)
+gen age_25_34  = inrange(age, 25, 34)
+gen age_35_49  = inrange(age, 35, 49)
+gen age_50plus = age >= 50
+* children
+gen has_child = nchild>0 if !mi(nchild)
+* citizenship
+tab  hispan  , gen(int_hispan)
+tab educ , gen(int_educ)
+tab marst , gen(int_marst)
+tab speakeng , gen(int_speakeng)
+tab citizen, gen(int_citizen)
+tab yrsusa2, gen(int_yrsusa2)
+tab language, gen(int_language)
+tab  hispand  , gen(int_dhispan)
 
 * Obtain totals
-foreach v in targetpop2 placebo1 spillover1 pop move_migpuma target_movers ///
- r_white r_black r_asian hs in_school ownhome no_english ///
- int_age1 int_age2 int_age3 int_age4 int_age5 int_age6 int_age7 int_age8 {
+foreach v of varlist targetpop2 placebo1 spillover1 pop move_migpuma target_movers ///
+ r_white r_black r_asian hs in_school ownhome no_english employed male has_child ///
+ age_0_17 age_18_24 age_25_34 age_35_49 age_50plu ///
+ int_hispan* int_educ* int_marst* int_speakeng* int_citizen* int_yrsusa2* int_language1-int_language10 int_dhispan*  {
 	di in red "Processing `v'"
 	// define unweighted populations
-	gen tot_`v' = perwt*(`v'==1)
-	// define weighted populations
-	gen tot_`v'_wwt = perwt_wt*(`v'==1)
+	rename `v' tot_`v'
 	//define populations for natives
-	gen nat_`v' = tot_`v'*(imm==1 )
-	gen nat_`v'_wwt = tot_`v'*(imm==1 )
+	gen nat_`v' = tot_`v'*(imm==0)
 }
 
 drop nat_targetpop2* nat_placebo1* nat_spillover1* nat_target_movers*
@@ -66,10 +72,13 @@ replace relative_year_gain = . if gain_exp_year == 0
 gen relative_year_lost =  year - lost_exp_year
 replace relative_year_lost = . if lost_exp_year == 0
 
+bys statefip: egen ever_treated_state = max( exp_any_state>0)
+
+
 * collapse at the migpuma and year level
-collapse (sum) tot_* nat_*  perwt perwt_wt ///
+collapse (sum) tot_* nat_*   ///
 	(max) exp_any_migpuma  ever_treated_migpuma ever_lost_exp_migpuma ever_gain_exp_migpuma lost_exp_year gain_exp_year ///
-	relative_year_gain relative_year_lost geoid_migpuma $invars ///
+	relative_year_gain relative_year_lost geoid_migpuma exp_any_state ever_treated_state [pw=perwt] ///
 	, by(current_migpuma statefip year)
 
 * obtain log version of all total and native variables
@@ -78,8 +87,8 @@ foreach v of varlist tot_* nat_*  {
 }
 
 * define regression controls
-global covarspop "log_tot_int_age1 log_tot_int_age2 log_tot_int_age3 log_tot_int_age4 log_tot_int_age5 log_tot_int_age6 log_tot_r_white log_tot_r_black log_tot_r_asian log_tot_hs log_tot_in_school log_tot_ownhome"
-global covarsnat "log_nat_int_age1 log_nat_int_age2 log_nat_int_age3 log_nat_int_age4 log_nat_int_age5 log_nat_int_age6 log_nat_r_white log_nat_r_black log_nat_r_asian log_nat_hs log_nat_in_school log_nat_ownhome"
+global covarspop "log_tot_age_0_17 log_tot_age_18_24 log_tot_age_25_34 log_tot_age_35_49 log_tot_r_white log_tot_r_black log_tot_r_asian log_tot_hs log_tot_in_school log_tot_ownhome"
+global covarsnat "log_nat_age_0_17 log_nat_age_18_24 log_nat_age_25_34 log_nat_age_35_49 log_nat_r_white log_nat_r_black log_nat_r_asian log_nat_hs log_nat_in_school log_nat_ownhome"
 
 *** Define variables for DID
 * define post for DID
@@ -117,3 +126,50 @@ replace gain_ry_minus6 = gain_ry_minus6 | gain_ry_minus7
 * save data 
 compress 
 save "$oi/migpuma_year_pops", replace
+
+
+
+use "$oi/migpuma_year_pops", clear
+
+gen istexas = statefip==48
+gen red_state = inlist(statefip, 1, 2, 4, 5, 13, 16, 20, 21, 22, 28, 29, 30, 31, 38, 40, 45, 46, 47, 48, 49, 54, 56) //https://www.worldatlas.com/articles/states-that-have-voted-republican-in-the-most-consecutive-u-s-presidential-elections.html
+
+keep if year==2012
+/* get propensity score for county exposure */	
+logit ever_treated_migpuma log_tot_pop log_tot_age_0_17 log_tot_age_18_24 log_tot_age_25_34 log_tot_age_35_49 log_tot_age_50plus ///
+ log_tot_r_white log_tot_r_black log_tot_r_asian ///
+ log_tot_hs log_tot_in_school ///
+ red_state istexas ever_treated_state /// 
+ log_tot_male log_tot_has_child log_tot_ownhome ///
+  [pw=tot_targetpop2] 
+
+//like doing it at the individual level
+cap drop phat
+predict phat
+corr phat ever_treated_migpuma 
+
+
+/* weights to get everyone to look like treated */
+sum phat
+gen wt = 1 if ever_treated_migpuma==1
+replace wt=phat/(1-phat) if ever_treated_migpuma==0
+replace wt=1 if ever_treated_migpuma==0 & wt>1
+
+/* graph the propensity score */
+kdensity phat if ever_treated_migpuma==1 , gen(x_1 d_1)
+label var d_1 "treatment group"
+kdensity phat if ever_treated_migpuma==0 , gen(x_0 d_0)
+label var d_0 "control group, unweighted"
+kdensity phat if ever_treated_migpuma==0 [aw=wt], gen(x_0w d_0w)
+label var d_0w "control group, weighted"
+twoway (line d_1 x_1, sort) (line d_0 x_0, sort) (line d_0w x_0w, sort), legend(pos(6) rows(1))
+//graph export "$oo/troubleshoot_propscore/propensity_weights2012migpuma_t2.pdf", replace
+
+/* look at distribution of weights -- sometimes end out putting tons of weight on a few obs */
+summ wt if ever_treated_migpuma==0, d
+
+keep statefip current_migpuma phat ever_treated_migpuma wt d_1 x_1 d_0 x_0 d_0w x_0w
+
+
+compress
+save "$oi/propensity_weights2012migpuma_t2_logtot", replace
