@@ -725,7 +725,7 @@ file write sumstat "\midrule" _n
 file write sumstat " \multicolumn{7}{c}{Panel B: Spillover population} \\" _n
 file write sumstat "\midrule" _n
 file write sumstat " & Baseline & Mexican & Poor English & New Immigrant & No children & Non-Hispanic \\" _n
-file write sumstat "Log population & (1) & (2)  & (3) & (4) & (5) & (6) \\" _n
+file write sumstat "Log population & (7) & (8)  & (9) & (10) & (11) & (12) \\" _n
 file write sumstat "\midrule" _n
 
 global varnames `"  "Gain treatment" "Lose treatment" "'
