@@ -27,9 +27,9 @@ drop if mi(perwt_wt)
 * Identify populations
 *targetpop2
 gen placebo1 = sex==1 & lowskill==1 & hispan!=0 & born_abroad==0 & young==1  & marst>=3  //hispanic citizens born in the usa
-gen spillover1 = sex==1 & lowskill==1 & hispan!=0 & born_abroad==1 & citizen!=3 & young==1 & marst>=3
 gen pop = age>=18 & age<=65
 gen target_movers = move_migpuma*targetpop2
+gen spillover1 = sex==1 & lowskill==1 & hispan!=0 & born_abroad==1 & citizen!=3 & young==1  & marst>=3
 
 * Controls
 * age
@@ -48,21 +48,28 @@ tab speakeng , gen(int_speakeng)
 tab citizen, gen(int_citizen)
 tab yrsusa2, gen(int_yrsusa2)
 tab language, gen(int_language)
-tab  hispand  , gen(int_dhispan)
 
 * Obtain totals
 foreach v of varlist targetpop2 placebo1 spillover1 pop move_migpuma target_movers ///
  r_white r_black r_asian hs in_school ownhome no_english employed male has_child ///
  age_0_17 age_18_24 age_25_34 age_35_49 age_50plu ///
- int_hispan* int_educ* int_marst* int_speakeng* int_citizen* int_yrsusa2* int_language1-int_language10 int_dhispan*  {
+ int_hispan* int_educ* int_marst* int_speakeng* int_citizen* int_yrsusa2* int_language1-int_language10  {
 	di in red "Processing `v'"
 	// define unweighted populations
 	rename `v' tot_`v'
-	//define populations for natives
-	gen nat_`v' = tot_`v'*(imm==0)
 }
 
-drop nat_targetpop2* nat_placebo1* nat_spillover1* nat_target_movers*
+* Obtain totals FOR HETEROGENEITY
+gen tot_target_mexican = tot_targetpop2 & bpl==200 //target mexican
+gen tot_target_noenglish = tot_targetpop2 & tot_no_english //target no english
+gen tot_target_new = tot_targetpop2 & inlist(yrsusa1 , 1 ,2)  //target new immigrants
+gen tot_target_nochild = tot_targetpop2 & nchild==0 //target no children
+gen tot_target_nohisp= sex==1 & lowskill==1 & hispan==0 & imm==1 & young==1 & yrimmig>2007 & inlist(yrsusa2 , 1 ,2) //target not hispanics
+gen tot_spill_mexican = tot_spillover1 & bpl==200 //spillover mexican
+gen tot_spill_noenglish = tot_spillover1 & tot_no_english //spillover no english
+gen tot_spill_new = tot_spillover1 & inlist(yrsusa1 , 1 ,2)  //spillover new immigrants
+gen tot_spill_nochild = tot_spillover1 & nchild==0 //spillover no children
+gen tot_spill_nohisp= sex==1 & lowskill==1 & hispan==0 & born_abroad==1 & citizen!=3 & young==1  & marst>=3 //target not hispanics
 
 * Obtain relative years for gainers and losers
 * gainers
@@ -76,19 +83,19 @@ bys statefip: egen ever_treated_state = max( exp_any_state>0)
 
 
 * collapse at the migpuma and year level
-collapse (sum) tot_* nat_*   ///
+collapse (sum) tot_* ///
 	(max) exp_any_migpuma  ever_treated_migpuma ever_lost_exp_migpuma ever_gain_exp_migpuma lost_exp_year gain_exp_year ///
 	relative_year_gain relative_year_lost geoid_migpuma exp_any_state ever_treated_state [pw=perwt] ///
 	, by(current_migpuma statefip year)
 
 * obtain log version of all total and native variables
-foreach v of varlist tot_* nat_*  {
+foreach v of varlist tot_* {
     gen log_`v' = log(`v' + 1)
 }
 
 * define regression controls
 global covarspop "log_tot_age_0_17 log_tot_age_18_24 log_tot_age_25_34 log_tot_age_35_49 log_tot_r_white log_tot_r_black log_tot_r_asian log_tot_hs log_tot_in_school log_tot_ownhome"
-global covarsnat "log_nat_age_0_17 log_nat_age_18_24 log_nat_age_25_34 log_nat_age_35_49 log_nat_r_white log_nat_r_black log_nat_r_asian log_nat_hs log_nat_in_school log_nat_ownhome"
+//global covarsnat "log_nat_age_0_17 log_nat_age_18_24 log_nat_age_25_34 log_nat_age_35_49 log_nat_r_white log_nat_r_black log_nat_r_asian log_nat_hs log_nat_in_school log_nat_ownhome"
 
 *** Define variables for DID
 * define post for DID

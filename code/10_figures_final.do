@@ -128,9 +128,9 @@ coefplot ///
 	, nooffsets xline(6, lcolor(gray) lpattern(solid))  yline(0, lcolor(gray) lpattern(dash))  ///
 	omit vertical ///
 	eqlabels(, labels) graphregion(color(white)) ///
-	xtitle("Relative year")   ytitle("Log target population") ///
-	title("(a) Gained treatment, target") ///
-	legend(order(4 "Active 287(g)" 2 "No 287(g)") row(1) pos(6)) xsize(5) ///
+	xtitle("Relative year")   ytitle("Log spillover population") ///
+	title("(a) Gained treatment, spillover") ///
+	legend(order(4 "Active 287(g)" 2 "No 287(g)") row(1) pos(6)) xsize(6) ///
 	ylabel(-2(2)6) //figure out scale
 graph export "$oo/final/logspillpop_gain_estudy.png", replace
 
@@ -141,8 +141,8 @@ coefplot ///
 	, nooffsets xline(6, lcolor(gray) lpattern(solid))  yline(0, lcolor(gray) lpattern(dash))  ///
 	omit vertical ///
 	eqlabels(, labels) graphregion(color(white))  ///
-	xtitle("Relative year")   ytitle("Log target population") ///
-	title("(b) Lost treatment, target") ///
+	xtitle("Relative year")   ytitle("Log spillover population") ///
+	title("(b) Lost treatment, spillover") ///
 	legend(order(2 "Active 287(g)" 4 "No 287(g)") row(1) pos(6)) xsize(6) ///
 	ylabel(-1.5(0.5)1.5)
 graph export "$oo/final/logspillpop_lost_estudy.png", replace
