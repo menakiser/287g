@@ -30,8 +30,8 @@ graph export "$oo/final/prop_score.png", replace
 /**************************************************************
 EVENT STUDY FOR GAINERS AND LOSERS TOTAL POP
 **************************************************************/
-global covarspop "log_tot_int_age1 log_tot_int_age2 log_tot_int_age3 log_tot_int_age4 log_tot_int_age5 log_tot_int_age6 log_tot_r_white log_tot_r_black log_tot_r_asian log_tot_hs log_tot_in_school log_tot_ownhome"
-global covarsnat "log_nat_int_age1 log_nat_int_age2 log_nat_int_age3 log_nat_int_age4 log_nat_int_age5 log_nat_int_age6 log_nat_r_white log_nat_r_black log_nat_r_asian log_nat_hs log_nat_in_school log_nat_ownhome"
+global covarspop "log_tot_age_0_17 log_tot_age_18_24 log_tot_age_25_34 log_tot_age_35_49 log_tot_r_white log_tot_r_black log_tot_r_asian log_tot_hs log_tot_in_school log_tot_ownhome"
+global covarsnat "log_nat_age_0_17 log_nat_age_18_24 log_nat_age_25_34 log_nat_age_35_49 log_nat_r_white log_nat_r_black log_nat_r_asian log_nat_hs log_nat_in_school log_nat_ownhome"
 global invars "exp_any_state "
 
 use "$oi/migpuma_year_pops", clear
@@ -67,7 +67,7 @@ coefplot ///
 	eqlabels(, labels) graphregion(color(white))  ///
 	xtitle("Relative year")   ytitle("Log target population") ///
 	title("(b) Lost treatment, target") ///
-	legend(order(4 "Active 287(g)" 2 "No 287(g)") row(1) pos(6)) xsize(6) ///
+	legend(order(2 "Active 287(g)" 4 "No 287(g)") row(1) pos(6)) xsize(6) ///
 	ylabel(-1.5(0.5)1.5)
 graph export "$oo/final/logtargetpop_lost_estudy.png", replace
 
@@ -104,7 +104,7 @@ coefplot ///
 	eqlabels(, labels) graphregion(color(white))  ///
 	xtitle("Relative year")   ytitle("Log placebo population") ///
 	title("(d) Lost treatment, placebo") ///
-	legend(order(4 "Active 287(g)" 2 "No 287(g)") row(1) pos(6)) xsize(6) ///
+	legend(order(2 "Active 287(g)" 4 "No 287(g)") row(1) pos(6)) xsize(6) ///
 	ylabel(-1.5(0.5)1.5)
 graph export "$oo/final/logplacebopop_lost_estudy.png", replace
 
@@ -143,7 +143,7 @@ coefplot ///
 	eqlabels(, labels) graphregion(color(white))  ///
 	xtitle("Relative year")   ytitle("Log target population") ///
 	title("(b) Lost treatment, target") ///
-	legend(order(4 "Active 287(g)" 2 "No 287(g)") row(1) pos(6)) xsize(5) ///
+	legend(order(2 "Active 287(g)" 4 "No 287(g)") row(1) pos(6)) xsize(6) ///
 	ylabel(-1.5(0.5)1.5)
 graph export "$oo/final/logspillpop_lost_estudy.png", replace
 
