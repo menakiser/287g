@@ -149,7 +149,7 @@ Panel (b) presents the event study for losing an agreement. In the pre-period, e
 \begin{table}[H]
 \begin{center}
 
-\caption{Summary statistics by exposure and target group}
+\caption{Characteristics of target population in treated and untreated migpumas}
 \label{tab:balance}
 \adjustbox{ width=0.7\linewidth}{
     \input{output/final/balancetable}
@@ -160,7 +160,7 @@ Panel (b) presents the event study for losing an agreement. In the pre-period, e
 
 \begin{spacing}{1}
 \begin{footnotesize}
-\noindent \textit{Notes:} This table summarizes main characteristics by exposure and population type. Columns 1-2 and 5-6 restrict the sample to immigrants likely targeted by 287(g) agreements: foreign-born non-citizen, Hispanic, male, of ages 18-39, with High School degree or less, that immigrated after 2007, have been in the US for 10 years or less, and are not currently married. Columns 3-4 and 7-8 restricts the sample to comparable individuals, meeting all criteria from the targeted sample except they must be US-born citizens (thus no immigration time requirements). Odd-numbered columns restrict the sample to (untreated) zero exposure counties and even-numbered columns restrict the sample to non-zero exposure counties. Columns 1-4 apply probability weights as extracted from ACS, while columns 5-8 apply weights obtained from propensity score matching.
+\noindent \textit{Notes:} This table summarizes main characteristics the population targeted by 287(g): males, ages 18-39, born in a Latin American country, not a U.S. citizen, that have spent 10 years or less in the country, that have a high school degree or less, and not currently married. Column 1 summarizes average characteristics for those in migpumas ever treated from 2012-2019 and Column 2 for those in never treated migpumas. Column 3 summarizes the average of those in treated areas minus the average of those in untreated areas. p $<$ 0.01 ***, p $<$ 0.05 **, p $<$0.1 *. 
 \end{footnotesize}
 \end{spacing}
 \end{table}
@@ -171,7 +171,7 @@ Panel (b) presents the event study for losing an agreement. In the pre-period, e
 \newpage
 \begin{table}[H]
 \centering
-\caption{Net effect of 287(g) on probability of mobility among targeted and placebo populations}
+\caption{Net effect of an active 287(g) on the probability of moving migpumas among targeted and placebo populations}
 \label{tab:regprob}
 \adjustbox{ width=\linewidth}{
     \input{output/final/prob_in_migration}
@@ -182,7 +182,7 @@ Panel (b) presents the event study for losing an agreement. In the pre-period, e
 \begin{footnotesize}
 
 
-\noindent \textit{Notes:} This table compares . p $<$ 0.01 ***, p $<$ 0.05 **, p $<$0.1 *. 
+\noindent \textit{Notes:} This table summarizes the results from the regression design detailed in Equation \ref{eq:regpr}. Columns 1-2 evaluates the effect of having an active 287(g) agreement on the probability of moving migpumas among the targeted population and Columns 3-4 among the placebo population, for comparison. Columns 2 and 3 incorporate controls at the individual level: age, race, high school attained, currently in school, poor level of English, and a dummy for owning a house. The unit of observation is the individual level. p $<$ 0.01 ***, p $<$ 0.05 **, p $<$0.1 *. 
 
 \end{footnotesize}
 \end{spacing}
@@ -194,7 +194,7 @@ Panel (b) presents the event study for losing an agreement. In the pre-period, e
 \newpage
 \begin{table}[H]
 \centering
-\caption{Net effect of 287(g) on log total targeted and placebo populations}
+\caption{Net effect of an active 287(g) on log total targeted and log total placebo populations}
 \label{tab:regpop}
 \adjustbox{ width=\linewidth}{
     \input{output/final/logtargetpop_reg}
@@ -205,7 +205,7 @@ Panel (b) presents the event study for losing an agreement. In the pre-period, e
 \begin{footnotesize}
 
 
-\noindent \textit{Notes:} This table compares . p $<$ 0.01 ***, p $<$ 0.05 **, p $<$0.1 *. 
+\noindent \textit{Notes:} This table summarizes the results from the regression design detailed in Equation \ref{eq:regpop}. Columns 1-2 evaluates the effect of having an active 287(g) agreement on the log total targeted population and Columns 3-4 on the log total placebo population, for comparison. Columns 2 and 3 incorporate controls at the migpuma-year level: log totals of population in different age distributions, race categories, high school attainment, in school status, and that are homeowners. The unit of observation is the migpuma-year level. p $<$ 0.01 ***, p $<$ 0.05 **, p $<$0.1 *. 
 
 \end{footnotesize}
 \end{spacing}
@@ -218,7 +218,7 @@ Panel (b) presents the event study for losing an agreement. In the pre-period, e
 \newpage
 \begin{table}[H]
 \centering
-\caption{Difference-in-difference for log total targeted and placebo populations by gainer and loser status, separate regression}
+\caption{Effect of gaining and losing a 287(g) agreement on the log total targeted and the log total placebo populations}
 \label{tab:didpop}
 \adjustbox{ width=\linewidth}{
     \input{output/final/logtargetpop_did}
@@ -229,7 +229,7 @@ Panel (b) presents the event study for losing an agreement. In the pre-period, e
 \begin{footnotesize}
 
 
-\noindent \textit{Notes:} This table compares . p $<$ 0.01 ***, p $<$ 0.05 **, p $<$0.1 *. 
+\noindent \textit{Notes:} This table summarizes the results from the difference-in-difference detailed in Equation \ref{eq:joindid}. Columns 1-2 evaluates the effect of gaining a 287(g) agreement and losing a 287(g) agreement on the log total targeted population and Columns 3-4 on the log total placebo population, for comparison. Columns 2 and 3 incorporate controls at the migpuma-year level: log totals of population in different age distributions, race categories, high school attainment, in school status, and that are homeowners. The unit of observation is the migpuma-year level. p $<$ 0.01 ***, p $<$ 0.05 **, p $<$0.1 *. 
 
 \end{footnotesize}
 \end{spacing}
@@ -237,11 +237,12 @@ Panel (b) presents the event study for losing an agreement. In the pre-period, e
 
 
 
-\newpage
-\begin{table}[H]
+
+\begin{landscape}
+\begin{table}[t]
 \centering
-\caption{Difference-in-difference for log total targeted heterogeneity and spillover populations by gainer and loser status, same regression}
-\label{tab:didpop}
+\caption{Effect of gaining and losing a 287(g) agreement on the log total of sectors of the targeted population and the log total of sectors of the placebo}
+\label{tab:didhet}
 \adjustbox{ width=\linewidth}{
     \input{output/final/logpops_het}
 }
@@ -250,17 +251,21 @@ Panel (b) presents the event study for losing an agreement. In the pre-period, e
 \begin{spacing}{1}
 \begin{footnotesize}
 
+\noindent \textit{Notes:} This table summarizes the results from the difference-in-difference detailed in Equation \ref{eq:joindid} on sizes of various population sectors. Panel A evaluates the effect of gaining and losing a 287(g) agreement on the size of different and similar sectors of the target population. Columns 1 represents the baseline, corresponding to Column 2 from Table \ref{tab:didpop}. Column 2 restricts the evaluated population to those from Mexican origin, Column 3 to those with poor English level, Column 4 to those with up to two years in the country, Column 5 to those with no children, and Column 6 evaluates non-Hispanic immigrants that share all other characteristics with the target population
 
-\noindent \textit{Notes:} This table compares . p $<$ 0.01 ***, p $<$ 0.05 **, p $<$0.1 *. 
+2 evaluates the effect of gaining a 287(g) agreement and losing a 287(g) agreement on the log total targeted population and Columns 3-4 on the log total placebo population, for comparison. 
 
+All columns incorporate controls at the migpuma-year level: log totals of population in different age distributions, race categories, high school attainment, in school status, and that are homeowners. The unit of observation is the migpuma-year level. p $<$ 0.01 ***, p $<$ 0.05 **, p $<$0.1 *. 
 \end{footnotesize}
 \end{spacing}
 \end{table}
+\end{landscape}
+
 
 
 %%%%% FIGURES
 %% figure 1
-\newpage
+
 \begin{figure}[H]
 \centering
 \caption{Yearly count and geographic distribution of MIGPUMAs with active 287(g) agreements}
