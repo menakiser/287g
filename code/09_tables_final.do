@@ -684,7 +684,7 @@ file open sumstat using "$oo/final/logpops_het.tex", write replace
 file write sumstat "\begin{tabular}{lcccccc}" _n
 file write sumstat "\toprule" _n
 file write sumstat "\toprule" _n
-file write sumstat " & \multicolumn{7}{c}{Panel A: Target population} \\" _n
+file write sumstat " \multicolumn{7}{c}{Panel A: Target population} \\" _n
 file write sumstat "\midrule" _n
 file write sumstat " & Baseline & Mexican & Poor English & New Immigrant & No children & Non-Hispanic \\" _n
 file write sumstat "Log population & (1) & (2)  & (3) & (4) & (5) & (6) \\" _n
@@ -694,7 +694,7 @@ global varnames `"  "Gain treatment" "Lose treatment" "'
 
 forval i = 1/2 {
     local varname : word `i' of $varnames
-    forval c = 1/4  {
+    forval c = 1/6  {
         local row = 1 +3*(`i'-1)
         local b`c' = string(intarget[`row',`c'], "%12.4fc" )
         local temp = intarget[`row',`c']/intarget[5,`c']*100
@@ -711,8 +711,8 @@ forval i = 1/2 {
     file write sumstat " & (`sd1') & (`sd2') & (`sd3') & (`sd4') & (`sd5') & (`sd6') \\" _n 
 }
 file write sumstat "\\" _n 
-file write sumstat " Controls &  & X &  & X \\" _n 
-forval c = 1/4  {
+file write sumstat " Controls & X & X & X & X & X & X \\" _n 
+forval c = 1/6  {
     local r`c' = string(intarget[7,`c'], "%12.4fc" )
     local um`c' = string(intarget[8,`c'], "%12.4fc" )
     local n`c' = string(intarget[9,`c'], "%12.0fc" )
@@ -722,9 +722,11 @@ file write sumstat " Untreated mean & `um1' & `um2' & `um3' & `um4' & `um5' & `u
 file write sumstat "Sample Size & `n1' & `n2' & `n3' & `n4' & `n5' & `n6'  \\" _n
 file write sumstat "\midrule" _n
 file write sumstat "\midrule" _n
-file write sumstat " & \multicolumn{7}{c}{Panel B: Spillover population} \\" _n
+file write sumstat " \multicolumn{7}{c}{Panel B: Spillover population} \\" _n
+file write sumstat "\midrule" _n
 file write sumstat " & Baseline & Mexican & Poor English & New Immigrant & No children & Non-Hispanic \\" _n
 file write sumstat "Log population & (1) & (2)  & (3) & (4) & (5) & (6) \\" _n
+file write sumstat "\midrule" _n
 
 global varnames `"  "Gain treatment" "Lose treatment" "'
 
@@ -748,7 +750,7 @@ forval i = 1/2 {
 }
 file write sumstat "\\" _n 
 file write sumstat " Controls & X & X & X & X & X & X \\" _n 
-forval c = 1/4  {
+forval c = 1/6 {
     local r`c' = string(inspillover[7,`c'], "%12.4fc" )
     local um`c' = string(inspillover[8,`c'], "%12.4fc" )
     local n`c' = string(inspillover[9,`c'], "%12.0fc" )
