@@ -763,3 +763,79 @@ file write sumstat "\bottomrule" _n
 file write sumstat "\\" _n 
 file write sumstat "\end{tabular}"
 file close sumstat
+
+
+
+/**************************************************************
+LOG POPULATION DID GAINERS AND LOSERS IN SAME REGRESSION WITH PROP WEIGHT
+**************************************************************/
+global covarspop "log_tot_age_0_17 log_tot_age_18_24 log_tot_age_25_34 log_tot_age_35_49 log_tot_r_white log_tot_r_black log_tot_r_asian log_tot_hs log_tot_in_school log_tot_ownhome"
+global invars "exp_any_state "
+
+use "$oi/migpuma_year_pops", clear
+
+merge m:1 statefip current_migpuma  using  "$oi/propensity_weights2012migpuma_t2" , nogen keep(3) keepusing(phat wt)
+
+gen popwt = tot_targetpop2*wt
+
+**** trying doug's suggestion
+cap mat drop intarget
+* no controls 
+reghdfe log_tot_targetpop2 exp_gain_migpuma exp_lost_migpuma $invars [aw=popwt], vce(robust) absorb(geoid_migpuma year)
+reg_to_mat, depvar( log_tot_targetpop2 ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget)  wt(popwt) wttype(aw)
+* with controls for native populations
+reghdfe log_tot_targetpop2 exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=popwt], vce(robust) absorb(geoid_migpuma year)
+reg_to_mat, depvar( log_tot_targetpop2 ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget)  wt(popwt) wttype(aw)
+* no controls 
+reghdfe log_tot_placebo1 exp_gain_migpuma exp_lost_migpuma $invars [aw=popwt], vce(robust) absorb(geoid_migpuma year)
+reg_to_mat, depvar( log_tot_placebo1 ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget)  wt(popwt) wttype(aw)
+* with controls for native populations
+reghdfe log_tot_placebo1 exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=popwt], vce(robust) absorb(geoid_migpuma year)
+reg_to_mat, depvar( log_tot_placebo1 ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget)  wt(popwt) wttype(aw)
+
+
+* Create table
+cap file close sumstat
+file open sumstat using "$oo/final/logtargetpop_did_prop.tex", write replace
+file write sumstat "\begin{tabular}{lcccc}" _n
+file write sumstat "\toprule" _n
+file write sumstat "\toprule" _n
+file write sumstat " & \multicolumn{2}{c}{Target population} & \multicolumn{2}{c}{Placebo population}  \\" _n
+file write sumstat "Log population & (1) & (2)  & (3) & (4) \\" _n
+file write sumstat "\midrule " _n
+
+global varnames `"  "Gain treatment" "Lose treatment" "'
+
+forval i = 1/2 {
+    local varname : word `i' of $varnames
+    forval c = 1/4  {
+        local row = 1 +3*(`i'-1)
+        local b`c' = string(intarget[`row',`c'], "%12.4fc" )
+        local temp = intarget[`row',`c']/intarget[5,`c']*100
+        local bmean`c' = string(`temp', "%12.2fc" )
+        local++ row
+        local p`c' = intarget[`row',`c']
+        local stars_abs`c' = cond(`p`c'' < 0.01, "***", cond(`p`c'' < 0.05, "**", cond(`p`c'' < 0.1, "*", "")))
+        local++ row
+        local sd`c' = string(intarget[`row',`c'], "%12.4fc" )
+        
+    }
+    file write sumstat " `varname' & `b1'`stars_abs1' & `b2'`stars_abs2' & `b3'`stars_abs3' & `b4'`stars_abs4' \\" _n 
+    //file write sumstat "  & [`bmean1'$\%$] & [`bmean2'$\%$] & [`bmean3'$\%$] & [`bmean4'$\%$] \\" _n 
+    file write sumstat " & (`sd1') & (`sd2') & (`sd3') & (`sd4') \\" _n 
+}
+file write sumstat "\\" _n 
+file write sumstat " Controls &  & X &  & X \\" _n 
+forval c = 1/4  {
+    local r`c' = string(intarget[7,`c'], "%12.4fc" )
+    local um`c' = string(intarget[8,`c'], "%12.4fc" )
+    local n`c' = string(intarget[9,`c'], "%12.0fc" )
+}
+file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4'  \\" _n 
+file write sumstat " Untreated mean & `um1' & `um2' & `um3' & `um4'  \\" _n 
+file write sumstat "Sample Size & `n1' & `n2' & `n3' & `n4'  \\" _n
+file write sumstat "\bottomrule" _n
+file write sumstat "\bottomrule" _n
+file write sumstat "\\" _n 
+file write sumstat "\end{tabular}"
+file close sumstat
