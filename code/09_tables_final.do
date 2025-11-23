@@ -681,7 +681,7 @@ reg_to_mat, depvar( log_tot_spill_nohisp ) indvars( exp_gain_migpuma exp_lost_mi
 * Create table
 cap file close sumstat
 file open sumstat using "$oo/final/logpops_het.tex", write replace
-file write sumstat "\begin{tabular}{lcccc}" _n
+file write sumstat "\begin{tabular}{lcccccc}" _n
 file write sumstat "\toprule" _n
 file write sumstat "\toprule" _n
 file write sumstat " & \multicolumn{7}{c}{Panel A: Target population} \\" _n
