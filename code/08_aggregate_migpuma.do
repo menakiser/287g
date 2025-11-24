@@ -29,7 +29,7 @@ drop if mi(perwt_wt)
 gen placebo1 = sex==1 & lowskill==1 & hispan!=0 & born_abroad==0 & young==1  & marst>=3  //hispanic citizens born in the usa
 gen pop = age>=18 & age<=65
 gen target_movers = move_migpuma*targetpop2
-gen spillover1 = sex==1 & lowskill==1 & hispan!=0 & born_abroad==1 & citizen!=3 & young==1  & marst>=3
+gen spillover1 = sex==1 & lowskill==1 & hispan!=0 & born_abroad==1 & citizen!=3 & young==1  & marst>=3 & yrnatur<2012
 
 * Controls
 * age
@@ -60,22 +60,24 @@ foreach v of varlist targetpop2 placebo1 spillover1 pop move_migpuma target_move
 }
 
 * Obtain totals FOR HETEROGENEITY
+*target
 gen tot_target_mexican = tot_targetpop2 & bpl==200 //target mexican
 gen tot_target_noenglish = tot_targetpop2 & tot_no_english //target no english
 gen tot_target_new = tot_targetpop2 & inlist(yrsusa1 , 1 ,2)  //target new immigrants
 gen tot_target_nochild = tot_targetpop2 & nchild==0 //target no children
 gen tot_target_nohisp= sex==1 & lowskill==1 & hispan==0 & imm==1 & young==1 & yrimmig>2007 & inlist(yrsusa2 , 1 ,2) //target not hispanics
+*spillover
 gen tot_spill_mexican = tot_spillover1 & bpl==200 //spillover mexican
 gen tot_spill_noenglish = tot_spillover1 & tot_no_english //spillover no english
 gen tot_spill_new = tot_spillover1 & inlist(yrsusa1 , 1 ,2)  //spillover new immigrants
 gen tot_spill_nochild = tot_spillover1 & nchild==0 //spillover no children
-gen tot_spill_nohisp= sex==1 & lowskill==1 & hispan==0 & born_abroad==1 & citizen!=3 & young==1  & marst>=3 //target not hispanics
+gen tot_spill_nohisp= sex==1 & lowskill==1 & hispan==0 & born_abroad==1 & citizen!=3 & young==1  & marst>=3 & yrnatur<2012 //spillover not hispanics
 * placebo is a bit different
-gen tot_plac_mexican = log_tot_placebo1 & bpl==200 //spillover mexican
-gen tot_plac_noenglish = log_tot_placebo1 & tot_no_english //spillover no english
-gen tot_plac_new = log_tot_placebo1 & inlist(yrsusa1 , 1 ,2)  //spillover new immigrants
-gen tot_plac_nochild = log_tot_placebo1 & nchild==0 //spillover no children
-gen tot_plac_nohisp= sex==1 & lowskill==1 & hispan==0 & born_abroad==1 & citizen!=3 & young==1  & marst>=3 //target not hispanics
+gen tot_plac_mexican = tot_placebo1 & hispan==1 //placebo mexican
+gen tot_plac_noenglish = tot_placebo1 & tot_no_english //placebo no english
+//gen tot_plac_new = log_tot_placebo1 & inlist(yrsusa1 , 1 ,2)  //placebo new immigrants -dna
+gen tot_plac_nochild = tot_placebo1 & nchild==0 //placebo no children
+gen tot_plac_nohisp= sex==1 & lowskill==1 & hispan==0 & born_abroad==0 & young==1  & marst>=3 //placebo not hispanics
 
 * Obtain relative years for gainers and losers
 * gainers
@@ -141,7 +143,7 @@ compress
 save "$oi/migpuma_year_pops", replace
 
 
-
+/*
 use "$oi/migpuma_year_pops", clear
 
 gen istexas = statefip==48
@@ -186,3 +188,4 @@ keep statefip current_migpuma phat ever_treated_migpuma wt d_1 x_1 d_0 x_0 d_0w 
 
 compress
 save "$oi/propensity_weights2012migpuma_t2_logtot", replace
+*/

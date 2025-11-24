@@ -655,6 +655,25 @@ reg_to_mat, depvar( log_tot_target_nochild ) indvars( exp_gain_migpuma exp_lost_
 reghdfe log_tot_target_nohisp exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
 reg_to_mat, depvar( log_tot_target_nohisp ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget)  wt(tot_targetpop2) wttype(aw)
 
+cap mat drop inplacebo 
+* PLACEBO
+reghdfe log_tot_placebo1 exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
+reg_to_mat, depvar( log_tot_placebo1 ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(inplacebo)  wt(tot_targetpop2) wttype(aw)
+* PLACEBO MEXICANS
+reghdfe log_tot_plac_mexican exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
+reg_to_mat, depvar( log_tot_plac_mexican ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(inplacebo)  wt(tot_targetpop2) wttype(aw)
+* PLACEBO POOR ENGLISH TARGET
+reghdfe log_tot_plac_noenglish exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
+reg_to_mat, depvar( log_tot_plac_noenglish ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(inplacebo)  wt(tot_targetpop2) wttype(aw)
+* PLACEBO NEW IMMIGRANT
+mat inplacebo = inplacebo , (9999 \ 9999 \ 9999 \ 9999 \ 9999 \ 9999 \ 9999 \ 9999 \ 9999 \ 9999)
+* PLACEBO NO child
+reghdfe log_tot_plac_nochild exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
+reg_to_mat, depvar( log_tot_plac_nochild ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(inplacebo)  wt(tot_targetpop2) wttype(aw)
+* PLACEBO NON HISPANIC
+reghdfe log_tot_plac_nohisp exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
+reg_to_mat, depvar( log_tot_plac_nohisp ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(inplacebo)  wt(tot_targetpop2) wttype(aw)
+
 
 cap mat drop inspillover
 * SPILLOVER
@@ -722,11 +741,63 @@ file write sumstat " Untreated mean & `um1' & `um2' & `um3' & `um4' & `um5' & `u
 file write sumstat "Sample Size & `n1' & `n2' & `n3' & `n4' & `n5' & `n6'  \\" _n
 file write sumstat "\midrule" _n
 file write sumstat "\midrule" _n
-file write sumstat " \multicolumn{7}{c}{Panel B: Spillover population} \\" _n
+file write sumstat " \multicolumn{7}{c}{Panel B: Placebo population} \\" _n
 file write sumstat "\midrule" _n
 file write sumstat " & Baseline & Mexican & Poor English & New Immigrant & No children & Non-Hispanic \\" _n
 file write sumstat "Log population & (7) & (8)  & (9) & (10) & (11) & (12) \\" _n
 file write sumstat "\midrule" _n
+
+global varnames `"  "Gain treatment" "Lose treatment" "'
+
+forval i = 1/2 {
+    local varname : word `i' of $varnames
+    forval c = 1/6  {
+        local row = 1 +3*(`i'-1)
+        local b`c' = string(inplacebo[`row',`c'], "%12.4fc" )
+        local temp = inplacebo[`row',`c']/inplacebo[5,`c']*100
+        local bmean`c' = string(`temp', "%12.2fc" )
+        local++ row
+        local p`c' = inplacebo[`row',`c']
+        local stars_abs`c' = cond(`p`c'' < 0.01, "***", cond(`p`c'' < 0.05, "**", cond(`p`c'' < 0.1, "*", "")))
+        local++ row
+        local sd`c' = string(inplacebo[`row',`c'], "%12.4fc" )
+        
+    }
+    file write sumstat " `varname' & `b1'`stars_abs1' & `b2'`stars_abs2' & `b3'`stars_abs3' & . & `b5'`stars_abs5' & `b6'`stars_abs6' \\" _n 
+    //file write sumstat "  & [`bmean1'$\%$] & [`bmean2'$\%$] & [`bmean3'$\%$] & [`bmean4'$\%$] \\" _n 
+    file write sumstat " & (`sd1') & (`sd2') & (`sd3') & . & (`sd5') & (`sd6') \\" _n 
+}
+file write sumstat "\\" _n 
+file write sumstat " Controls & X & X & X & X & X & X \\" _n 
+forval c = 1/6 {
+    local r`c' = string(inplacebo[7,`c'], "%12.4fc" )
+    local um`c' = string(inplacebo[8,`c'], "%12.4fc" )
+    local n`c' = string(inplacebo[9,`c'], "%12.0fc" )
+}
+file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & . & `r5' & `r6'    \\" _n 
+file write sumstat " Untreated mean & `um1' & `um2' & . & `um4' & `um5' & `um6'  \\" _n 
+file write sumstat "Sample Size & `n1' & `n2' & `n3' & . & `n5' & `n6'  \\" _n
+file write sumstat "\bottomrule" _n
+file write sumstat "\bottomrule" _n
+file write sumstat "\\" _n 
+file write sumstat "\end{tabular}"
+file close sumstat
+
+
+
+
+****
+* Create table
+cap file close sumstat
+file open sumstat using "$oo/final/logpops_het_spill.tex", write replace
+file write sumstat "\begin{tabular}{lcccccc}" _n
+file write sumstat "\toprule" _n
+file write sumstat "\toprule" _n
+file write sumstat " \multicolumn{7}{c}{Panel A: Target population} \\" _n
+file write sumstat "\midrule" _n
+file write sumstat " & Baseline & Mexican & Poor English & New Immigrant & No children & Non-Hispanic \\" _n
+file write sumstat "Log population & (1) & (2)  & (3) & (4) & (5) & (6) \\" _n
+file write sumstat "\midrule " _n
 
 global varnames `"  "Gain treatment" "Lose treatment" "'
 
