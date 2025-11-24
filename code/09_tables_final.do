@@ -793,8 +793,6 @@ file open sumstat using "$oo/final/logpops_het_spill.tex", write replace
 file write sumstat "\begin{tabular}{lcccccc}" _n
 file write sumstat "\toprule" _n
 file write sumstat "\toprule" _n
-file write sumstat " \multicolumn{7}{c}{Panel A: Target population} \\" _n
-file write sumstat "\midrule" _n
 file write sumstat " & Baseline & Mexican & Poor English & New Immigrant & No children & Non-Hispanic \\" _n
 file write sumstat "Log population & (1) & (2)  & (3) & (4) & (5) & (6) \\" _n
 file write sumstat "\midrule " _n
