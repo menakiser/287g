@@ -768,14 +768,14 @@ forval i = 1/2 {
     file write sumstat " & (`sd1') & (`sd2') & (`sd3') & . & (`sd5') & (`sd6') \\" _n 
 }
 file write sumstat "\\" _n 
-file write sumstat " Controls & X & X & X & X & X & X \\" _n 
+file write sumstat " Controls & X & X & X & . & X & X \\" _n 
 forval c = 1/6 {
     local r`c' = string(inplacebo[7,`c'], "%12.4fc" )
     local um`c' = string(inplacebo[8,`c'], "%12.4fc" )
     local n`c' = string(inplacebo[9,`c'], "%12.0fc" )
 }
 file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & . & `r5' & `r6'    \\" _n 
-file write sumstat " Untreated mean & `um1' & `um2' & . & `um4' & `um5' & `um6'  \\" _n 
+file write sumstat " Untreated mean & `um1' & `um2' & `um3' & . & `um5' & `um6'  \\" _n 
 file write sumstat "Sample Size & `n1' & `n2' & `n3' & . & `n5' & `n6'  \\" _n
 file write sumstat "\bottomrule" _n
 file write sumstat "\bottomrule" _n
