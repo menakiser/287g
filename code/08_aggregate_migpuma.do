@@ -70,6 +70,12 @@ gen tot_spill_noenglish = tot_spillover1 & tot_no_english //spillover no english
 gen tot_spill_new = tot_spillover1 & inlist(yrsusa1 , 1 ,2)  //spillover new immigrants
 gen tot_spill_nochild = tot_spillover1 & nchild==0 //spillover no children
 gen tot_spill_nohisp= sex==1 & lowskill==1 & hispan==0 & born_abroad==1 & citizen!=3 & young==1  & marst>=3 //target not hispanics
+* placebo is a bit different
+gen tot_plac_mexican = log_tot_placebo1 & bpl==200 //spillover mexican
+gen tot_plac_noenglish = log_tot_placebo1 & tot_no_english //spillover no english
+gen tot_plac_new = log_tot_placebo1 & inlist(yrsusa1 , 1 ,2)  //spillover new immigrants
+gen tot_plac_nochild = log_tot_placebo1 & nchild==0 //spillover no children
+gen tot_plac_nohisp= sex==1 & lowskill==1 & hispan==0 & born_abroad==1 & citizen!=3 & young==1  & marst>=3 //target not hispanics
 
 * Obtain relative years for gainers and losers
 * gainers

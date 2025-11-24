@@ -221,7 +221,7 @@ forval r = 11/17 {
 local a1 = string(sumstat[18,1], "%12.0fc" )
 local a2 = string(sumstat[18,2], "%12.0fc" )
 local a3 = string(sumstat[18,3], "%12.0fc" )
-file write sumstat "Sample size & `a1' & `a2' & `a3' \\" _n
+file write sumstat "Sample size & `a1' & `a2' & \\" _n
 file write sumstat "\bottomrule" _n
 file write sumstat "\bottomrule" _n
 file write sumstat "\\" _n 
@@ -839,3 +839,28 @@ file write sumstat "\bottomrule" _n
 file write sumstat "\\" _n 
 file write sumstat "\end{tabular}"
 file close sumstat
+
+
+/*
+
+cap mat drop inspillover
+* SPILLOVER
+reghdfe log_tot_spillover1 exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
+reg_to_mat, depvar( log_tot_spillover1 ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(inspillover)  wt(tot_targetpop2) wttype(aw)
+* SPILLOVER MEXICANS
+reghdfe log_tot_spill_mexican exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
+reg_to_mat, depvar( log_tot_spill_mexican ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(inspillover)  wt(tot_targetpop2) wttype(aw)
+* SPILLOVER POOR ENGLISH TARGET
+reghdfe log_tot_spill_noenglish exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
+reg_to_mat, depvar( log_tot_spill_noenglish ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(inspillover)  wt(tot_targetpop2) wttype(aw)
+* SPILLOVER NEW IMMIGRANT
+reghdfe log_tot_spill_new exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
+reg_to_mat, depvar( log_tot_spill_new ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(inspillover)  wt(tot_targetpop2) wttype(aw)
+* SPILLOVER NO child
+reghdfe log_tot_spill_nochild exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
+reg_to_mat, depvar( log_tot_spill_nochild ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(inspillover)  wt(tot_targetpop2) wttype(aw)
+* SPILLOVER NON HISPANIC
+reghdfe log_tot_spill_nohisp exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
+reg_to_mat, depvar( log_tot_spill_nohisp ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(inspillover)  wt(tot_targetpop2) wttype(aw)
+
+*/
