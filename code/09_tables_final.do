@@ -667,7 +667,6 @@ cap mat drop intarget
 reghdfe log_tot_targetpop2 exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
 gen sample1 = e(sample)
 reg_to_mat, depvar( log_tot_targetpop2 ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget)  wt(tot_targetpop2) wttype(aw)
-
 * MEXICAN TARGET
 reghdfe log_tot_target_mexican exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
 gen sample2 = e(sample)
@@ -692,15 +691,15 @@ reg_to_mat, depvar( log_tot_target_nohisp ) indvars( exp_gain_migpuma exp_lost_m
 *** STORE POP SIZE ***
 qui sum tot_targetpop2 if sample1
 local um1 = r(mean)
-qui sum tot_targetpop2 if sample2
+qui sum tot_target_mexican if sample2
 local um2 = r(mean)
-qui sum tot_targetpop2 if sample3
+qui sum tot_target_noenglish if sample3
 local um3 = r(mean)
-qui sum tot_targetpop2 if sample4
+qui sum tot_target_new if sample4
 local um4 = r(mean)
-qui sum tot_targetpop2 if sample5
+qui sum tot_target_nochild if sample5
 local um5 = r(mean)
-qui sum tot_targetpop2 if sample6
+qui sum tot_target_nohisp if sample6
 local um6 = r(mean)
 mat intarget = nullmat(intarget) \ (`um1', `um2', `um3', `um4', `um5', `um6')
 drop sample*
@@ -738,16 +737,17 @@ gen sample`i' = e(sample)
 local++ i
 
 *** STORE POP SIZE ***
-qui sum tot_targetpop2 if sample1
+qui sum tot_placebo1 if sample1
 local um1 = r(mean)
-qui sum tot_targetpop2 if sample2
+qui sum tot_plac_mexican if sample2
 local um2 = r(mean)
-qui sum tot_targetpop2 if sample3
+qui sum tot_plac_noenglish if sample3
 local um3 = r(mean)
-local um4  = 9999
-qui sum tot_targetpop2 if sample5
+qui sum tot_plac_noenglish if sample3
+local um4 = r(mean)
+qui sum tot_plac_nochild if sample5
 local um5 = r(mean)
-qui sum tot_targetpop2 if sample6
+qui sum tot_plac_nohisp if sample6
 local um6 = r(mean)
 mat inplacebo = nullmat(inplacebo) \ (`um1', `um2', `um3', `um4', `um5', `um6')
 drop sample*
@@ -787,17 +787,17 @@ gen sample`i' = e(sample)
 local++ i
 
 *** STORE POP SIZE ***
-qui sum tot_targetpop2 if sample1
+qui sum tot_spillover1 if sample1
 local um1 = r(mean)
-qui sum tot_targetpop2 if sample2
+qui sum tot_spill_mexican if sample2
 local um2 = r(mean)
-qui sum tot_targetpop2 if sample3
+qui sum tot_spill_noenglish if sample3
 local um3 = r(mean)
-qui sum tot_targetpop2 if sample4
+qui sum tot_spill_new if sample4
 local um4 = r(mean)
-qui sum tot_targetpop2 if sample5
+qui sum tot_spill_nochild if sample5
 local um5 = r(mean)
-qui sum tot_targetpop2 if sample6
+qui sum tot_spill_nohisp if sample6
 local um6 = r(mean)
 mat inspillover = nullmat(inspillover) \ (`um1', `um2', `um3', `um4', `um5', `um6')
 drop sample*
@@ -980,9 +980,9 @@ qui sum tot_targetpop2 if sample1
 local um1 = r(mean)
 qui sum tot_targetpop2 if sample2
 local um2 = r(mean)
-qui sum tot_targetpop2 if sample3
+qui sum tot_placebo1 if sample3
 local um3 = r(mean)
-qui sum tot_targetpop2 if sample4
+qui sum tot_placebo1 if sample4
 local um4 = r(mean)
 mat intarget = nullmat(intarget) \ (`um1', `um2', `um3', `um4')
 drop sample*
