@@ -34,7 +34,7 @@ global covarspop "log_tot_age_0_17 log_tot_age_18_24 log_tot_age_25_34 log_tot_a
 global covarsnat "log_nat_age_0_17 log_nat_age_18_24 log_nat_age_25_34 log_nat_age_35_49 log_nat_r_white log_nat_r_black log_nat_r_asian log_nat_hs log_nat_in_school log_nat_ownhome"
 global invars "exp_any_state "
 
-use "$oi/migpuma_year_pops", clear
+use "$oi/puma_year_pops", clear
 
 gen gain_ry_plus2_group = gain_ry_plus2 | gain_ry_plus3
 gen lost_ry_plus3_group =  lost_ry_plus3 | lost_ry_plus4 | lost_ry_plus5 |lost_ry_plus6 
@@ -47,12 +47,12 @@ label var gain_ry_minus4_group "-4"
 label var lost_ry_minus4_group "-4"
 
 ********** In same regression, target
-reghdfe log_tot_targetpop2 gain_ry_minus4_group gain_ry_minus3 gain_ry_minus2 o.gain_ry_minus1 ///
-	gain_ry_plus0 gain_ry_plus1 gain_ry_plus2_group  ///
+reghdfe log_tot_targetpop1 gain_ry_minus4_group gain_ry_minus3 gain_ry_minus2 o.gain_ry_minus1 ///
+	gain_ry_plus0 gain_ry_plus1 gain_ry_plus2_group   ///
 	lost_ry_minus4_group lost_ry_minus3 lost_ry_minus2 o.lost_ry_minus1 ///
 	lost_ry_plus0 lost_ry_plus1 lost_ry_plus2 lost_ry_plus3_group ///
-	$covarspop $invars [aw=tot_targetpop2] , ///
-	vce(robust) absorb(geoid_migpuma year)
+	$covarspop $invars [aw=tot_targetpop1] , ///
+	vce(robust) absorb(geoid_puma year)
 est store in_target1
 
 **** GAINERS
@@ -65,7 +65,7 @@ coefplot ///
 	xtitle("Relative year")   ytitle("Log target population") ///
 	title("(a) Gained treatment, target") ///
 	legend(order(4 "Active 287(g)" 2 "No 287(g)") row(1) pos(6)) xsize(6) ///
-	ylabel(-.75(0.25).25)
+	ylabel(-.3(0.1).2)
 graph export "$oo/final/logtargetpop_gain_estudy.png", replace
 
 **** LOSERS
@@ -78,7 +78,7 @@ coefplot ///
 	xtitle("Relative year")   ytitle("Log target population") ///
 	title("(b) Lost treatment, target") ///
 	legend(order(2 "Active 287(g)" 4 "No 287(g)") row(1) pos(6)) xsize(6) ///
-	ylabel(-.75(0.25).25)
+	ylabel(-.3(0.1).2)
 graph export "$oo/final/logtargetpop_lost_estudy.png", replace
 
 

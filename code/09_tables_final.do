@@ -16,6 +16,7 @@ global covarspop "log_tot_age_0_17 log_tot_age_18_24 log_tot_age_25_34 log_tot_a
 global covarsnat "log_nat_age_0_17 log_nat_age_18_24 log_nat_age_25_34 log_nat_age_35_49 log_nat_r_white log_nat_r_black log_nat_r_asian log_nat_hs log_nat_in_school log_nat_ownhome"
 global invars "exp_any_state SC_any "
 
+
 /*
 
 /**************************************************************
@@ -493,14 +494,17 @@ LOG POPULATION REGRESSION
 
 use "$oi/puma_year_pops", clear
 
+gen targetpop2_2012 = tot_targetpop2*(year==2012)
+bys geoid_puma: ereplace targetpop2_2012 = max(targetpop2_2012)
+
 ********* IN MIGRATION FOR TARGET POPULATION
 cap mat drop intarget
 * with simple weights
 * without controls
-reghdfe log_tot_targetpop2 exp_any_puma $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_puma year)
+reghdfe log_tot_targetpop2 exp_any_puma $invars [aw=tot_targetpop2] , vce(robust) absorb(statefip geoid_puma year)
 reg_to_mat, depvar( log_tot_targetpop2 ) indvars( exp_any_puma ) mat(intarget)  wt(tot_targetpop2) wttype(aw)
 * with controls for native
-reghdfe log_tot_targetpop2 exp_any_puma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_puma year)
+reghdfe log_tot_targetpop2 exp_any_puma $covarspop $invars [aw=tot_targetpop2] , vce(robust) absorb(statefip geoid_puma year)
 reg_to_mat, depvar( log_tot_targetpop2 ) indvars( exp_any_puma ) mat(intarget) wt(tot_targetpop2) wttype(aw)
 
 **** IN MIGRATION FOR PLACEBO POPULATION
@@ -561,13 +565,31 @@ LOG POPULATION DID GAINERS AND LOSERS IN SAME REGRESSION
 
 
 use "$oi/puma_year_pops", clear
+
+gen targetpop2_2012 = tot_targetpop2*(year==2012)
+bys geoid_puma: ereplace targetpop2_2012 = max(targetpop2_2012)
+
 **** trying doug's suggestion
 cap mat drop intarget
-* no controls 
-reghdfe log_tot_targetpop2 exp_gain_puma exp_lost_puma $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_puma year)
-reg_to_mat, depvar( log_tot_targetpop2 ) indvars( exp_gain_puma exp_lost_puma) mat(intarget)  wt(tot_targetpop2) wttype(aw)
+forval i = 1/6 {
+    di in red "population `i'"
+    * no controls 
+    reghdfe log_tot_targetpop`i' exp_gain_puma exp_lost_puma $invars [aw=tot_targetpop`i'], vce(robust) absorb( geoid_puma year)
+    reg_to_mat, depvar( log_tot_targetpop`i' ) indvars( exp_gain_puma exp_lost_puma) mat(intarget)  wt(tot_targetpop2) wttype(aw)
+}
+//4 is probably best, next 3, next 1
+di in red "with controls"
+cap mat drop intarget
+forval i = 1/6 {
+    di in red "population `i'"
+    * no controls 
+    reghdfe log_tot_targetpop`i' exp_gain_puma exp_lost_puma $covarspop $invars [aw=tot_targetpop`i'], vce(robust) absorb(statefip geoid_puma year)
+    reg_to_mat, depvar( log_tot_targetpop`i' ) indvars( exp_gain_puma exp_lost_puma) mat(intarget)  wt(tot_targetpop2) wttype(aw)
+} 
+//4 is probably best, 5 also works, then 1
+
 * with controls for native populations
-reghdfe log_tot_targetpop2 exp_gain_puma exp_lost_puma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_puma year)
+reghdfe log_tot_targetpop2 exp_gain_puma exp_lost_puma $covarspop $invars [aw=tot_targetpop2] if targetpop2_2012>=1000, vce(robust) absorb(geoid_puma year)
 reg_to_mat, depvar( log_tot_targetpop2 ) indvars( exp_gain_puma exp_lost_puma) mat(intarget)  wt(tot_targetpop2) wttype(aw)
 * no controls 
 reghdfe log_tot_placebo1 exp_gain_puma exp_lost_puma $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_puma year)
@@ -840,7 +862,7 @@ LOG POPULATION DID GAINERS AND LOSERS IN SAME REGRESSION WITH PROP WEIGHT
 use "$oi/puma_year_pops", clear
 
 merge m:1 statefip current_puma  using  "$oi/propensity_weights2012puma_t2" , nogen keep(3) keepusing(phat wt)
-
+replace tot_targetpop2 = tot_targetpop1
 gen popwt = tot_targetpop2*wt
 
 **** trying doug's suggestion
@@ -964,3 +986,7 @@ twoway (scatter tot_targetpop1 year if ever_treated_puma==1 , mcolor(red)) ///
  (scatter tot_targetpop1 year if ever_treated_puma==0, mcolor(midblue)) ///
  (scatter tot_targetpop2 year if ever_treated_puma==1 , mcolor(pink)) ///
  (scatter tot_targetpop2 year if ever_treated_puma==0, mcolor(black))
+
+
+ twoway (scatter tot_targetpop3 year if ever_treated_puma==1 , mcolor(red)) ///
+ (scatter tot_targetpop3 year if ever_treated_puma==0, mcolor(midblue)) 

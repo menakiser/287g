@@ -11,9 +11,6 @@ global wd "/Users/jimenakiser/Desktop/287g/"
 global or "$wd/data/raw"
 global oi "$wd/data/int"
 
-global covars "age r_white r_black r_asian hs in_school no_english ownhome"
-global invars "exp_any_state " //SC_any
-global outvars "prev_exp_any_state " //prev_SC_any
 
 use "$oi/working_acs", clear 
 keep if year >= 2012
@@ -50,7 +47,7 @@ tab yrsusa2, gen(int_yrsusa2)
 tab language, gen(int_language)
 
 * Obtain totals
-foreach v of varlist targetpop1 targetpop2 targetpop3 placebo1 spillover1 pop move_migpuma target_movers ///
+foreach v of varlist targetpop1 targetpop2 targetpop3 targetpop4 targetpop5 targetpop6 placebo1 spillover1 pop move_migpuma target_movers ///
  r_white r_black r_asian hs in_school ownhome no_english employed male has_child ///
  age_0_17 age_18_24 age_25_34 age_35_49 age_50plu ///
  int_hispan* int_educ* int_marst* int_speakeng* int_citizen* int_yrsusa2* int_language1-int_language10  {
@@ -63,19 +60,19 @@ foreach v of varlist targetpop1 targetpop2 targetpop3 placebo1 spillover1 pop mo
 *target
 gen tot_target_mexican = tot_targetpop2 & bpl==200 //target mexican
 gen tot_target_noenglish = tot_targetpop2 & tot_no_english //target no english
-gen tot_target_new = tot_targetpop2 & inlist(yrsusa1 , 1 ,2)  //target new immigrants
+gen tot_target_new = tot_targetpop2 & inlist(yrsusa2 , 1 )  //target new immigrants
 gen tot_target_nochild = tot_targetpop2 & nchild==0 //target no children
 gen tot_target_nohisp= sex==1 & lowskill==1 & hispan==0 & imm==1 & young==1 & yrimmig>2007 & inlist(yrsusa2 , 1 ,2) //target not hispanics
 *spillover
 gen tot_spill_mexican = tot_spillover1 & bpl==200 //spillover mexican
 gen tot_spill_noenglish = tot_spillover1 & tot_no_english //spillover no english
-gen tot_spill_new = tot_spillover1 & inlist(yrsusa1 , 1 ,2)  //spillover new immigrants
+gen tot_spill_new = tot_spillover1 & inlist(yrsusa2 , 1 )  //spillover new immigrants
 gen tot_spill_nochild = tot_spillover1 & nchild==0 //spillover no children
 gen tot_spill_nohisp= sex==1 & lowskill==1 & hispan==0 & born_abroad==1 & citizen!=3 & young==1  & marst>=3 & yrnatur<2012 //spillover not hispanics
 * placebo is a bit different
 gen tot_plac_mexican = tot_placebo1 & hispan==1 //placebo mexican
 gen tot_plac_noenglish = tot_placebo1 & tot_no_english //placebo no english
-//gen tot_plac_new = log_tot_placebo1 & inlist(yrsusa1 , 1 ,2)  //placebo new immigrants -dna
+//gen tot_plac_new = log_tot_placebo1 & inlist(yrsusa2 , 1 ,2)  //placebo new immigrants -dna
 gen tot_plac_nochild = tot_placebo1 & nchild==0 //placebo no children
 gen tot_plac_nohisp= sex==1 & lowskill==1 & hispan==0 & born_abroad==0 & young==1  & marst>=3 //placebo not hispanics
 
@@ -93,7 +90,7 @@ bys statefip: egen ever_treated_state = max( exp_any_state>0)
 * collapse at the puma and year level
 collapse (sum) tot_* ///
 	(max) exp_any_puma  ever_treated_puma ever_lost_exp_puma ever_gain_exp_puma lost_exp_year gain_exp_year ///
-	relative_year_gain relative_year_lost geoid_puma exp_any_state ever_treated_state SC_any [pw=perwt] ///
+	relative_year_gain relative_year_lost geoid_puma exp_any_state ever_treated_state SC_any trump [pw=perwt] ///
 	, by(current_puma statefip year)
 
 * obtain log version of all total and native variables
