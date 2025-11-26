@@ -48,19 +48,26 @@ tab citizen, gen(int_citizen)
 tab yrsusa2, gen(int_yrsusa2)
 tab language, gen(int_language)
 tab  hispand  , gen(int_dhispan)
+gen has_child = nchild>0
 
-collapse (sum) total_pop total_targetpop2=targetpop2 ///
-	(mean) exp* red_state incwage employed target_sh=targetpop2 foreign_sh=imm young_sh=young  ///
+collapse (sum) total_pop total_targetpop1=targetpop1 ///
+	(mean) exp* red_state incwage employed target_sh=targetpop1 foreign_sh=imm young_sh=young  ///
 	r_white r_black r_asian int_citizen* int_language* int_yrsusa2* int_hispan* int_dhispan* ///
 	int_educ* hs nchild int_marst* no_english int_speakeng* in_school ///
 	lowskill_sh=lowskill istexas isflorida   ///
-	(max) ever_treated_state ever_treated_migpuma ///
+	has_child famsize nchlt5 eldch yngch ///
+	trantime departs arrives ///
+	(max) ever_treated_state ever_treated_migpuma  ///
 	[pw=perwt] ///
 	, by(statefip current_migpuma)
 
 /* get propensity score for county exposure */	
 logit ever_treated_migpuma total_pop target_sh foreign_sh red_state istexas ever_treated_state ///
-	r_white r_black r_asian int_citizen2-int_citizen4 int_dhispan* int_educ* int_marst* nchild in_school no_english [pw=total_targetpop2]
+	r_white r_black r_asian int_citizen2-int_citizen4 int_dhispan* int_educ* int_marst* nchild in_school no_english [pw=total_targetpop1]
+
+logit ever_treated_migpuma total_pop target_sh foreign_sh young_sh int_yrsusa2* lowskill_sh red_state istexas isflorida ever_treated_state ///
+	r_white r_black r_asian int_citizen2-int_citizen4 int_dhispan* int_educ* int_marst* in_school no_english ///
+	has_child famsize nchild  [pw=total_targetpop1]
 
 //like doing it at the individual level
 cap drop phat

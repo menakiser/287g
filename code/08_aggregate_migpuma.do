@@ -90,10 +90,16 @@ replace relative_year_lost = . if lost_exp_year == 0
 bys statefip: egen ever_treated_state = max( exp_any_state>0)
 
 
+global covars "age r_white r_black r_asian hs in_school no_english ownhome"
+global invars "exp_any_state SC_any" //SC_any
+global outvars "prev_exp_any_state " //prev_SC_any
+
+
 * collapse at the migpuma and year level
 collapse (sum) tot_* ///
 	(max) exp_any_migpuma  ever_treated_migpuma ever_lost_exp_migpuma ever_gain_exp_migpuma lost_exp_year gain_exp_year ///
-	relative_year_gain relative_year_lost geoid_migpuma exp_any_state ever_treated_state SC_any [pw=perwt] ///
+	relative_year_gain relative_year_lost geoid_migpuma exp_any_state ever_treated_state SC_any ///
+	(mean) age r_white=tot_r_white r_black=tot_r_black r_asian=tot_r_asian hs=tot_hs in_school=tot_in_school no_english=tot_no_english ownhome=tot_ownhome	 [pw=perwt] ///
 	, by(current_migpuma statefip year)
 
 * obtain log version of all total and native variables
