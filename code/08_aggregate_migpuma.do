@@ -62,7 +62,7 @@ gen tot_target_mexican = tot_targetpop2 & bpl==200 //target mexican
 gen tot_target_noenglish = tot_targetpop2 & tot_no_english //target no english
 gen tot_target_new = tot_targetpop2 & inlist(yrsusa2 , 1 )  //target new immigrants
 gen tot_target_nochild = tot_targetpop2 & nchild==0 //target no children
-gen tot_target_nohisp= sex==1 & lowskill==1 & hispan==0 & imm==1 & young==1 & yrimmig>2007 & inlist(yrsusa2 , 1 ,2) //target not hispanics
+gen tot_target_nohisp= sex==1 & lowskill==1 & hispan==0 & imm==1 & young==1 & inlist(yrsusa2 , 1)  //target not hispanics
 *spillover
 gen tot_spill_mexican = tot_spillover1 & bpl==200 //spillover mexican
 gen tot_spill_noenglish = tot_spillover1 & tot_no_english //spillover no english
@@ -97,10 +97,6 @@ collapse (sum) tot_* ///
 foreach v of varlist tot_* {
     gen log_`v' = log(`v' + 1)
 }
-
-* define regression controls
-global covarspop "log_tot_age_0_17 log_tot_age_18_24 log_tot_age_25_34 log_tot_age_35_49 log_tot_r_white log_tot_r_black log_tot_r_asian log_tot_hs log_tot_in_school log_tot_ownhome"
-//global covarsnat "log_nat_age_0_17 log_nat_age_18_24 log_nat_age_25_34 log_nat_age_35_49 log_nat_r_white log_nat_r_black log_nat_r_asian log_nat_hs log_nat_in_school log_nat_ownhome"
 
 *** Define variables for DID
 * define post for DID

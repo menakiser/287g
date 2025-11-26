@@ -475,7 +475,7 @@ file write sumstat " & (`sd1') & (`sd2') & (`sd3') & (`sd4') \\" _n
 file write sumstat "\\" _n 
 file write sumstat " Controls &  & X &  & X \\" _n 
 file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4'  \\" _n 
-file write sumstat " Untreated mean & `um1' & `um2' & `um3' & `um4'  \\" _n 
+file write sumstat " Untreated pop size & `um1' & `um2' & `um3' & `um4'  \\" _n 
 file write sumstat "Sample Size & `n1' & `n2' & `n3' & `n4'  \\" _n
 file write sumstat "\bottomrule" _n
 file write sumstat "\bottomrule" _n
@@ -516,6 +516,16 @@ reg_to_mat, depvar( log_tot_placebo1 ) indvars( exp_any_puma ) mat(intarget) wt(
 reghdfe log_tot_placebo1 exp_any_puma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_puma year)
 reg_to_mat, depvar( log_tot_placebo1 ) indvars( exp_any_puma ) mat(intarget) wt(tot_targetpop2) wttype(aw)
 
+//store pop size
+qui sum tot_targetpop2 if sample1 
+local um1 = r(mean)
+qui sum tot_targetpop2 if sample2
+local um2 = r(mean)
+qui sum tot_placebo1 if sample3
+local um3 = r(mean)
+qui sum tot_placebo1 if sample4
+local um4 = r(mean)
+mat intarget = nullmat(intarget) \ (`um1', `um2', `um3' , `um4' )
 
 * Create table
 cap file close sumstat
@@ -539,7 +549,7 @@ forval c = 1/4  {
     local stars_abs`c' = cond(`p`c'' < 0.01, "***", cond(`p`c'' < 0.05, "**", cond(`p`c'' < 0.1, "*", "")))
     local sd`c' = string(intarget[3,`c'], "%12.4fc" )
     local r`c' = string(intarget[4,`c'], "%12.4fc" )
-    local um`c' = string(intarget[5,`c'], "%12.4fc" )
+    local um`c' = string(intarget[8,`c'], "%12.0fc" )
 	local n`c' = string(intarget[6,`c'], "%12.0fc" )
 }
 file write sumstat " `varname' & `b1'`stars_abs1' & `b2'`stars_abs2' & `b3'`stars_abs3' & `b4'`stars_abs4' \\" _n 
@@ -548,7 +558,7 @@ file write sumstat " & (`sd1') & (`sd2') & (`sd3') & (`sd4') \\" _n
 file write sumstat "\\" _n 
 file write sumstat " Controls &  & X &  & X \\" _n 
 file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4'  \\" _n 
-file write sumstat " Untreated mean & `um1' & `um2' & `um3' & `um4'  \\" _n 
+file write sumstat " Untreated pop size & `um1' & `um2' & `um3' & `um4'  \\" _n 
 file write sumstat "Sample Size & `n1' & `n2' & `n3' & `n4'  \\" _n
 file write sumstat "\bottomrule" _n
 file write sumstat "\bottomrule" _n
@@ -598,6 +608,17 @@ reg_to_mat, depvar( log_tot_placebo1 ) indvars( exp_gain_puma exp_lost_puma) mat
 reghdfe log_tot_placebo1 exp_gain_puma exp_lost_puma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_puma year)
 reg_to_mat, depvar( log_tot_placebo1 ) indvars( exp_gain_puma exp_lost_puma) mat(intarget)  wt(tot_targetpop2) wttype(aw)
 
+//store pop size
+qui sum tot_targetpop2 if sample1 
+local um1 = r(mean)
+qui sum tot_targetpop2 if sample2
+local um2 = r(mean)
+qui sum tot_placebo1 if sample3
+local um3 = r(mean)
+qui sum tot_placebo1 if sample4
+local um4 = r(mean)
+mat intarget = nullmat(intarget) \ (`um1', `um2', `um3' , `um4' )
+
 
 * Create table
 cap file close sumstat
@@ -633,11 +654,11 @@ file write sumstat "\\" _n
 file write sumstat " Controls &  & X &  & X \\" _n 
 forval c = 1/4  {
     local r`c' = string(intarget[7,`c'], "%12.4fc" )
-    local um`c' = string(intarget[8,`c'], "%12.4fc" )
+    local um`c' = string(intarget[11,`c'], "%12.0fc" )
     local n`c' = string(intarget[9,`c'], "%12.0fc" )
 }
 file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4'  \\" _n 
-file write sumstat " Untreated mean & `um1' & `um2' & `um3' & `um4'  \\" _n 
+file write sumstat " Untreated pop size & `um1' & `um2' & `um3' & `um4'  \\" _n 
 file write sumstat "Sample Size & `n1' & `n2' & `n3' & `n4'  \\" _n
 file write sumstat "\bottomrule" _n
 file write sumstat "\bottomrule" _n
@@ -655,6 +676,7 @@ use "$oi/puma_year_pops", clear
 
 **** trying doug's suggestion
 cap mat drop intarget
+
 * BASELINE
 reghdfe log_tot_targetpop2 exp_gain_puma exp_lost_puma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_puma year)
 reg_to_mat, depvar( log_tot_targetpop2 ) indvars( exp_gain_puma exp_lost_puma) mat(intarget)  wt(tot_targetpop2) wttype(aw)
@@ -674,6 +696,24 @@ reg_to_mat, depvar( log_tot_target_nochild ) indvars( exp_gain_puma exp_lost_pum
 reghdfe log_tot_target_nohisp exp_gain_puma exp_lost_puma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_puma year)
 reg_to_mat, depvar( log_tot_target_nohisp ) indvars( exp_gain_puma exp_lost_puma) mat(intarget)  wt(tot_targetpop2) wttype(aw)
 
+*** STORE POP SIZE ***
+qui sum tot_targetpop2 if sample1
+local um1 = r(mean)
+qui sum tot_targetpop2 if sample2
+local um2 = r(mean)
+qui sum tot_targetpop2 if sample3
+local um3 = r(mean)
+qui sum tot_targetpop2 if sample4
+local um4 = r(mean)
+qui sum tot_targetpop2 if sample5
+local um5 = r(mean)
+qui sum tot_targetpop2 if sample6
+local um6 = r(mean)
+mat intarget = nullmat(intarget) \ (`um1', `um2', `um3', `um4', `um5', `um6')
+drop sample*
+
+
+local i = 1
 cap mat drop inplacebo 
 * PLACEBO
 reghdfe log_tot_placebo1 exp_gain_puma exp_lost_puma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_puma year)
@@ -686,6 +726,7 @@ reghdfe log_tot_plac_noenglish exp_gain_puma exp_lost_puma $covarspop $invars [a
 reg_to_mat, depvar( log_tot_plac_noenglish ) indvars( exp_gain_puma exp_lost_puma) mat(inplacebo)  wt(tot_targetpop2) wttype(aw)
 * PLACEBO NEW IMMIGRANT
 mat inplacebo = inplacebo , (9999 \ 9999 \ 9999 \ 9999 \ 9999 \ 9999 \ 9999 \ 9999 \ 9999 \ 9999)
+local++ i
 * PLACEBO NO child
 reghdfe log_tot_plac_nochild exp_gain_puma exp_lost_puma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_puma year)
 reg_to_mat, depvar( log_tot_plac_nochild ) indvars( exp_gain_puma exp_lost_puma) mat(inplacebo)  wt(tot_targetpop2) wttype(aw)
@@ -752,11 +793,11 @@ file write sumstat "\\" _n
 file write sumstat " Controls & X & X & X & X & X & X \\" _n 
 forval c = 1/6  {
     local r`c' = string(intarget[7,`c'], "%12.4fc" )
-    local um`c' = string(intarget[8,`c'], "%12.4fc" )
+    local um`c' = string(intarget[11,`c'], "%12.0fc" )
     local n`c' = string(intarget[9,`c'], "%12.0fc" )
 }
 file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4' & `r5' & `r6'    \\" _n 
-file write sumstat " Untreated mean & `um1' & `um2' & `um3' & `um4' & `um5' & `um6'  \\" _n 
+file write sumstat " Untreated pop size & `um1' & `um2' & `um3' & `um4' & `um5' & `um6'  \\" _n 
 file write sumstat "Sample Size & `n1' & `n2' & `n3' & `n4' & `n5' & `n6'  \\" _n
 file write sumstat "\midrule" _n
 file write sumstat "\midrule" _n
@@ -790,11 +831,11 @@ file write sumstat "\\" _n
 file write sumstat " Controls & X & X & X & . & X & X \\" _n 
 forval c = 1/6 {
     local r`c' = string(inplacebo[7,`c'], "%12.4fc" )
-    local um`c' = string(inplacebo[8,`c'], "%12.4fc" )
+    local um`c' = string(inplacebo[11,`c'], "%12.0fc" )
     local n`c' = string(inplacebo[9,`c'], "%12.0fc" )
 }
 file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & . & `r5' & `r6'    \\" _n 
-file write sumstat " Untreated mean & `um1' & `um2' & `um3' & . & `um5' & `um6'  \\" _n 
+file write sumstat " Untreated pop size & `um1' & `um2' & `um3' & . & `um5' & `um6'  \\" _n 
 file write sumstat "Sample Size & `n1' & `n2' & `n3' & . & `n5' & `n6'  \\" _n
 file write sumstat "\bottomrule" _n
 file write sumstat "\bottomrule" _n
@@ -840,11 +881,11 @@ file write sumstat "\\" _n
 file write sumstat " Controls & X & X & X & . & X & X \\" _n 
 forval c = 1/6 {
     local r`c' = string(inspillover[7,`c'], "%12.4fc" )
-    local um`c' = string(inspillover[8,`c'], "%12.4fc" )
+    local um`c' = string(inspillover[11,`c'], "%12.0fc" )
     local n`c' = string(inspillover[9,`c'], "%12.0fc" )
 }
 file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & . & `r5' & `r6'    \\" _n 
-file write sumstat " Untreated mean & `um1' & `um2' & `um3' & . & `um5' & `um6'  \\" _n 
+file write sumstat " Untreated pop size & `um1' & `um2' & `um3' & . & `um5' & `um6'  \\" _n 
 file write sumstat "Sample Size & `n1' & `n2' & `n3' & . & `n5' & `n6'  \\" _n
 file write sumstat "\bottomrule" _n
 file write sumstat "\bottomrule" _n
@@ -866,6 +907,7 @@ replace tot_targetpop2 = tot_targetpop1
 gen popwt = tot_targetpop2*wt
 
 **** trying doug's suggestion
+local i = 1
 cap mat drop intarget
 * no controls 
 reghdfe log_tot_targetpop2 exp_gain_puma exp_lost_puma $invars [aw=popwt], vce(robust) absorb(geoid_puma year)
@@ -880,6 +922,18 @@ reg_to_mat, depvar( log_tot_placebo1 ) indvars( exp_gain_puma exp_lost_puma) mat
 reghdfe log_tot_placebo1 exp_gain_puma exp_lost_puma $covarspop $invars [aw=popwt], vce(robust) absorb(geoid_puma year)
 reg_to_mat, depvar( log_tot_placebo1 ) indvars( exp_gain_puma exp_lost_puma) mat(intarget)  wt(popwt) wttype(aw)
 
+
+*** STORE POP SIZE ***
+qui sum tot_targetpop2 if sample1
+local um1 = r(mean)
+qui sum tot_targetpop2 if sample2
+local um2 = r(mean)
+qui sum tot_targetpop2 if sample3
+local um3 = r(mean)
+qui sum tot_targetpop2 if sample4
+local um4 = r(mean)
+mat intarget = nullmat(intarget) \ (`um1', `um2', `um3', `um4')
+drop sample*
 
 * Create table
 cap file close sumstat
@@ -915,11 +969,11 @@ file write sumstat "\\" _n
 file write sumstat " Controls &  & X &  & X \\" _n 
 forval c = 1/4  {
     local r`c' = string(intarget[7,`c'], "%12.4fc" )
-    local um`c' = string(intarget[8,`c'], "%12.4fc" )
+    local um`c' = string(intarget[11,`c'], "%12.0fc" )
     local n`c' = string(intarget[9,`c'], "%12.0fc" )
 }
 file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4'  \\" _n 
-file write sumstat " Untreated mean & `um1' & `um2' & `um3' & `um4'  \\" _n 
+file write sumstat " Untreated pop size & `um1' & `um2' & `um3' & `um4'  \\" _n 
 file write sumstat "Sample Size & `n1' & `n2' & `n3' & `n4'  \\" _n
 file write sumstat "\bottomrule" _n
 file write sumstat "\bottomrule" _n
