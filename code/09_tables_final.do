@@ -332,6 +332,7 @@ local m3 = r(N)
 
 mat sumstat = nullmat(sumstat) \ (`m1', `m2', `m3' )
 
+
 ** create balance table for migpuma population comparisons
 
 * Create table
@@ -475,7 +476,7 @@ file write sumstat " & (`sd1') & (`sd2') & (`sd3') & (`sd4') \\" _n
 file write sumstat "\\" _n 
 file write sumstat " Controls &  & X &  & X \\" _n 
 file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4'  \\" _n 
-file write sumstat " Untreated mean & `um1' & `um2' & `um3' & `um4'  \\" _n 
+file write sumstat " Untreated pop size & `um1' & `um2' & `um3' & `um4'  \\" _n 
 file write sumstat "Sample Size & `n1' & `n2' & `n3' & `n4'  \\" _n
 file write sumstat "\bottomrule" _n
 file write sumstat "\bottomrule" _n
@@ -498,20 +499,34 @@ cap mat drop intarget
 * with simple weights
 * without controls
 reghdfe log_tot_targetpop2 exp_any_migpuma $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
+gen sample1 = e(sample)
 reg_to_mat, depvar( log_tot_targetpop2 ) indvars( exp_any_migpuma ) mat(intarget)  wt(tot_targetpop2) wttype(aw)
 * with controls for native
 reghdfe log_tot_targetpop2 exp_any_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
+gen sample2 = e(sample)
 reg_to_mat, depvar( log_tot_targetpop2 ) indvars( exp_any_migpuma ) mat(intarget) wt(tot_targetpop2) wttype(aw)
 
 **** IN MIGRATION FOR PLACEBO POPULATION
 * with simple weights
 * without controls
 reghdfe log_tot_placebo1 exp_any_migpuma $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
+gen sample3 = e(sample)
 reg_to_mat, depvar( log_tot_placebo1 ) indvars( exp_any_migpuma ) mat(intarget) wt(tot_targetpop2) wttype(aw)
 * with controls 
 reghdfe log_tot_placebo1 exp_any_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
+gen sample4 = e(sample)
 reg_to_mat, depvar( log_tot_placebo1 ) indvars( exp_any_migpuma ) mat(intarget) wt(tot_targetpop2) wttype(aw)
 
+//store pop size
+qui sum tot_targetpop2 if sample1 
+local um1 = r(mean)
+qui sum tot_targetpop2 if sample2
+local um2 = r(mean)
+qui sum tot_placebo1 if sample3
+local um3 = r(mean)
+qui sum tot_placebo1 if sample4
+local um4 = r(mean)
+mat intarget = nullmat(intarget) \ (`um1', `um2', `um3' , `um4' )
 
 * Create table
 cap file close sumstat
@@ -535,7 +550,7 @@ forval c = 1/4  {
     local stars_abs`c' = cond(`p`c'' < 0.01, "***", cond(`p`c'' < 0.05, "**", cond(`p`c'' < 0.1, "*", "")))
     local sd`c' = string(intarget[3,`c'], "%12.4fc" )
     local r`c' = string(intarget[4,`c'], "%12.4fc" )
-    local um`c' = string(intarget[5,`c'], "%12.4fc" )
+    local um`c' = string(intarget[8,`c'], "%12.0fc" )
 	local n`c' = string(intarget[6,`c'], "%12.0fc" )
 }
 file write sumstat " `varname' & `b1'`stars_abs1' & `b2'`stars_abs2' & `b3'`stars_abs3' & `b4'`stars_abs4' \\" _n 
@@ -544,7 +559,7 @@ file write sumstat " & (`sd1') & (`sd2') & (`sd3') & (`sd4') \\" _n
 file write sumstat "\\" _n 
 file write sumstat " Controls &  & X &  & X \\" _n 
 file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4'  \\" _n 
-file write sumstat " Untreated mean & `um1' & `um2' & `um3' & `um4'  \\" _n 
+file write sumstat " Untreated pop size & `um1' & `um2' & `um3' & `um4'  \\" _n 
 file write sumstat "Sample Size & `n1' & `n2' & `n3' & `n4'  \\" _n
 file write sumstat "\bottomrule" _n
 file write sumstat "\bottomrule" _n
@@ -564,16 +579,31 @@ use "$oi/migpuma_year_pops", clear
 cap mat drop intarget
 * no controls 
 reghdfe log_tot_targetpop2 exp_gain_migpuma exp_lost_migpuma $invars [aw=tot_targetpop2] , vce(robust) absorb( geoid_migpuma year)
+gen sample1 = e(sample)
 reg_to_mat, depvar( log_tot_targetpop2 ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget)  wt(tot_targetpop2) wttype(aw)
 * with controls for native populations
 reghdfe log_tot_targetpop2 exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
+gen sample2 = e(sample)
 reg_to_mat, depvar( log_tot_targetpop2 ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget)  wt(tot_targetpop2) wttype(aw)
 * no controls 
 reghdfe log_tot_placebo1 exp_gain_migpuma exp_lost_migpuma $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
+gen sample3 = e(sample)
 reg_to_mat, depvar( log_tot_placebo1 ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget)  wt(tot_targetpop2) wttype(aw)
 * with controls for native populations
 reghdfe log_tot_placebo1 exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
+gen sample4 = e(sample)
 reg_to_mat, depvar( log_tot_placebo1 ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget)  wt(tot_targetpop2) wttype(aw)
+
+//store pop size
+qui sum tot_targetpop2 if sample1 
+local um1 = r(mean)
+qui sum tot_targetpop2 if sample2
+local um2 = r(mean)
+qui sum tot_placebo1 if sample3
+local um3 = r(mean)
+qui sum tot_placebo1 if sample4
+local um4 = r(mean)
+mat intarget = nullmat(intarget) \ (`um1', `um2', `um3' , `um4' )
 
 
 * Create table
@@ -610,11 +640,11 @@ file write sumstat "\\" _n
 file write sumstat " Controls &  & X &  & X \\" _n 
 forval c = 1/4  {
     local r`c' = string(intarget[7,`c'], "%12.4fc" )
-    local um`c' = string(intarget[8,`c'], "%12.4fc" )
+    local um`c' = string(intarget[11,`c'], "%12.0fc" )
     local n`c' = string(intarget[9,`c'], "%12.0fc" )
 }
 file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4'  \\" _n 
-file write sumstat " Untreated mean & `um1' & `um2' & `um3' & `um4'  \\" _n 
+file write sumstat " Untreated pop size & `um1' & `um2' & `um3' & `um4'  \\" _n 
 file write sumstat "Sample Size & `n1' & `n2' & `n3' & `n4'  \\" _n
 file write sumstat "\bottomrule" _n
 file write sumstat "\bottomrule" _n
@@ -628,71 +658,149 @@ file close sumstat
 HETEROGENEITY EFFECTS TO OTHER POPS: LOG POPULATION DID GAINERS AND LOSERS IN SAME REGRESSION
 **************************************************************/
 
-
 use "$oi/migpuma_year_pops", clear
 
 **** trying doug's suggestion
 cap mat drop intarget
+
 * BASELINE
 reghdfe log_tot_targetpop2 exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
+gen sample1 = e(sample)
 reg_to_mat, depvar( log_tot_targetpop2 ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget)  wt(tot_targetpop2) wttype(aw)
+
 * MEXICAN TARGET
 reghdfe log_tot_target_mexican exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
+gen sample2 = e(sample)
 reg_to_mat, depvar( log_tot_target_mexican ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget)  wt(tot_targetpop2) wttype(aw)
 * POOR ENGLISH TARGET
 reghdfe log_tot_target_noenglish exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
+gen sample3 = e(sample)
 reg_to_mat, depvar( log_tot_target_noenglish ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget)  wt(tot_targetpop2) wttype(aw)
 * NEW IMMIGRANT TARGET
 reghdfe log_tot_target_new exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
+gen sample4 = e(sample)
 reg_to_mat, depvar( log_tot_target_new ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget)  wt(tot_targetpop2) wttype(aw)
 * TARGET no CHILDREN
 reghdfe log_tot_target_nochild exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
+gen sample5 = e(sample)
 reg_to_mat, depvar( log_tot_target_nochild ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget)  wt(tot_targetpop2) wttype(aw)
 * NON HISPANIC TARGET
 reghdfe log_tot_target_nohisp exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
+gen sample6 = e(sample)
 reg_to_mat, depvar( log_tot_target_nohisp ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget)  wt(tot_targetpop2) wttype(aw)
 
+*** STORE POP SIZE ***
+qui sum tot_targetpop2 if sample1
+local um1 = r(mean)
+qui sum tot_targetpop2 if sample2
+local um2 = r(mean)
+qui sum tot_targetpop2 if sample3
+local um3 = r(mean)
+qui sum tot_targetpop2 if sample4
+local um4 = r(mean)
+qui sum tot_targetpop2 if sample5
+local um5 = r(mean)
+qui sum tot_targetpop2 if sample6
+local um6 = r(mean)
+mat intarget = nullmat(intarget) \ (`um1', `um2', `um3', `um4', `um5', `um6')
+drop sample*
+
+
+local i = 1
 cap mat drop inplacebo 
 * PLACEBO
 reghdfe log_tot_placebo1 exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
 reg_to_mat, depvar( log_tot_placebo1 ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(inplacebo)  wt(tot_targetpop2) wttype(aw)
+gen sample`i' = e(sample)
+local++ i
 * PLACEBO MEXICANS
 reghdfe log_tot_plac_mexican exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
 reg_to_mat, depvar( log_tot_plac_mexican ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(inplacebo)  wt(tot_targetpop2) wttype(aw)
+gen sample`i' = e(sample)
+local++ i
 * PLACEBO POOR ENGLISH TARGET
 reghdfe log_tot_plac_noenglish exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
 reg_to_mat, depvar( log_tot_plac_noenglish ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(inplacebo)  wt(tot_targetpop2) wttype(aw)
+gen sample`i' = e(sample)
+local++ i
 * PLACEBO NEW IMMIGRANT
 mat inplacebo = inplacebo , (9999 \ 9999 \ 9999 \ 9999 \ 9999 \ 9999 \ 9999 \ 9999 \ 9999 \ 9999)
+local++ i
 * PLACEBO NO child
 reghdfe log_tot_plac_nochild exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
 reg_to_mat, depvar( log_tot_plac_nochild ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(inplacebo)  wt(tot_targetpop2) wttype(aw)
+gen sample`i' = e(sample)
+local++ i
 * PLACEBO NON HISPANIC
 reghdfe log_tot_plac_nohisp exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
 reg_to_mat, depvar( log_tot_plac_nohisp ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(inplacebo)  wt(tot_targetpop2) wttype(aw)
+gen sample`i' = e(sample)
+local++ i
+
+*** STORE POP SIZE ***
+qui sum tot_targetpop2 if sample1
+local um1 = r(mean)
+qui sum tot_targetpop2 if sample2
+local um2 = r(mean)
+qui sum tot_targetpop2 if sample3
+local um3 = r(mean)
+local um4  = 9999
+qui sum tot_targetpop2 if sample5
+local um5 = r(mean)
+qui sum tot_targetpop2 if sample6
+local um6 = r(mean)
+mat inplacebo = nullmat(inplacebo) \ (`um1', `um2', `um3', `um4', `um5', `um6')
+drop sample*
 
 
+local i =1 
 cap mat drop inspillover
 * SPILLOVER
 reghdfe log_tot_spillover1 exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
 reg_to_mat, depvar( log_tot_spillover1 ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(inspillover)  wt(tot_targetpop2) wttype(aw)
+gen sample`i' = e(sample)
+local++ i
 * SPILLOVER MEXICANS
 reghdfe log_tot_spill_mexican exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
 reg_to_mat, depvar( log_tot_spill_mexican ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(inspillover)  wt(tot_targetpop2) wttype(aw)
+gen sample`i' = e(sample)
+local++ i
 * SPILLOVER POOR ENGLISH TARGET
 reghdfe log_tot_spill_noenglish exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
-reg_to_mat, depvar( log_tot_spill_noenglish ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(inspillover)  wt(tot_targetpop2) wttype(aw)
+reg_to_mat, depvar( log_tot_spill_noenglish ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(inspillover)  wt(tot_targetpop2) wttype(aw) 
+gen sample`i' = e(sample)
+local++ i
 * SPILLOVER NEW IMMIGRANT
 reghdfe log_tot_spill_new exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
 reg_to_mat, depvar( log_tot_spill_new ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(inspillover)  wt(tot_targetpop2) wttype(aw)
+gen sample`i' = e(sample)
+local++ i
 * SPILLOVER NO child
 reghdfe log_tot_spill_nochild exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
 reg_to_mat, depvar( log_tot_spill_nochild ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(inspillover)  wt(tot_targetpop2) wttype(aw)
+gen sample`i' = e(sample)
+local++ i
 * SPILLOVER NON HISPANIC
 reghdfe log_tot_spill_nohisp exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
 reg_to_mat, depvar( log_tot_spill_nohisp ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(inspillover)  wt(tot_targetpop2) wttype(aw)
+gen sample`i' = e(sample)
+local++ i
 
-
+*** STORE POP SIZE ***
+qui sum tot_targetpop2 if sample1
+local um1 = r(mean)
+qui sum tot_targetpop2 if sample2
+local um2 = r(mean)
+qui sum tot_targetpop2 if sample3
+local um3 = r(mean)
+qui sum tot_targetpop2 if sample4
+local um4 = r(mean)
+qui sum tot_targetpop2 if sample5
+local um5 = r(mean)
+qui sum tot_targetpop2 if sample6
+local um6 = r(mean)
+mat inspillover = nullmat(inspillover) \ (`um1', `um2', `um3', `um4', `um5', `um6')
+drop sample*
 
 * Create table
 cap file close sumstat
@@ -730,11 +838,11 @@ file write sumstat "\\" _n
 file write sumstat " Controls & X & X & X & X & X & X \\" _n 
 forval c = 1/6  {
     local r`c' = string(intarget[7,`c'], "%12.4fc" )
-    local um`c' = string(intarget[8,`c'], "%12.4fc" )
+    local um`c' = string(intarget[11,`c'], "%12.0fc" )
     local n`c' = string(intarget[9,`c'], "%12.0fc" )
 }
 file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4' & `r5' & `r6'    \\" _n 
-file write sumstat " Untreated mean & `um1' & `um2' & `um3' & `um4' & `um5' & `um6'  \\" _n 
+file write sumstat " Untreated pop size & `um1' & `um2' & `um3' & `um4' & `um5' & `um6'  \\" _n 
 file write sumstat "Sample Size & `n1' & `n2' & `n3' & `n4' & `n5' & `n6'  \\" _n
 file write sumstat "\midrule" _n
 file write sumstat "\midrule" _n
@@ -768,11 +876,11 @@ file write sumstat "\\" _n
 file write sumstat " Controls & X & X & X & . & X & X \\" _n 
 forval c = 1/6 {
     local r`c' = string(inplacebo[7,`c'], "%12.4fc" )
-    local um`c' = string(inplacebo[8,`c'], "%12.4fc" )
+    local um`c' = string(inplacebo[11,`c'], "%12.0fc" )
     local n`c' = string(inplacebo[9,`c'], "%12.0fc" )
 }
 file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & . & `r5' & `r6'    \\" _n 
-file write sumstat " Untreated mean & `um1' & `um2' & `um3' & . & `um5' & `um6'  \\" _n 
+file write sumstat " Untreated pop size & `um1' & `um2' & `um3' & . & `um5' & `um6'  \\" _n 
 file write sumstat "Sample Size & `n1' & `n2' & `n3' & . & `n5' & `n6'  \\" _n
 file write sumstat "\bottomrule" _n
 file write sumstat "\bottomrule" _n
@@ -818,11 +926,11 @@ file write sumstat "\\" _n
 file write sumstat " Controls & X & X & X & . & X & X \\" _n 
 forval c = 1/6 {
     local r`c' = string(inspillover[7,`c'], "%12.4fc" )
-    local um`c' = string(inspillover[8,`c'], "%12.4fc" )
+    local um`c' = string(inspillover[11,`c'], "%12.0fc" )
     local n`c' = string(inspillover[9,`c'], "%12.0fc" )
 }
 file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & . & `r5' & `r6'    \\" _n 
-file write sumstat " Untreated mean & `um1' & `um2' & `um3' & . & `um5' & `um6'  \\" _n 
+file write sumstat " Untreated pop size & `um1' & `um2' & `um3' & . & `um5' & `um6'  \\" _n 
 file write sumstat "Sample Size & `n1' & `n2' & `n3' & . & `n5' & `n6'  \\" _n
 file write sumstat "\bottomrule" _n
 file write sumstat "\bottomrule" _n
@@ -843,20 +951,41 @@ merge m:1 statefip current_migpuma  using  "$oi/propensity_weights2012migpuma_t2
 gen popwt = tot_targetpop2*wt
 
 **** trying doug's suggestion
+local i = 1
 cap mat drop intarget
 * no controls 
 reghdfe log_tot_targetpop2 exp_gain_migpuma exp_lost_migpuma $invars [aw=popwt], vce(robust) absorb(geoid_migpuma year)
+gen sample`i' = e(sample)
+local++ i
 reg_to_mat, depvar( log_tot_targetpop2 ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget)  wt(popwt) wttype(aw)
 * with controls for native populations
 reghdfe log_tot_targetpop2 exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=popwt], vce(robust) absorb(geoid_migpuma year)
+gen sample`i' = e(sample)
+local++ i
 reg_to_mat, depvar( log_tot_targetpop2 ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget)  wt(popwt) wttype(aw)
 * no controls 
 reghdfe log_tot_placebo1 exp_gain_migpuma exp_lost_migpuma $invars [aw=popwt], vce(robust) absorb(geoid_migpuma year)
+gen sample`i' = e(sample)
+local++ i
 reg_to_mat, depvar( log_tot_placebo1 ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget)  wt(popwt) wttype(aw)
 * with controls for native populations
 reghdfe log_tot_placebo1 exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=popwt], vce(robust) absorb(geoid_migpuma year)
+gen sample`i' = e(sample)
+local++ i
 reg_to_mat, depvar( log_tot_placebo1 ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget)  wt(popwt) wttype(aw)
 
+
+*** STORE POP SIZE ***
+qui sum tot_targetpop2 if sample1
+local um1 = r(mean)
+qui sum tot_targetpop2 if sample2
+local um2 = r(mean)
+qui sum tot_targetpop2 if sample3
+local um3 = r(mean)
+qui sum tot_targetpop2 if sample4
+local um4 = r(mean)
+mat intarget = nullmat(intarget) \ (`um1', `um2', `um3', `um4')
+drop sample*
 
 * Create table
 cap file close sumstat
@@ -892,11 +1021,11 @@ file write sumstat "\\" _n
 file write sumstat " Controls &  & X &  & X \\" _n 
 forval c = 1/4  {
     local r`c' = string(intarget[7,`c'], "%12.4fc" )
-    local um`c' = string(intarget[8,`c'], "%12.4fc" )
+    local um`c' = string(intarget[11,`c'], "%12.0fc" )
     local n`c' = string(intarget[9,`c'], "%12.0fc" )
 }
 file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4'  \\" _n 
-file write sumstat " Untreated mean & `um1' & `um2' & `um3' & `um4'  \\" _n 
+file write sumstat " Untreated pop size & `um1' & `um2' & `um3' & `um4'  \\" _n 
 file write sumstat "Sample Size & `n1' & `n2' & `n3' & `n4'  \\" _n
 file write sumstat "\bottomrule" _n
 file write sumstat "\bottomrule" _n
@@ -928,3 +1057,11 @@ reghdfe log_tot_spill_nohisp exp_gain_migpuma exp_lost_migpuma $covarspop $invar
 reg_to_mat, depvar( log_tot_spill_nohisp ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(inspillover)  wt(tot_targetpop2) wttype(aw)
 
 */
+
+
+twoway (scatter tot_targetpop1 year if ever==1) ///
+ (scatter tot_targetpop2 year if ever==1) ///
+  (scatter tot_targetpop3 year if ever==1) ///
+  (scatter  tot_targetpop4 year if ever==1) ///
+   (scatter  tot_targetpop5 year if ever==1) ///
+   (scatter   tot_targetpop6 year if ever==1) 
