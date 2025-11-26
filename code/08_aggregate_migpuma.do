@@ -11,16 +11,13 @@ global wd "/Users/jimenakiser/Desktop/287g/"
 global or "$wd/data/raw"
 global oi "$wd/data/int"
 
-global covars "age r_white r_black r_asian hs in_school no_english ownhome"
-global invars "exp_any_state " //SC_any
-global outvars "prev_exp_any_state " //prev_SC_any
 
 use "$oi/working_acs", clear 
 keep if year >= 2012
-drop if always_treated_migpuma==1
+drop if always_treated_puma==1
 
 * define propensity weights
-merge m:1 statefip current_migpuma  using  "$oi/propensity_weights2012migpuma_t2" , nogen keep(3) keepusing( phat wt)
+merge m:1 statefip current_puma  using  "$oi/propensity_weights2012puma_t2" , nogen keep(3) keepusing( phat wt)
 gen perwt_wt = perwt*wt
 drop if mi(perwt_wt)
 
@@ -63,19 +60,19 @@ foreach v of varlist targetpop1 targetpop2 targetpop3 targetpop4 targetpop5 targ
 *target
 gen tot_target_mexican = tot_targetpop2 & bpl==200 //target mexican
 gen tot_target_noenglish = tot_targetpop2 & tot_no_english //target no english
-gen tot_target_new = tot_targetpop2 & inlist(yrsusa1 , 1 ,2)  //target new immigrants
+gen tot_target_new = tot_targetpop2 & inlist(yrsusa2 , 1 )  //target new immigrants
 gen tot_target_nochild = tot_targetpop2 & nchild==0 //target no children
 gen tot_target_nohisp= sex==1 & lowskill==1 & hispan==0 & imm==1 & young==1 & inlist(yrsusa2 , 1)  //target not hispanics
 *spillover
 gen tot_spill_mexican = tot_spillover1 & bpl==200 //spillover mexican
 gen tot_spill_noenglish = tot_spillover1 & tot_no_english //spillover no english
-gen tot_spill_new = tot_spillover1 & inlist(yrsusa1 , 1 ,2)  //spillover new immigrants
+gen tot_spill_new = tot_spillover1 & inlist(yrsusa2 , 1 )  //spillover new immigrants
 gen tot_spill_nochild = tot_spillover1 & nchild==0 //spillover no children
 gen tot_spill_nohisp= sex==1 & lowskill==1 & hispan==0 & born_abroad==1 & citizen!=3 & young==1  & marst>=3 & yrnatur<2012 //spillover not hispanics
 * placebo is a bit different
 gen tot_plac_mexican = tot_placebo1 & hispan==1 //placebo mexican
 gen tot_plac_noenglish = tot_placebo1 & tot_no_english //placebo no english
-//gen tot_plac_new = log_tot_placebo1 & inlist(yrsusa1 , 1 ,2)  //placebo new immigrants -dna
+//gen tot_plac_new = log_tot_placebo1 & inlist(yrsusa2 , 1 ,2)  //placebo new immigrants -dna
 gen tot_plac_nochild = tot_placebo1 & nchild==0 //placebo no children
 gen tot_plac_nohisp= sex==1 & lowskill==1 & hispan==0 & born_abroad==0 & young==1  & marst>=3 //placebo not hispanics
 
@@ -90,11 +87,11 @@ replace relative_year_lost = . if lost_exp_year == 0
 bys statefip: egen ever_treated_state = max( exp_any_state>0)
 
 
-* collapse at the migpuma and year level
+* collapse at the puma and year level
 collapse (sum) tot_* ///
-	(max) exp_any_migpuma  ever_treated_migpuma ever_lost_exp_migpuma ever_gain_exp_migpuma lost_exp_year gain_exp_year ///
-	relative_year_gain relative_year_lost geoid_migpuma exp_any_state ever_treated_state SC_any [pw=perwt] ///
-	, by(current_migpuma statefip year)
+	(max) exp_any_puma  ever_treated_puma ever_lost_exp_puma ever_gain_exp_puma lost_exp_year gain_exp_year ///
+	relative_year_gain relative_year_lost geoid_puma exp_any_state ever_treated_state SC_any trump [pw=perwt] ///
+	, by(current_puma statefip year)
 
 * obtain log version of all total and native variables
 foreach v of varlist tot_* {
@@ -103,8 +100,8 @@ foreach v of varlist tot_* {
 
 *** Define variables for DID
 * define post for DID
-gen exp_lost_migpuma = (year>=lost_exp_year)*(ever_lost_exp_migpuma==1)
-gen exp_gain_migpuma = (year>=gain_exp_year)*(ever_gain_exp_migpuma==1)
+gen exp_lost_puma = (year>=lost_exp_year)*(ever_lost_exp_puma==1)
+gen exp_gain_puma = (year>=gain_exp_year)*(ever_gain_exp_puma==1)
 
 * event-time indicators
 forval n = 1/7 {
@@ -132,22 +129,20 @@ forval n = 1/7 {
 label var gain_ry_plus0 "0"
 label var lost_ry_plus0 "0"
 
-//replace gain_ry_minus6 = gain_ry_minus6 | gain_ry_minus7
-
 * save data 
 compress 
-save "$oi/migpuma_year_pops", replace
+save "$oi/puma_year_pops", replace
 
 
 /*
-use "$oi/migpuma_year_pops", clear
+use "$oi/puma_year_pops", clear
 
 gen istexas = statefip==48
 gen red_state = inlist(statefip, 1, 2, 4, 5, 13, 16, 20, 21, 22, 28, 29, 30, 31, 38, 40, 45, 46, 47, 48, 49, 54, 56) //https://www.worldatlas.com/articles/states-that-have-voted-republican-in-the-most-consecutive-u-s-presidential-elections.html
 
 keep if year==2012
 /* get propensity score for county exposure */	
-logit ever_treated_migpuma log_tot_pop log_tot_age_0_17 log_tot_age_18_24 log_tot_age_25_34 log_tot_age_35_49 log_tot_age_50plus ///
+logit ever_treated_puma log_tot_pop log_tot_age_0_17 log_tot_age_18_24 log_tot_age_25_34 log_tot_age_35_49 log_tot_age_50plus ///
  log_tot_r_white log_tot_r_black log_tot_r_asian ///
  log_tot_hs log_tot_in_school ///
  red_state istexas ever_treated_state /// 
@@ -157,31 +152,31 @@ logit ever_treated_migpuma log_tot_pop log_tot_age_0_17 log_tot_age_18_24 log_to
 //like doing it at the individual level
 cap drop phat
 predict phat
-corr phat ever_treated_migpuma 
+corr phat ever_treated_puma 
 
 
 /* weights to get everyone to look like treated */
 sum phat
-gen wt = 1 if ever_treated_migpuma==1
-replace wt=phat/(1-phat) if ever_treated_migpuma==0
-replace wt=1 if ever_treated_migpuma==0 & wt>1
+gen wt = 1 if ever_treated_puma==1
+replace wt=phat/(1-phat) if ever_treated_puma==0
+replace wt=1 if ever_treated_puma==0 & wt>1
 
 /* graph the propensity score */
-kdensity phat if ever_treated_migpuma==1 , gen(x_1 d_1)
+kdensity phat if ever_treated_puma==1 , gen(x_1 d_1)
 label var d_1 "treatment group"
-kdensity phat if ever_treated_migpuma==0 , gen(x_0 d_0)
+kdensity phat if ever_treated_puma==0 , gen(x_0 d_0)
 label var d_0 "control group, unweighted"
-kdensity phat if ever_treated_migpuma==0 [aw=wt], gen(x_0w d_0w)
+kdensity phat if ever_treated_puma==0 [aw=wt], gen(x_0w d_0w)
 label var d_0w "control group, weighted"
 twoway (line d_1 x_1, sort) (line d_0 x_0, sort) (line d_0w x_0w, sort), legend(pos(6) rows(1))
-//graph export "$oo/troubleshoot_propscore/propensity_weights2012migpuma_t2.pdf", replace
+//graph export "$oo/troubleshoot_propscore/propensity_weights2012puma_t2.pdf", replace
 
 /* look at distribution of weights -- sometimes end out putting tons of weight on a few obs */
-summ wt if ever_treated_migpuma==0, d
+summ wt if ever_treated_puma==0, d
 
-keep statefip current_migpuma phat ever_treated_migpuma wt d_1 x_1 d_0 x_0 d_0w x_0w
+keep statefip current_puma phat ever_treated_puma wt d_1 x_1 d_0 x_0 d_0w x_0w
 
 
 compress
-save "$oi/propensity_weights2012migpuma_t2_logtot", replace
+save "$oi/propensity_weights2012puma_t2_logtot", replace
 */

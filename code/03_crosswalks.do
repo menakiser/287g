@@ -53,6 +53,8 @@ compress
 save "$oi/xwalk/puma10_migpuma10", replace 
 
 
+
+
 *--------------- COUNTY FIPS to MIGPUMA ------------------*
 *using geocorr county to puma crosswalk then puma to migpuma crosswalk
 *remember every migpuma corresponds to exactly one or more pumas
@@ -71,6 +73,14 @@ replace countyfips = subinstr(countyfips, statefip, "", 1)
 destring countyfips statefip, replace
 
 isid countyfips statefip puma10
+
+preserve
+keep statefip countyfips puma10 pop10 afact
+bys statefip countyfips: gen pumaorder = _n
+reshape wide puma10 pop10 afact, i(statefip countyfips) j(pumaorder)
+save "$oi/xwalk/county_puma10", replace
+restore
+
 * add migpuma variable
 merge m:1 statefip puma10 using "$oi/xwalk/puma10_migpuma10" , nogen keep(1 3) //dropping PR
 
@@ -187,9 +197,15 @@ reshape long puma10, i(cpuma0010 statefip year) j(pumaorder)
 drop if mi(puma10) & pumaorder>1
 drop pumaorder
 duplicates drop
+gen SC_any = SC_jan>0 |  SC_march>0 | SC_frac>0
+
+preserve 
+collapse (max) SC_any, by( statefip year puma10)
+compress 
+save "$oi/puma10_SC", replace 
+restore 
 
 merge m:1 statefip puma10 using "$oi/xwalk/puma10_migpuma10" , nogen keep(1 3)
-gen SC_any = SC_jan>0 |  SC_march>0 | SC_frac>0
 collapse (max) SC_any, by( statefip year migpuma10)
 compress 
 save "$oi/migpuma10_SC", replace 
