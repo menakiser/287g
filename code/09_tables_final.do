@@ -929,3 +929,38 @@ reghdfe log_tot_spill_nohisp exp_gain_puma exp_lost_puma $covarspop $invars [aw=
 reg_to_mat, depvar( log_tot_spill_nohisp ) indvars( exp_gain_puma exp_lost_puma) mat(inspillover)  wt(tot_targetpop2) wttype(aw)
 
 */
+
+
+
+
+
+use "$oi/migpuma_year_pops", clear
+gen target_sh = tot_targetpop2/tot_pop
+mean  target_sh if target_sh>0
+
+use "$oi/puma_year_pops", clear
+gen target_sh = tot_targetpop2/tot_pop
+mean  target_sh if target_sh>0
+
+foreach v in tot_targetpop1 tot_targetpop2 tot_targetpop3 tot_target_movers tot_target_mexican tot_target_noenglish tot_target_new tot_target_nochild tot_target_nohisp ///
+tot_placebo1 tot_plac_mexican tot_plac_noenglish tot_plac_nochild tot_plac_nohisp {
+    gen sum_`v' = `v'
+}
+
+collapse (mean) tot_* (sum) sum_tot* , by(year ever_treated_puma)
+
+
+twoway (scatter tot_targetpop2 year ) ///
+ (scatter tot_placebo1 year)
+
+twoway (scatter sum_tot_targetpop1 year if ever_treated_puma==1 , mcolor(red)) ///
+ (scatter sum_tot_targetpop1 year if ever_treated_puma==0, mcolor(midblue)) ///
+ (scatter sum_tot_targetpop2 year if ever_treated_puma==1 , mcolor(pink)) ///
+ (scatter sum_tot_targetpop2 year if ever_treated_puma==0, mcolor(black))
+
+
+
+twoway (scatter tot_targetpop1 year if ever_treated_puma==1 , mcolor(red)) ///
+ (scatter tot_targetpop1 year if ever_treated_puma==0, mcolor(midblue)) ///
+ (scatter tot_targetpop2 year if ever_treated_puma==1 , mcolor(pink)) ///
+ (scatter tot_targetpop2 year if ever_treated_puma==0, mcolor(black))

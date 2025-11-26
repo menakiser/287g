@@ -50,7 +50,7 @@ tab yrsusa2, gen(int_yrsusa2)
 tab language, gen(int_language)
 
 * Obtain totals
-foreach v of varlist targetpop2 placebo1 spillover1 pop move_migpuma target_movers ///
+foreach v of varlist targetpop1 targetpop2 targetpop3 placebo1 spillover1 pop move_migpuma target_movers ///
  r_white r_black r_asian hs in_school ownhome no_english employed male has_child ///
  age_0_17 age_18_24 age_25_34 age_35_49 age_50plu ///
  int_hispan* int_educ* int_marst* int_speakeng* int_citizen* int_yrsusa2* int_language1-int_language10  {

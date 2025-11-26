@@ -112,26 +112,49 @@ bys statefip current_puma year: ereplace SC_any = max(SC_any)
 
 * define targetpop
 cap drop targetpop*
-gen targetpop1 = sex==1 & lowskill==1 & hispan!=0 & imm==1 & young==1 & yrimmig>2007 & inlist(yrsusa2 , 1 ,2) //hispanic, young, <10 yrs in the country
+
+//DACA requirements
+//entered pre 2007
+gen yr_enterus = year-yrsusa1
+replace yr_enterus = . if bpl<100  //Don't want this for native born
+gen enterpre2007 = yr_enterus<=2007
+// requirement: younger than 31 on June 15, 2012
+gen agejun12q = 2012-birthyr //years minus quarters before born in birth year plus first two quarters of 2012. 
+gen in2012_over31 = agejun12q>=31
+gen in2012_under31 = agejun12q <31
+// requirement: younger than 16 when entered
+gen entage = age - yrsusa1
+replace entage = 0 if entage == -1 // possible missinterpretation of the questionaire
+gen enterunder16 = entage<16
+// requirement: education
+gen reqedu = 0 if educd < 62 & school == 1
+replace reqedu = 1 if educd >= 62 | school == 2
+la var reqedu "Meets education requirement"
+la def reqedu 0 "No" 1 "Yes, in school or GED or higher attained"
+la val reqedu
+
+gen daca = age>=year-2007+18 & in2012_under31 == 1 & enterpre2007 == 1 & reqedu == 1 & citizen == 3 & enterunder16==1
+
+gen targetpop1 = sex==1 & lowskill==1 & hispan!=0 & imm==1 & young==1 & daca==0 //hispanic, young
 gen targetpop2 = targetpop1==1 & marst>=3
 gen targetpop3 = targetpop1==1 & marst>=3 & nchild==0 
-/*gen targetpop4 = targetpop1==1 & bpl==200 //mexican, young, <10 yrs in the country
+gen targetpop4 = targetpop1==1 & bpl==200 //mexican, young
 gen targetpop5 = targetpop4==1 & marst>=3
 gen targetpop6 = targetpop4==1 & marst>=3 & nchild==0 
-gen targetpop7 = targetpop1==1 & bpl!=200 //non-mexican hispanic, young, <10 yrs in the country
+gen targetpop7 = targetpop1==1 & bpl!=200 //non-mexican hispanic, young
 gen targetpop8 = targetpop7==1 & marst>=3
 gen targetpop9 = targetpop7==1 & marst>=3 & nchild==0 */
 
 label var targetpop1 "hispanic immigrants"
 label var targetpop2 "hispanic immigrants unmarried"
 label var targetpop3 "hispanic immigrants unmarried, no kids"
-/*label var targetpop4 "mexican immigrants"
+label var targetpop4 "mexican immigrants"
 label var targetpop5 "mexican immigrants unmarried"
 label var targetpop6 "mexican immigrants unmarried, no kids"
 label var targetpop7 "hispanic non-mexican immigrants"
 label var targetpop8 "hispanic non-mexican immigrants unmarried"
 label var targetpop9 "hispanic non-mexican immigrants unmarried, no kids"
-*/
+
 
 * define FE and SE for PUMA
 gen geoid_puma = statefip*100000 + current_puma //unique county-state group
