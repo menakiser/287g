@@ -12,6 +12,10 @@ global or "$wd/data/raw"
 global oi "$wd/data/int"
 global oo "$wd/output/"
 
+global covarspop "log_tot_age_0_17 log_tot_age_18_24 log_tot_age_25_34 log_tot_age_35_49 log_tot_r_white log_tot_r_black log_tot_r_asian log_tot_hs log_tot_in_school "
+global covarsnat "log_nat_age_0_17 log_nat_age_18_24 log_nat_age_25_34 log_nat_age_35_49 log_nat_r_white log_nat_r_black log_nat_r_asian log_nat_hs log_nat_in_school "
+global invars "exp_any_state SC_any"
+
 
 /*
 
@@ -401,7 +405,7 @@ file write sumstat "\end{tabular}"
 file close sumstat
 
 
-
+/*
 
 /**************************************************************
 Probability of moving IN migpuma, simple Regressions
@@ -479,15 +483,12 @@ file write sumstat "\\" _n
 file write sumstat "\end{tabular}"
 file close sumstat
 
-
+*/
 
 
 /**************************************************************
 LOG POPULATION REGRESSION
 **************************************************************/
-global covarspop "log_tot_age_0_17 log_tot_age_18_24 log_tot_age_25_34 log_tot_age_35_49 log_tot_r_white log_tot_r_black log_tot_r_asian log_tot_hs log_tot_in_school log_tot_ownhome"
-global covarsnat "log_nat_age_0_17 log_nat_age_18_24 log_nat_age_25_34 log_nat_age_35_49 log_nat_r_white log_nat_r_black log_nat_r_asian log_nat_hs log_nat_in_school log_nat_ownhome"
-global invars "exp_any_state "
 
 
 use "$oi/migpuma_year_pops", clear
@@ -557,15 +558,12 @@ file close sumstat
 /**************************************************************
 LOG POPULATION DID GAINERS AND LOSERS IN SAME REGRESSION
 **************************************************************/
-global covarspop "log_tot_age_0_17 log_tot_age_18_24 log_tot_age_25_34 log_tot_age_35_49 log_tot_r_white log_tot_r_black log_tot_r_asian log_tot_hs log_tot_in_school log_tot_ownhome"
-global covarsnat "log_nat_age_0_17 log_nat_age_18_24 log_nat_age_25_34 log_nat_age_35_49 log_nat_r_white log_nat_r_black log_nat_r_asian log_nat_hs log_nat_in_school log_nat_ownhome"
-global invars "exp_any_state "
 
 use "$oi/migpuma_year_pops", clear
 **** trying doug's suggestion
 cap mat drop intarget
 * no controls 
-reghdfe log_tot_targetpop2 exp_gain_migpuma exp_lost_migpuma $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
+reghdfe log_tot_targetpop2 exp_gain_migpuma exp_lost_migpuma $invars [aw=tot_targetpop2] , vce(robust) absorb( geoid_migpuma year)
 reg_to_mat, depvar( log_tot_targetpop2 ) indvars( exp_gain_migpuma exp_lost_migpuma) mat(intarget)  wt(tot_targetpop2) wttype(aw)
 * with controls for native populations
 reghdfe log_tot_targetpop2 exp_gain_migpuma exp_lost_migpuma $covarspop $invars [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
@@ -629,8 +627,7 @@ file close sumstat
 /**************************************************************
 HETEROGENEITY EFFECTS TO OTHER POPS: LOG POPULATION DID GAINERS AND LOSERS IN SAME REGRESSION
 **************************************************************/
-global covarspop "log_tot_age_0_17 log_tot_age_18_24 log_tot_age_25_34 log_tot_age_35_49 log_tot_r_white log_tot_r_black log_tot_r_asian log_tot_hs log_tot_in_school log_tot_ownhome"
-global invars "exp_any_state "
+
 
 use "$oi/migpuma_year_pops", clear
 
@@ -838,8 +835,6 @@ file close sumstat
 /**************************************************************
 LOG POPULATION DID GAINERS AND LOSERS IN SAME REGRESSION WITH PROP WEIGHT
 **************************************************************/
-global covarspop "log_tot_age_0_17 log_tot_age_18_24 log_tot_age_25_34 log_tot_age_35_49 log_tot_r_white log_tot_r_black log_tot_r_asian log_tot_hs log_tot_in_school log_tot_ownhome"
-global invars "exp_any_state "
 
 use "$oi/migpuma_year_pops", clear
 
