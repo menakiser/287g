@@ -75,11 +75,11 @@ label var gain_ry_minus4_group "-4"
 label var lost_ry_minus4_group "-4"
 
 ********** In same regression, target
-reghdfe log_tot_targetpop1 gain_ry_minus4_group gain_ry_minus3 gain_ry_minus2 o.gain_ry_minus1 ///
+reghdfe log_tot_targetpop2 gain_ry_minus4_group gain_ry_minus3 gain_ry_minus2 o.gain_ry_minus1 ///
 	gain_ry_plus0 gain_ry_plus1 gain_ry_plus2_group   ///
 	lost_ry_minus4_group lost_ry_minus3 lost_ry_minus2 o.lost_ry_minus1 ///
 	lost_ry_plus0 lost_ry_plus1 lost_ry_plus2 lost_ry_plus3_group ///
-	$covarspop [aw=tot_targetpop1] , ///
+	$covarspop [aw=tot_targetpop2] , ///
 	vce(robust) absorb(geoid_puma year)
 est store in_target1
 
@@ -112,7 +112,7 @@ graph export "$oo/final/logtargetpop_lost_estudy.png", replace
 
 
 ********** In same regression, placebo
-reghdfe log_tot_placebo1 gain_ry_minus4_group gain_ry_minus3 gain_ry_minus2 o.gain_ry_minus1 ///
+reghdfe log_tot_placebo5 gain_ry_minus4_group gain_ry_minus3 gain_ry_minus2 o.gain_ry_minus1 ///
 	gain_ry_plus0 gain_ry_plus1 gain_ry_plus2_group  ///
 	lost_ry_minus4_group lost_ry_minus3 lost_ry_minus2 o.lost_ry_minus1 ///
 	lost_ry_plus0 lost_ry_plus1 lost_ry_plus2 lost_ry_plus3_group ///
@@ -185,3 +185,62 @@ coefplot ///
 	ylabel(-1.5(0.5)1.5)
 graph export "$oo/final/logspillpop_lost_estudy.png", replace
 
+
+
+
+
+/**************************************************************
+LOG POPULATION DID GAINERS AND LOSERS IN SAME REGRESSION WITH PROP WEIGHT
+**************************************************************/
+
+use "$oi/puma_year_pops", clear
+keep if year>=2013
+merge m:1 statefip current_puma  using  "$oi/propensity_weights2012puma_t2" , nogen keep(3) keepusing(phat wt)
+
+gen popwt = tot_targetpop2*wt
+
+gen gain_ry_plus2_group = gain_ry_plus2 | gain_ry_plus3
+gen lost_ry_plus3_group =  lost_ry_plus3 | lost_ry_plus4 | lost_ry_plus5 |lost_ry_plus6 
+label var gain_ry_plus2_group "+2"
+label var lost_ry_plus3_group "+3"
+
+gen gain_ry_minus4_group = gain_ry_minus6 |gain_ry_minus5| gain_ry_minus4
+gen lost_ry_minus4_group = lost_ry_minus6| lost_ry_minus5| lost_ry_minus4
+label var gain_ry_minus4_group "-4"
+label var lost_ry_minus4_group "-4"
+
+
+********** In same regression, target
+reghdfe log_tot_targetpop2 gain_ry_minus4_group gain_ry_minus3 gain_ry_minus2 o.gain_ry_minus1 ///
+	gain_ry_plus0 gain_ry_plus1 gain_ry_plus2_group   ///
+	lost_ry_minus4_group lost_ry_minus3 lost_ry_minus2 o.lost_ry_minus1 ///
+	lost_ry_plus0 lost_ry_plus1 lost_ry_plus2 lost_ry_plus3_group ///
+	$covarspop [aw=popwt] , ///
+	vce(robust) absorb(geoid_puma year)
+est store in_target1
+
+**** GAINERS
+coefplot ///
+	(in_target1 , keep(gain_ry_minus* o.gain_ry_minus1) msymbol(circle ) mcolor(midblue) msize(1.25) ciopts(lcolor(midblue) lwidth(0.3) recast(rcap))) ///
+	(in_target1 , keep(gain_ry_plus* ) msymbol(circle ) mcolor(navy) msize(1.25) ciopts(lcolor(navy) lwidth(0.3) recast(rcap))) ///
+	, nooffsets xline(4, lcolor(gray) lpattern(solid))  yline(0, lcolor(gray) lpattern(dash))  ///
+	omit vertical ///
+	eqlabels(, labels) graphregion(color(white)) ///
+	xtitle("Relative year")   ytitle("Log target population") ///
+	title("(a) Gained treatment, target") ///
+	legend(order(4 "Active 287(g)" 2 "No 287(g)") row(1) pos(6)) xsize(6) ///
+	ylabel(-.75(0.25).5)
+graph export "$oo/final/logtargetpop_gain_estudy_prop.png", replace
+
+**** LOSERS
+coefplot ///
+	(in_target1 , keep(lost_ry_minus* o.lost_ry_minus1) msymbol(circle ) mcolor(navy) msize(1.25) ciopts(lcolor(navy) lwidth(0.3) recast(rcap))) ///
+	(in_target1 , keep(lost_ry_plus* ) msymbol(circle ) mcolor(midblue) msize(1.25) ciopts(lcolor(midblue) lwidth(0.3) recast(rcap))) ///
+	, nooffsets xline(4, lcolor(gray) lpattern(solid))  yline(0, lcolor(gray) lpattern(dash))  ///
+	omit vertical ///
+	eqlabels(, labels) graphregion(color(white))  ///
+	xtitle("Relative year")   ytitle("Log target population") ///
+	title("(b) Lost treatment, target") ///
+	legend(order(2 "Active 287(g)" 4 "No 287(g)") row(1) pos(6)) xsize(6) ///
+	ylabel(-.75(0.25).5)
+graph export "$oo/final/logtargetpop_lost_estudy_prop.png", replace
