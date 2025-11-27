@@ -26,7 +26,7 @@ drop if mi(perwt_wt)
 
 * Identify populations
 *targetpop2
-gen placebo1 = sex==1 & lowskill==1 & hispan==0 & r_white==1 & born_abroad==0 & young==1  & marst>=3  //hispanic citizens born in the usa
+//gen placebo1 = sex==1 & lowskill==1 & hispan==0 & r_white==1 & born_abroad==0 & young==1  & marst>=3  //hispanic citizens born in the usa
 gen pop = age>=18 & age<=65
 gen target_movers = move_migpuma*targetpop2
 gen spillover1 = sex==1 & lowskill==1 & hispan!=0 & born_abroad==1 & citizen!=3 & young==1  & marst>=3 & yrnatur<2013
@@ -50,7 +50,7 @@ tab yrsusa2, gen(int_yrsusa2)
 tab language, gen(int_language)
 
 * Obtain totals
-foreach v of varlist targetpop1 targetpop2 targetpop3 targetpop4 targetpop5 targetpop6 placebo1 spillover1 pop move_migpuma target_movers ///
+foreach v of varlist targetpop1 targetpop2 targetpop3 targetpop4 targetpop5 targetpop6 placebo1 placebo2 placebo3 placebo4 placebo5 spillover1 pop move_migpuma target_movers ///
  r_white r_black r_asian hs in_school ownhome no_english employed male has_child ///
  age_0_17 age_18_24 age_25_34 age_35_49 age_50plu ///
  int_hispan* int_educ* int_marst* int_speakeng* int_citizen* int_yrsusa2* int_language1-int_language10  {

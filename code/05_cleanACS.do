@@ -230,7 +230,7 @@ label var targetpop7 "hispanic non-mexican immigrants"
 label var targetpop8 "hispanic non-mexican immigrants unmarried"
 label var targetpop9 "hispanic non-mexican immigrants unmarried, no kids"
 
-/* define placebo
+*define placebo
 cap drop placebo*
 gen placebo1 = sex==1 & lowskill==1 & hispan!=0 & born_abroad==0 & citizen!=3 & young==1  & marst>=3 & nchild==0 //hispanic citizens born in the usa, 113,260, n 
 gen placebo2 = sex==1 & lowskill==1 & hispan==0 & imm==1 & young==1 & yrimmig>2007 & inlist(yrsusa2 , 1 ,2) & marst>=3 & nchild==0 //same as target but not hispanic, 9,316, p
@@ -243,7 +243,7 @@ label var placebo2 "non-hispanic target"
 label var placebo3 "non-hispanic citizen"
 label var placebo4 "non-hispanic citizen US born"
 label var placebo5 "non-hispanic white citizen US born"
-*/
+
 
 gen prev_year = year-1
 
