@@ -73,10 +73,10 @@ gen tot_spill_new = tot_spillover1 & inlist(yrsusa1 , 1 ,2)  //spillover new imm
 gen tot_spill_nochild = tot_spillover1 & nchild==0 //spillover no children
 gen tot_spill_nohisp= sex==1 & lowskill==1 & hispan==0 & born_abroad==1 & citizen!=3 & young==1  & marst>=3 & yrnatur<2013 //spillover not hispanics
 * placebo is a bit different
-gen tot_plac_mexican = tot_placebo1 & hispan==1 //placebo mexican
-gen tot_plac_noenglish = tot_placebo1 & tot_no_english //placebo no english
+gen tot_plac_mexican = tot_placebo5 & hispan==1 //placebo mexican
+gen tot_plac_noenglish = tot_placebo5 & tot_no_english //placebo no english
 //gen tot_plac_new = log_tot_placebo1 & inlist(yrsusa1 , 1 ,2)  //placebo new immigrants -dna
-gen tot_plac_nochild = tot_placebo1 & nchild==0 //placebo no children
+gen tot_plac_nochild = tot_placebo5 & nchild==0 //placebo no children
 gen tot_plac_nohisp= sex==1 & lowskill==1 & hispan==0 & born_abroad==0 & young==1  & marst>=3 //placebo not hispanics
 
 * Obtain relative years for gainers and losers
