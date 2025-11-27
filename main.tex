@@ -138,20 +138,44 @@ In Table \ref{tab:regpop} we evaluate the effect of having an active 287(g) agre
 
 I next hone into the effects of gaining and losing a 287(g) agreement by implementing the difference-in-difference design in Equation \ref{eq:joindid}, finding large but marginally significant results. In Table \ref{tab:didpop}, the target population decreases by 20.4\% (Column 2) when a puma gains a 287(g) agreement, significant at the 10 percent level, which translate to a decrease of 167 people relative to the mean puma targeted population size among the untreated. This is distinguishable from the effect in the placebo population, for which we find an imprecise effect of 8.2\% (Column 4). Losing a 287(g) agreement, with positive changes in the target population (6.0\%) though much smaller and with large standard errors, while the corresponding effect on the placebo population is negative and statistically insignificant though larger in magnitude (12.7\%). These patterns are consistent with intuitive expectations: when a locality activates a 287(g) agreement, increased deportation salience may reduce in-migration and/or increase out-migration among the targeted population, generating population declines. Conversely, when a locality loses a 287(g) agreement, reduced enforcement risk should encourage in-migration or slow out-migration, and our estimates align with this intuition. As previously mentioned, it is expected for the event of gaining an agreement to be more salient than losing an agreement due to media coverage or immediate enforcement changes, we see these reflected in the magnitude of our effects though these have large standard errors.
 
-To assess the parallel trends assumption, I begin with an event–study design that estimates the dynamic effects of gaining and losing 287(g) agreements in the same specification with dummies for each pre and post period for each type of event.\footnote{The regression includes both gaining and losing events simultaneously; for clarity, I plot them separately.} Panel (a) shows that prior to gaining a 287(g) agreement, changes in the size of the target population are close to zero, though generally below the reference period (the year immediately before treatment). After the agreement is enacted, the target population declines more sharply beginning one year post-treatment, reaches its largest drop two years after, and returns toward zero by year three. The placebo population (Panel (c)) displays a similar pattern during the first few years: modest declines through two years post-treatment and continued downward movement in year three. %the event studies are underwhelming. One thing is that you are probably going too far before/after, given that you only have 7 years of data. Try shortening the window to something like -3 to +2? (where the last point on either end accumulates, so -3 or less, +2 or more). This will also get rid of some of the huge CIs at the extremes, which will help with the scale of the y-axis (currently has a big range to accomodate some of the big CIs).
-%again, this will look much better if you do -3 to +2. There is a pretty clear pre-trend going on, but you might imagine there is a reason for this -- enforcement peters out before the actual end of the formal agreement?
-Panel (b) presents the event study for losing an agreement. In the pre-period, estimates are consistently negative but move toward zero as the termination date approaches, indicating that areas about to lose 287(g) were already experiencing declines in the target population, though these declines were moderating over time. After the agreement ends, the coefficients shift to positive values and gradually increase. While some of the post-period estimates are imprecise, the overall pattern implies a reversal of the earlier decline, with population levels beginning to recover and ultimately surpassing the pre-termination trajectory. %I think this is not the right interpretation. It looks like there was some increase in the target population that preceeded losing the 287(g), so a bit of a pre-trend. Quesiton is whether this reflected declining enforcement leading up to actually losing the 287(g). or is it sign of a violation of parallel trends?
+To assess the parallel trends assumption, I begin with an event–study design that estimates the dynamic effects of gaining and losing 287(g) agreements in the same specification with dummies for each pre and post period for each type of event.\footnote{The regression includes both gaining and losing events simultaneously; for clarity, I plot them separately.} Panel (a) shows that prior to gaining a 287(g) agreement, the size of the target population is gradually and slightly increasing, this may indicate that localities that enacted the policy were experiencing growth in the target population in the years prior to the enactment. After the agreement is enacted, the target population declines more sharply beginning one year post-treatment, reaches its largest drop two years after, suggesting a modest decline in population growth. The placebo population (Panel (c)) displays flat trends suggesting that before and after the reference year, the population size was larger but changes were negligible. Panel (b) presents the event study for losing an agreement. In the pre-period, population was consistently lower than in the reference period and stayed within a close range, after the enactment of the policy, the population size is smaller than in the reference period but larger than in the pre-period for the first two years of treatment, in the third year there is a slight increase in population size. We can see that there is no identifiable pattern in the lost of an agreement aligning with a reduction in enforcement risk leading to the return of in-migrants, suggesting that the noticeable risk of deportation in an area about to lose an agreement is not much different from an area that has recently lost it. For the placebo population (Panel (c)), we see that population size remained stable in the pre-period and dropped slightly during the year of enactment but later returned to the regular average; these trends are not substantially different from the effect in the target population suggesting both groups are unaffected by losing an agreement. 
 
-This pattern aligns with a reduction in enforcement risk leading to the return of in-migrants or a slowdown in out-migration. For the placebo population (Panel (c)), however, the event-study coefficients around the loss of a 287(g) agreement are small, statistically insignificant, and lack the clear pre-trend reversal seen in the target population, this reinforces the positive post-termination effects observed in the target group. 
+%I think this is not the right interpretation. It looks like there was some increase in the target population that preceeded losing the 287(g), so a bit of a pre-trend. Quesiton is whether this reflected declining enforcement leading up to actually losing the 287(g). or is it sign of a violation of parallel trends?
+%the event studies are underwhelming. One thing is that you are probably going too far before/after, given that you only have 7 years of data. Try shortening the window to something like -3 to +2? (where the last point on either end accumulates, so -3 or less, +2 or more). This will also get rid of some of the huge CIs at the extremes, which will help with the scale of the y-axis (currently has a big range to accomodate some of the big CIs).
+%again, this will look much better if you do -3 to +2. There is a pretty clear pre-trend going on, but you might imagine there is a reason for this -- enforcement peters out before the actual end of the formal agreement?
+
 
 \subsection{Heterogeneity and spillovers}
-Panel A of Table 6 estimates Equation \ref{eq:joindid} using the log population size of several subsectors of the target group: Mexican-born immigrants, immigrants with poor English proficiency, recent arrivals ($\leqslant$ 2 years in the U.S.), immigrants without children, and a non-Hispanic comparison group. Across these subgroups, the estimated effects of gaining a 287(g) agreement remain small and statistically insignificant. The only exception is recent immigrants (Column 4), where the point estimate is large (+0.30 log points = +35\%) but imprecise. This pattern is consistent with the idea that ACS-based population counts are only weakly sensitive to short-run out-migration among targeted groups.
-By contrast, losing a 287(g) agreement produces positive and statistically significant effects for several subgroups. The baseline effect (Column 1) indicates a +0.176 log-point increase (= +19.2\%) in the target population relative to untreated areas. The effects are even larger among groups more exposed to enforcement risk: +0.300 log points for immigrants with poor English (= +35\%), +0.539 log points for recent immigrants (= +71\%), and +0.233 log points for immigrants without children (= +26\%). These estimates imply that ending enforcement agreements is associated with substantial increases in the size of targeted immigrant subpopulations—driven mainly by recent, single, low-English-proficiency immigrants. In contrast, the estimated effects for Mexican-born immigrants (+0.078 log points = +8\%) and non-Hispanic immigrants (–0.145 log points = –13.5\%) are small and imprecise, suggesting the overall response is driven by Hispanic non-Mexican immigrants, consistent with the long-run decline in the Mexican share of U.S. immigrants \citep{mpi2024}.
+Panel A of Table \ref{tab:didhet} estimates Equation \ref{eq:joindid} using the log population size of several subsectors of the target group: Mexican-born immigrants, immigrants with poor English proficiency, long-term immigrants (at least 5 years in the U.S.), immigrants without children, and a non-Hispanic comparison group. Across these subgroups, the estimated effects of gaining a 287(g) agreement remain large but statistically insignificant. The exception is those with poor English level (Column 4), where the point estimate is large (-0.725 log points, -51.6\%) and significant at the 5 percent level. As our target population is already restricted to recent immigrants, the strong negative results for those with poor English (likely to have been in the country for less time) suggests this policy affects where recent arrivals decide to settle. In contrast, the effect of losing a 287(g) agreement are smaller and statistically insignificant, with the exception of the effect on long-term immigrants for which we see an effect of 17.8\%; however, this subgroup sees a positive and imprecise effect of gaining enforcement. 
 
-Panel B repeats the exercise for a spillover group: foreign-born Hispanic U.S. citizens with similar demographic characteristics. Although not directly targeted for deportation, this group may still experience racial profiling or include recently naturalized former members of the target population. The effects of gaining 287(g) vary: the baseline estimate is +0.277 log points (= +32\%) and statistically significant at the 10 percent level, but the direction of effects across subgroups differs. Mexican-origin spillovers (Column 8) show a +1.208 log-point increase (= +234\%), while recent immigrant spillovers (Column 10) exhibit a –1.128 log-point decrease (= –68\%). These heterogeneous responses suggest that some spillover groups avoid newly activated enforcement areas, whereas others—particularly well-established Mexican-origin spillover communities—grow due to demographic or residential sorting. Losing an agreement yields mostly small, statistically insignificant effects on spillover groups; the only notable estimate is a modest decline for non-Hispanic spillovers (–0.210 log points = -19\%), indicating that positive population responses to 287(g) termination are concentrated within the targeted immigrant groups rather than among Hispanic citizens more broadly.
+Panel B repeats the exercise for a spillover group: Hispanic U.S. citizens (either U.S. born or naturalized before the start of the period) with similar demographic characteristics. Although not directly targeted for deportation, this group may still experience racial profiling or include recently naturalized former members of the target population. Across spillover populations, gaining a 287(g) treatment shows no consistent effects, except for a large positive increase in long-term immigrants (0.70 log points), though this population is very small. Losing treatment similarly shows limited impacts, with the only meaningful change being a decline in adults with no children of –0.15 log points, significant at the 5 percent level.
 %these results are kind of all over the map. Some of the populations are fairly small which may explain some of the instability. Any reason why these should show up mostly on the gain variable, while targeted group more shows up on the lose variable? I'm not sure we learn much from the spillover population. Maybe panel B should be the placebo population -- to show that you don't find effects in these subpopulations in the placebo?
 
-\section{Pending discussion}
+\subsection{Propensity Score}
+As Table \ref{tab:balance} showed small though statistically significant differences of the targeted population in the treated and untreated pumas and to address selection of pumas into the 287(g) program, I weight pumas using propensity scores. These are calculated through a logit estimation using 2013 (start of period of observation) puma characteristics and weighting using the total population of target immigrants to estimate the probability of having an active 287(g) during this period. 
+The characteristics include 2013 total adult population and, to match on composition of localities, using 2013 shares of
+\begin{spacing}{1}
+\begin{enumerate}
+    \item Target population
+    \item Foreign born
+    \item Young (18-39)
+    \item Marital status
+    \item Red state
+    \item Texas
+    \item State treatment
+    \item Race
+    \item Ethnicity
+    \item Education
+    \item English level
+\end{enumerate}
+\end{spacing}
+
+Though all other specification exclude pumas that always have an active 287(g) during 2013-2019, as they are ultimately absorbed by puma fixed effects, I include them for finding propensity scores as they provide information of the type of localities with a 287(g) agreement. 
+
+I apply these propensity scores to our difference-in-difference specification (Equation \ref{eq:joindid}) in Table \ref{tab:didpopprop}. For the target population, we see that the propensity weighting, increases the the effect of gaining treatment, and dampens the effect of losing treatment. Gaining a 287(g) agreement can be associated with a reduction of approximate 23–24\% in population size. In contrast, losing a 287(g) agreement has no meaningful effect, with estimates near zero, and less than half in magnitude than in Table \ref{tab:didpop}. For the placebo U.S.-born population, neither gaining nor losing treatment produces statistically meaningful changes: the estimated effects (about +8–15\% for gains and –4–6\% for losses) are imprecise. These results suggest that the effect of gaining an agreement is much more salient than losing an agreement and can be associated with modest declines in population, consistent with unweighted results.
+
+\section{Discussion}
+
 
 
 \bibliography{bib_287}
@@ -267,34 +291,56 @@ Panel B repeats the exercise for a spillover group: foreign-born Hispanic U.S. c
 \begin{spacing}{1}
 \begin{footnotesize}
 
-\noindent \textit{Notes:} This table summarizes the results from the difference-in-difference detailed in Equation \ref{eq:joindid} on sizes of various population sectors. Panel A evaluates the effect of gaining and losing a 287(g) agreement on the size of different and similar sectors of the target population. Columns 1 represents the baseline, corresponding to Column 2 from Table \ref{tab:didpop}. Column 2 restricts the evaluated population to those from Mexican origin, Column 3 to those with poor English level, Column 4 to those with up to two years in the country, Column 5 to those with no children, and Column 6 evaluates non-Hispanic immigrants that share all other characteristics with the target population. Panel B repeats the top panel for the placebo population, obviating effects on new immigrants. p $<$ 0.01 ***, p $<$ 0.05 **, p $<$0.1 *. 
+\noindent \textit{Notes:} This table summarizes the results from the difference-in-difference detailed in Equation \ref{eq:joindid} on sizes of various population sectors. Panel A evaluates the effect of gaining and losing a 287(g) agreement on the size of different and similar sectors of the target population. Columns 1 represents the baseline, corresponding to Column 2 from Table \ref{tab:didpop}. Column 2 restricts the evaluated population to those from Mexican origin, Column 3 to those with poor English level, Column 4 to those with up to two years in the country, Column 5 to those with no children, and Column 6 evaluates non-Hispanic immigrants that share all other characteristics with the target population. Panel B repeats the top panel for the spillover population population: foreign-born U.S. citizens from Hispanic descent that have naturalized before 2013, with similar non-immigration characteristics to the targeted (males, ages 18-39, with a high school degree or less, not currently married).  p $<$ 0.01 ***, p $<$ 0.05 **, p $<$0.1 *.
 \end{footnotesize}
 \end{spacing}
 \end{table}
 \end{landscape}
 
 
+%% table 2
+\newpage
+\begin{table}[H]
+\begin{center}
 
-\begin{landscape}
-\begin{table}[t]
-\centering
-\caption{Effect of gaining and losing a 287(g) agreement on the log total spillover population}
-\label{tab:didhet}
+\caption{Propensity score weighted characteristics of target population in treated and untreated pumas}
+\label{tab:balance}
 \adjustbox{ width=0.8\linewidth}{
-    \input{output/final/logpops_het_spill}
+    \input{output/final/balancetable_prop}
+}
+\end{center}
+
+\justifying
+
+\begin{spacing}{1}
+\begin{footnotesize}
+\noindent \textit{Notes:} This table summarizes main characteristics (weighted by propensity score) the population targeted by 287(g): males, ages 18-39, born in a Latin American country, not a U.S. citizen, that have spent 10 years or less in the country, that have a high school degree or less, and not currently married. Column 1 summarizes average characteristics for those in pumas ever treated from 2013-2019 and Column 2 for those in never treated pumas. Column 3 summarizes the average of those in treated areas minus the average of those in untreated areas. p $<$ 0.01 ***, p $<$ 0.05 **, p $<$0.1 *. 
+\end{footnotesize}
+\end{spacing}
+\end{table}
+
+
+\begin{table}[h!]
+\centering
+\caption{Effect of gaining and losing a 287(g) agreement on the log total targeted and the log total placebo populations with propensity score weighting}
+\label{tab:didpopprop}
+\adjustbox{ width=0.7\linewidth}{
+    \input{output/final/logtargetpop_did_prop}
 }
 
 \justifying
 \begin{spacing}{1}
 \begin{footnotesize}
 
-\noindent \textit{Notes:} This table summarizes the results from the difference-in-difference detailed in Equation \ref{eq:joindid} on sizes of spillover population and various subsectors and a similar sector. The spillover population includes: foreign-born U.S. citizens from Hispanic descent that have naturalized before 2013, with similar non-immigration characteristics to the targeted (males, ages 18-39, with a high school degree or less, not currently married). Columns 1 represents the baseline, mirroring Column 2 from Table \ref{tab:didpop}. Column 2 restricts the evaluated population to those from Mexican origin, Column 3 to those with poor English level, Column 4 to those with up to two years in the country, Column 5 to those with no children, and Column 6 evaluates non-Hispanic immigrants that share all other characteristics with the target population.  p $<$ 0.01 ***, p $<$ 0.05 **, p $<$0.1 *. 
+
+\noindent \textit{Notes:} This table summarizes the results from the difference-in-difference detailed in Equation \ref{eq:joindid}, when including propensity scores weights. Columns 1-2 evaluates the effect of gaining a 287(g) agreement and losing a 287(g) agreement on the log total targeted population and Columns 3-4 on the log total placebo population, for comparison. Columns 2 and 3 incorporate controls at the puma-year level. The unit of observation is the puma-year level. All specifications include puma and year fixed effects and robust standard errors. p $<$ 0.01 ***, p $<$ 0.05 **, p $<$0.1 *. 
+
 \end{footnotesize}
 \end{spacing}
 \end{table}
-\end{landscape}
 
-\end{spacing}
+
+
 
 
 %%%%% FIGURES
@@ -379,20 +425,8 @@ Panel B repeats the exercise for a spillover group: foreign-born Hispanic U.S. c
 
 \end{landscape}
 
-
-
-
-\renewcommand{\thefigure}{A\arabic{figure}}
-\renewcommand{\thetable}{A\arabic{table}}
-\setcounter{figure}{0}
-\setcounter{table}{0}
-\setcounter{page}{1}
-
-\section*{Appendix: Applying propensity score}
-To address selection of pumas into the 287(g) program, I weight pumas using propensity scores. These are calculated through a logit estimation using 2013 (start of period of observation) puma characteristics and weighting using the total population of target immigrants to estimate the probability of having an active 287(g) during this period. 
-
-%% table 1
-\begin{figure}[h!]
+\newpage
+\begin{figure}[t]
 \centering
 \caption{Density of propensity score}
 \label{fig:prop_score}
@@ -409,46 +443,10 @@ To address selection of pumas into the 287(g) program, I weight pumas using prop
 \end{spacing}
 \end{figure}
 
-The characteristics include 2013 total adult population and, to match on composition of localities, using 2013 shares of
-\begin{spacing}{1}
-\begin{enumerate}
-    \item Target population
-    \item Foreign born
-    \item Young (18-39)
-    \item Marital status
-    \item Red state
-    \item Texas
-    \item State treatment
-    \item Race
-    \item Ethnicity
-    \item Education
-    \item English level
-\end{enumerate}
+
+
 \end{spacing}
 
-Though all other specification exclude pumas that always have an active 287(g) during 2013-2019, as they are ultimately absorbed by puma fixed effects, I include them for finding propensity scores as they provide information of the type of localities with a 287(g) agreement. 
-
-\begin{table}[h!]
-\centering
-\caption{Effect of gaining and losing a 287(g) agreement on the log total targeted and the log total placebo populations with propensity score weighting}
-\label{tab:didpopprop}
-\adjustbox{ width=0.7\linewidth}{
-    \input{output/final/logtargetpop_did_prop}
-}
-
-\justifying
-\begin{spacing}{1}
-\begin{footnotesize}
-
-
-\noindent \textit{Notes:} This table summarizes the results from the difference-in-difference detailed in Equation \ref{eq:joindid}, when including propensity scores weights. Columns 1-2 evaluates the effect of gaining a 287(g) agreement and losing a 287(g) agreement on the log total targeted population and Columns 3-4 on the log total placebo population, for comparison. Columns 2 and 3 incorporate controls at the puma-year level. The unit of observation is the puma-year level. All specifications include puma and year fixed effects and robust standard errors. p $<$ 0.01 ***, p $<$ 0.05 **, p $<$0.1 *. 
-
-\end{footnotesize}
-\end{spacing}
-\end{table}
-
-
-I apply these propensity scores to our difference-in-difference specification (Equation \ref{eq:joindid}) in Table \ref{eq:didpopprop}. For the target population, we see that the propensity weighting, increases the the effect of gaining treatment, though these still have large standard errors, and dampens the effect of losing treatment. The effect of losing treatment is much lower at +9.5\% in the setup obviating puma-year control. Upon accounting for puma-year controls, the effect of losing an agreement returns to a closer level to Column 2 from Table \ref{tab:didpop}, at +0.1374 log points or +14.7\%, significant at the 5 percent level. The estimates of losing treatment for the placebo group are much larger in magnitude though the standard errors are also quite large.
 
 
 
