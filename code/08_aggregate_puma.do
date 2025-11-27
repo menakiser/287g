@@ -34,7 +34,8 @@ drop if mi(perwt_wt)
 //gen placebo1 = sex==1 & lowskill==1 & hispan==0 & r_white==1 & born_abroad==0 & young==1  & marst>=3  //hispanic citizens born in the usa
 gen pop = age>=18 & age<=65
 gen target_movers = move_migpuma*targetpop2
-gen spillover1 = sex==1 & lowskill==1 & hispan!=0 & born_abroad==1 & citizen!=3 & young==1  & marst>=3 & yrnatur<2013
+gen spillover1 = sex==1 & lowskill==1 & hispan!=0 & ((born_abroad==0 & citizen!=3) | (born_abroad==1 & citizen!=3 & yrnatur<2013)) & young==1  & marst>=3 //hispanic US born or born abroad but citizens naturalized before sample of interest, 113,260, n 
+gen spillover2 = sex==1 & lowskill==1 & hispan!=0 & (born_abroad==0 & citizen!=3) & young==1  & marst>=3 //hispanic US born , 113,260, n 
 
 * Controls
 * age
@@ -55,7 +56,7 @@ tab yrsusa2, gen(int_yrsusa2)
 tab language, gen(int_language)
 
 * Obtain totals
-foreach v of varlist targetpop1 targetpop2 targetpop3 targetpop4 targetpop5 targetpop6 placebo1 placebo2 placebo3 placebo4 placebo5 spillover1 pop move_migpuma target_movers ///
+foreach v of varlist targetpop1 targetpop2 targetpop3 targetpop4 targetpop5 targetpop6 placebo1 placebo2 placebo3 placebo4 placebo5 spillover1 spillover2 pop move_migpuma target_movers ///
  r_white r_black r_asian hs in_school ownhome no_english employed male has_child ///
  age_0_17 age_18_24 age_25_34 age_35_49 age_50plu ///
  int_hispan* int_educ* int_marst* int_speakeng* int_citizen* int_yrsusa2* int_language1-int_language10  {
@@ -66,18 +67,25 @@ foreach v of varlist targetpop1 targetpop2 targetpop3 targetpop4 targetpop5 targ
 
 * Obtain totals FOR HETEROGENEITY
 *target
-gen tot_target_mexican = tot_targetpop2 & bpl==200 //target mexican
+gen tot_target_mexican = tot_targetpop2 & (bpl==200 | hispan==1) //target mexican
 gen tot_target_noenglish = tot_targetpop2 & tot_no_english //target no english
-gen tot_target_new = tot_targetpop2 & inlist(yrsusa1 , 1 ,2)  //target new immigrants
+gen tot_target_old = tot_targetpop2 & inlist(yrsusa2 , 2)  //target old immigrants
 gen tot_target_nochild = tot_targetpop2 & nchild==0 //target no children
-gen tot_target_nohisp= sex==1 & lowskill==1 & hispan==0 & imm==1 & young==1 & inlist(yrsusa2 , 1)  //target not hispanics
+gen tot_target_nohisp= sex==1 & lowskill==1 & hispan==0 & imm==1 & young==1 & daca==0 & inlist(yrsusa2 , 1) & marst>=3  //target not hispanics
 *spillover
-gen tot_spill_mexican = tot_spillover1 & bpl==200 //spillover mexican
-gen tot_spill_noenglish = tot_spillover1 & tot_no_english //spillover no english
-gen tot_spill_new = tot_spillover1 & inlist(yrsusa1 , 1 ,2)  //spillover new immigrants
-gen tot_spill_nochild = tot_spillover1 & nchild==0 //spillover no children
-gen tot_spill_nohisp= sex==1 & lowskill==1 & hispan==0 & born_abroad==1 & citizen!=3 & young==1  & marst>=3 & yrnatur<2013 //spillover not hispanics
-* placebo is a bit different
+gen tot_spill1_mexican = tot_spillover1 & (bpl==200 | hispan==1) //spillover mexican
+gen tot_spill1_noenglish = tot_spillover1 & tot_no_english //spillover no english
+gen tot_spill1_old = tot_spillover1 & inlist(yrsusa2, 2)  //spillover new immigrants
+gen tot_spill1_nochild = tot_spillover1 & nchild==0 //spillover no children
+gen tot_spill1_nohisp= sex==1 & lowskill==1 & hispan==0 & ((born_abroad==0 & citizen!=3) | (born_abroad==1 & citizen!=3 & yrnatur<2013)) & young==1  & marst>=3 //spillover not hispanics
+*spillover2
+gen tot_spill2_mexican = tot_spillover2 & (bpl==200 | hispan==1) //spillover mexican
+gen tot_spill2_noenglish = tot_spillover2 & tot_no_english //spillover no english
+gen tot_spill2_old = tot_spillover2 & inlist(yrsusa2, 2)  //spillover new immigrants
+gen tot_spill2_nochild = tot_spillover2 & nchild==0 //spillover no children
+gen tot_spill2_nohisp= sex==1 & lowskill==1 & hispan==0 & ((born_abroad==0 & citizen!=3)) & young==1  & marst>=3 //spillover not hispanics
+
+* placebo is a bit different, does not apply anymore
 gen tot_plac_mexican = tot_placebo5 & hispan==1 //placebo mexican
 gen tot_plac_noenglish = tot_placebo5 & tot_no_english //placebo no english
 //gen tot_plac_new = log_tot_placebo1 & inlist(yrsusa1 , 1 ,2)  //placebo new immigrants -dna
@@ -92,23 +100,16 @@ replace relative_year_gain = . if gain_exp_year == 0
 gen relative_year_lost =  year - lost_exp_year
 replace relative_year_lost = . if lost_exp_year == 0
 
-bys statefip: egen ever_treated_state = max( exp_any_state>0)
-
-
-global covars "age r_white r_black r_asian hs in_school no_english ownhome"
-global invars "exp_any_state SC_any" //SC_any
-global outvars "prev_exp_any_state " //prev_SC_any
-
 foreach v in r_white r_black r_asian hs in_school no_english ownhome {
 	gen `v' = tot_`v'
 }
 
-egen geoid_puma = group(current_puma statefip)
+egen geoid_puma = group(statefip current_puma)
 
 * collapse at the puma and year level
 collapse (sum) tot_* ///
 	(max) exp_any_puma  ever_treated_puma ever_lost_exp_puma ever_gain_exp_puma lost_exp_year gain_exp_year ///
-	relative_year_gain relative_year_lost geoid_puma exp_any_state ever_treated_state SC_any ///
+	relative_year_gain relative_year_lost geoid_puma SC_any ///
 	(mean) age r_white r_black r_asian hs in_school no_english ownhome [pw=perwt] ///
 	, by(current_puma statefip year)
 

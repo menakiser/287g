@@ -77,7 +77,7 @@ replace group = "Seriousness Level of Conviction" if group=="Seriousness Level o
 sort group torder
 
 cap file close sumstat
-file open sumstat using "$oo/removaltable.tex", write replace
+file open sumstat using "$oo/fina/removaltable.tex", write replace
 file write sumstat "\begin{tabular}{rllll}" _n
 file write sumstat "\toprule" _n
 file write sumstat "\toprule" _n
