@@ -21,7 +21,7 @@ log using "$oo/logs/prop_matching2012migpuma_t2.pdf", replace
 use "$oi/working_acs", clear 
 
 *define affected population (presumably undocumented) as male, low-skill (High School or less), Hispanic, foreign-born, noncitizens of ages 18-39, and
-keep if year >= 2012
+keep if year >= 2013
 * drop pumas that lost treatment and those always treated, keeoing only never treated and those that gained exposure
 //drop if always_treated_migpuma==1 
 
@@ -33,7 +33,7 @@ bys statefip current_migpuma: egen ever_treated_migpuma = max( exp_any_migpuma>0
 bys statefip: egen ever_treated_state = max( exp_any_state>0)
 bys statefip : egen ever_treated_migpuma_st = max( exp_any_migpuma>0)
 drop if ever_treated_migpuma_st==0 & ever_treated_state==0
-keep if year == 2012
+keep if year == 2013
 gen ishispanic = hispan!=0 & hispan!=2 //hispanic origin of any kind excluding PR
 gen istexas = statefip==48
 gen isflorida = statefip==12
@@ -50,8 +50,8 @@ tab language, gen(int_language)
 tab  hispand  , gen(int_dhispan)
 gen has_child = nchild>0
 
-collapse (sum) total_pop total_targetpop1=targetpop1 ///
-	(mean) exp* red_state incwage employed target_sh=targetpop1 foreign_sh=imm young_sh=young  ///
+collapse (sum) total_pop total_targetpop1=targetpop1 total_targetpop2=targetpop2  ///
+	(mean) exp* red_state incwage employed target_sh1=targetpop1 target_sh2=targetpop2 foreign_sh=imm young_sh=young  ///
 	r_white r_black r_asian int_citizen* int_language* int_yrsusa2* int_hispan* int_dhispan* ///
 	int_educ* hs nchild int_marst* no_english int_speakeng* in_school ///
 	lowskill_sh=lowskill istexas isflorida   ///
@@ -62,10 +62,7 @@ collapse (sum) total_pop total_targetpop1=targetpop1 ///
 	, by(statefip current_migpuma)
 
 /* get propensity score for county exposure */	
-logit ever_treated_migpuma total_pop target_sh foreign_sh red_state istexas ever_treated_state ///
-	r_white r_black r_asian int_citizen2-int_citizen4 int_dhispan* int_educ* int_marst* nchild in_school no_english [pw=total_targetpop1]
-
-logit ever_treated_migpuma total_pop target_sh foreign_sh young_sh int_yrsusa2* lowskill_sh red_state istexas isflorida ever_treated_state ///
+logit ever_treated_migpuma total_pop target_sh1 foreign_sh young_sh int_yrsusa2* lowskill_sh red_state istexas isflorida ever_treated_state ///
 	r_white r_black r_asian int_citizen2-int_citizen4 int_dhispan* int_educ* int_marst* in_school no_english ///
 	has_child famsize nchild  [pw=total_targetpop1]
 

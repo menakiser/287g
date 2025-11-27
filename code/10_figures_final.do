@@ -45,17 +45,29 @@ foreach v of varlist tot_* mean_tot_* {
 }
 
 twoway (connected mean_tot_targetpop1 year if ever_treated_migpuma==1, mcolor(black) lcolor(black)) ///
-	(connected mean_tot_targetpop1 year if ever_treated_migpuma==0, mcolor(gray) lcolor(gray)) 
+	(connected mean_tot_targetpop1 year if ever_treated_migpuma==0, mcolor(gray) lcolor(gray) lpattern(longdash)) ///
+	, legend(pos(6) row(1) order(1 "Treated" 2 "Untreated" )) ytitle("Migpuma mean population") xtitle("Year") ///
+	xlabel(2012(1)2019) ylabel(0(500)2500)
+graph export "$oo/final/mean_target1_pop.png", replace
 
-twoway (connected mean_tot_targetpop2 year if ever_treated_migpuma==1, mcolor(black) lcolor(black)) ///
-	(connected mean_tot_targetpop2 year if ever_treated_migpuma==0, mcolor(gray) lcolor(gray)) 
 
 twoway (connected tot_targetpop1 year if ever_treated_migpuma==1, mcolor(black) lcolor(black)) ///
-	(connected tot_targetpop1 year if ever_treated_migpuma==0, mcolor(gray) lcolor(gray)) 
+	(connected tot_targetpop1 year if ever_treated_migpuma==0, mcolor(gray) lcolor(gray) lpattern(longdash)) ///
+	, legend(pos(6) row(1) order(1 "Treated" 2 "Untreated" )) ytitle("Total target population") xtitle("Year") ///
+	xlabel(2012(1)2019) ylabel(0(50000)250000)
+graph export "$oo/final/total_target1_pop.png", replace
+
+twoway (connected mean_tot_targetpop2 year if ever_treated_migpuma==1, mcolor(black) lcolor(black)) ///
+	(connected mean_tot_targetpop2 year if ever_treated_migpuma==0, mcolor(gray) lcolor(gray) lpattern(longdash)) ///
+	, legend(pos(6) row(1) order(1 "Treated" 2 "Untreated" )) ytitle("Migpuma mean population") xtitle("Year") ///
+	xlabel(2012(1)2019) ylabel(0(500)2000)
+graph export "$oo/final/mean_target2_pop.png", replace
 
 twoway (connected tot_targetpop2 year if ever_treated_migpuma==1, mcolor(black) lcolor(black)) ///
-	(connected tot_targetpop2 year if ever_treated_migpuma==0, mcolor(gray) lcolor(gray)) 
-
+	(connected tot_targetpop2 year if ever_treated_migpuma==0, mcolor(gray) lcolor(gray) lpattern(longdash)) ///
+	, legend(pos(6) row(1) order(1 "Treated" 2 "Untreated" )) ytitle("Total target population") xtitle("Year") ///
+	xlabel(2012(1)2019) ylabel(0(50000)200000)
+graph export "$oo/final/total_target2_pop.png", replace
 
 
 

@@ -16,7 +16,7 @@ global invars "exp_any_state " //SC_any
 global outvars "prev_exp_any_state " //prev_SC_any
 
 use "$oi/working_acs", clear 
-keep if year >= 2012
+keep if year >= 2013
 drop if always_treated_migpuma==1
 
 * define propensity weights
@@ -29,7 +29,7 @@ drop if mi(perwt_wt)
 gen placebo1 = sex==1 & lowskill==1 & hispan!=0 & born_abroad==0 & young==1  & marst>=3  //hispanic citizens born in the usa
 gen pop = age>=18 & age<=65
 gen target_movers = move_migpuma*targetpop2
-gen spillover1 = sex==1 & lowskill==1 & hispan!=0 & born_abroad==1 & citizen!=3 & young==1  & marst>=3 & yrnatur<2012
+gen spillover1 = sex==1 & lowskill==1 & hispan!=0 & born_abroad==1 & citizen!=3 & young==1  & marst>=3 & yrnatur<2013
 
 * Controls
 * age
@@ -71,7 +71,7 @@ gen tot_spill_mexican = tot_spillover1 & bpl==200 //spillover mexican
 gen tot_spill_noenglish = tot_spillover1 & tot_no_english //spillover no english
 gen tot_spill_new = tot_spillover1 & inlist(yrsusa1 , 1 ,2)  //spillover new immigrants
 gen tot_spill_nochild = tot_spillover1 & nchild==0 //spillover no children
-gen tot_spill_nohisp= sex==1 & lowskill==1 & hispan==0 & born_abroad==1 & citizen!=3 & young==1  & marst>=3 & yrnatur<2012 //spillover not hispanics
+gen tot_spill_nohisp= sex==1 & lowskill==1 & hispan==0 & born_abroad==1 & citizen!=3 & young==1  & marst>=3 & yrnatur<2013 //spillover not hispanics
 * placebo is a bit different
 gen tot_plac_mexican = tot_placebo1 & hispan==1 //placebo mexican
 gen tot_plac_noenglish = tot_placebo1 & tot_no_english //placebo no english
@@ -94,12 +94,15 @@ global covars "age r_white r_black r_asian hs in_school no_english ownhome"
 global invars "exp_any_state SC_any" //SC_any
 global outvars "prev_exp_any_state " //prev_SC_any
 
+foreach v in r_white r_black r_asian hs in_school no_english ownhome {
+	gen `v' = tot_`v'
+}
 
 * collapse at the migpuma and year level
 collapse (sum) tot_* ///
 	(max) exp_any_migpuma  ever_treated_migpuma ever_lost_exp_migpuma ever_gain_exp_migpuma lost_exp_year gain_exp_year ///
 	relative_year_gain relative_year_lost geoid_migpuma exp_any_state ever_treated_state SC_any ///
-	(mean) age r_white=tot_r_white r_black=tot_r_black r_asian=tot_r_asian hs=tot_hs in_school=tot_in_school no_english=tot_no_english ownhome=tot_ownhome	 [pw=perwt] ///
+	(mean) age r_white r_black r_asian hs in_school no_english ownhome [pw=perwt] ///
 	, by(current_migpuma statefip year)
 
 * obtain log version of all total and native variables

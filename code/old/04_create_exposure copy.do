@@ -80,9 +80,10 @@ gen month = month(date)
 replace exposure_state = 0 if  supporttype =="jail & task force" & year>=2013
 replace exposure_state = 0 if  supporttype =="task force" & year>=2013
 
-keep if month==1 | month==2 | month==3
-collapse (max) exposure_state  exposure_county  , by(year supporttype statefips countyfips) 
+collapse (max) exposure_state  exposure_county  , by(year month supporttype statefips countyfips) 
 keep if year >=2011 & year <=2019
+keep if month==1
+drop month
 
 *drop counties with no exposure during this period
 bys statefips countyfips: egen some_exp = max(exposure_state>0 | exposure_county>0)
