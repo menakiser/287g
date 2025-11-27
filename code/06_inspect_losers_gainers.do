@@ -22,7 +22,7 @@ keep year statefip current_migpuma exp_any_migpuma
 duplicates drop
 
 * identify if migpuma was ever treated
-bys statefip current_migpuma: egen ever_treated_migpuma = max( exp_any_migpuma>0)
+bys statefip current_migpuma: egen ever_treated_migpuma = max( exp_any_migpuma==1)
 keep if ever_treated_migpuma==1
 
 *identify if migpuma was always treated
@@ -79,3 +79,48 @@ foreach v in  ever_treated_migpuma always_treated_migpuma gain_exp_migpuma lost_
 
 compress
 save  "$oi/working_acs" , replace
+
+
+
+***** AT PUMA LEVEL
+
+use "$oi/working_acs" , clear
+* drop years and puma's we don't need
+keep if year>=2013
+drop if puma==77777
+
+keep year statefip current_puma exp_any_puma
+duplicates drop
+
+* identify if puma was ever treated
+bys statefip current_puma: egen ever_treated_puma = max( exp_any_puma==1)
+keep if ever_treated_puma==1
+
+*identify if puma was always treated
+bys statefip current_puma: egen always_treated_puma = max( exp_any_puma==0)
+replace always_treated_puma = !always_treated_puma
+sort statefip current_puma year
+
+* identifying gain and lost events
+bys statefip current_puma (year): gen gain_exp_puma = exp_any_puma[_n-1] == 0 & exp_any_puma==1
+bys statefip current_puma (year): gen lost_exp_puma = exp_any_puma[_n-1] == 1 & exp_any_puma==0
+gen gain_exp_year = year if gain_exp_puma==1
+gen lost_exp_year = year if lost_exp_puma==1
+replace gain_exp_year = 0 if mi(gain_exp_year)
+replace lost_exp_year = 0 if mi(lost_exp_year)
+bys statefip current_puma (year): ereplace gain_exp_year = max(gain_exp_year)
+bys statefip current_puma (year): ereplace lost_exp_year = max(lost_exp_year)
+
+bys statefip current_puma (year): egen ever_gain_exp_puma = max(gain_exp_puma)
+bys statefip current_puma (year): egen ever_lost_exp_puma = max(lost_exp_puma)
+
+tab exp_any_puma if year>=gain_exp_year & ever_gain_exp_puma==1 //all 1
+tab exp_any_puma if year<gain_exp_year & ever_gain_exp_puma==1 //all zero except for two pumas
+
+tab exp_any_puma if year<lost_exp_year & ever_lost_exp_puma==1 //all 1
+tab exp_any_puma if year>=lost_exp_year & ever_lost_exp_puma==1 //all zero except for two pumas
+
+drop exp_any_puma
+
+* save for all current puma
+save "$oi/list_gain_lost_puma", replace

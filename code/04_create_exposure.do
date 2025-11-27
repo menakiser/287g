@@ -130,7 +130,9 @@ use "$oi/exposure_county_year" , clear
 rename countyfip countyfips
 merge m:1 statefip countyfip using "$oi/xwalk/county_migpuma10", nogen keep(1 3)
 rename countyfips countyfip
+bys statefip migpuma10 year: gen mnum = _N //up to 4
 collapse (max) exp_any_migpuma=exp_any_county exp_jail_migpuma=exp_jail_county exp_task_migpuma=exp_task_county exp_warrant_migpuma=exp_warrant_county, by(statefip migpuma10 year)
+
 compress
 save "$oi/exposure_migpuma10_year", replace
 
@@ -140,10 +142,11 @@ rename countyfip countyfips
 merge m:1 statefip countyfip using "$oi/xwalk/county_puma10" , nogen keep(1 3)
 rename countyfips countyfip
 reshape long puma10 pop10 afact , i(statefip countyfip year) j(pumaorder)
+drop if afact==0
 drop if mi(afact)
 drop if mi(puma10)
 duplicates drop
-
+bys statefip puma10 year: gen mnum = _N //up to 4
 foreach v in exp_any_ exp_jail_ exp_task_ exp_warrant_ {
 	gen wt_`v'puma = `v'county*afact
 }
@@ -154,3 +157,19 @@ collapse (max) exp_any_puma=exp_any_county exp_jail_puma=exp_jail_county exp_tas
 compress
 save "$oi/exposure_puma10_year", replace
 
+
+
+//evaluate how often a puma has multiple counties
+use "$oi/xwalk/county_puma10" , clear 
+reshape long puma10 pop10 afact , i(statefip countyfip ) j(pumaorder)
+drop if afact==0
+drop if mi(afact)
+drop if mi(puma10)
+duplicates drop
+bys statefip countyfip: gen cnum = _N // up to 69
+bys statefip puma10: gen mnum = _N //up to 24
+
+use "$oi/xwalk/county_migpuma10", clear 
+
+bys statefip countyfip: gen cnum = _N // up to 4
+bys statefip migpuma: gen mnum = _N

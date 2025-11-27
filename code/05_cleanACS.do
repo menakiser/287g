@@ -318,6 +318,14 @@ gen in_school = school==2
 gen no_english = inlist(speakeng, 1, 6)
 
 
+rename current_puma puma10
+merge m:1 puma10 statefip year using  "$oi/exposure_puma10_year", nogen keep(1 3) keepusing(exp_any*)
+rename puma10 current_puma
+replace exp_any_puma = 0 if mi(exp_any_puma)
 
 compress 
 save "$oi/working_acs", replace
+
+bys statefip current_puma: egen ever_treated_puma = max( exp_any_puma==1)
+
+//bys statefip current_puma: egen ever_treated_migpuma = max( exp_any_migpuma==1)
