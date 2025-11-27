@@ -170,11 +170,15 @@ The characteristics include 2013 total adult population and, to match on composi
 \end{enumerate}
 \end{spacing}
 
-Though all other specification exclude pumas that always have an active 287(g) during 2013-2019, as they are ultimately absorbed by puma fixed effects, I include them for finding propensity scores as they provide information of the type of localities with a 287(g) agreement. 
+Though all other specification exclude pumas that always have an active 287(g) during 2013-2019, as they are ultimately absorbed by puma fixed effects, I include them for finding propensity scores as they provide information of the type of localities with a 287(g) agreement. The resulting density of probability of treatment by propensity score weighting is graphed in Figure \ref{fig:prop_score}. In Table \ref{tab:balance_prop}, we can see the weighted differences for demographics and education are much smaller and less precisely defined, though differences in level of English and school enrollment persist. 
 
 I apply these propensity scores to our difference-in-difference specification (Equation \ref{eq:joindid}) in Table \ref{tab:didpopprop}. For the target population, we see that the propensity weighting, increases the the effect of gaining treatment, and dampens the effect of losing treatment. Gaining a 287(g) agreement can be associated with a reduction of approximate 23–24\% in population size. In contrast, losing a 287(g) agreement has no meaningful effect, with estimates near zero, and less than half in magnitude than in Table \ref{tab:didpop}. For the placebo U.S.-born population, neither gaining nor losing treatment produces statistically meaningful changes: the estimated effects (about +8–15\% for gains and –4–6\% for losses) are imprecise. These results suggest that the effect of gaining an agreement is much more salient than losing an agreement and can be associated with modest declines in population, consistent with unweighted results.
 
 \section{Discussion}
+
+This study provide evidence of how policies increasing the risk of deportation, in this case through 287(g) agreements, can meaningfully shape the local settlement patterns of recently arrived Hispanic immigrants who are most exposed to deportation risk. Across a variety of specifications, gaining an agreement produces relatively sizable, though modest in absolute values, reductions in the target population—on the order of 8–9\% in the baseline regression and roughly 20–25\% in the difference-in-differences design—while effects, robust to propensity score weighting, on a carefully constructed placebo group are negligible and statistically insignificant. These patterns strongly suggest that the policy shifts population through behavioral responses of the targeted group rather than through compositional changes in the broader community. The asymmetry between gaining and losing enforcement authority, with much weaker and noisier responses to losing an agreement, is consistent with the idea that the activation of 287(g) creates a more salient and immediate change in perceived deportation risk than its subsequent termination. This is also reflected in the event-study dynamics, which show sharper declines beginning shortly after activation and no clear rebound following deactivation.
+Although the overall magnitudes are modest in absolute terms—amounting to declines of roughly 70–170 individuals per PUMA—the relative changes align closely with prior work. For example, Parrado and Gutierrez (2012) report a 7% decline in the foreign-born Mexican population at the metropolitan plus non-metro-PUMA level, a substantially larger geographic unit, reinforcing that the order of magnitude observed here is plausible. The heterogeneity results further suggest that the policy disproportionately affects the least-established immigrants, particularly those with limited English proficiency, and produces little consistent evidence of spillovers to Hispanic U.S. citizens. Propensity-score–weighted estimates reinforce the core finding that activation—rather than deactivation—drives meaningful changes in local immigrant populations. Overall, the evidence points to 287(g) agreements operating primarily through deterrence of in-migration or acceleration of out-migration among highly mobile recent arrivals, with limited broader demographic ripple effects.
+
 
 
 
@@ -304,7 +308,7 @@ I apply these propensity scores to our difference-in-difference specification (E
 \begin{center}
 
 \caption{Propensity score weighted characteristics of target population in treated and untreated pumas}
-\label{tab:balance}
+\label{tab:balance_prop}
 \adjustbox{ width=0.8\linewidth}{
     \input{output/final/balancetable_prop}
 }
@@ -319,7 +323,7 @@ I apply these propensity scores to our difference-in-difference specification (E
 \end{spacing}
 \end{table}
 
-
+\newpage
 \begin{table}[h!]
 \centering
 \caption{Effect of gaining and losing a 287(g) agreement on the log total targeted and the log total placebo populations with propensity score weighting}
@@ -344,7 +348,7 @@ I apply these propensity scores to our difference-in-difference specification (E
 
 
 %%%%% FIGURES
-
+\newpage
 
 \begin{figure}[H]
 \centering
