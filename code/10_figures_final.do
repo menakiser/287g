@@ -28,8 +28,7 @@ graph export "$oo/final/prop_score.png", replace
 /**************************************************************
 trends in pop
 **************************************************************/
-global covarspop "log_tot_age_0_17 log_tot_age_18_24 log_tot_age_25_34 log_tot_age_35_49 log_tot_r_white log_tot_r_black log_tot_r_asian log_tot_hs log_tot_in_school "
-global covarsnat "log_nat_age_0_17 log_nat_age_18_24 log_nat_age_25_34 log_nat_age_35_49 log_nat_r_white log_nat_r_black log_nat_r_asian log_nat_hs log_nat_in_school "
+global covarspop "log_tot_age_0_17 log_tot_age_18_24 log_tot_age_25_34 log_tot_age_35_49 log_tot_r_white log_tot_r_black log_tot_r_asian log_tot_hs log_tot_in_school log_tot_ownhome"
 
 use "$oi/migpuma_year_pops", clear
 
@@ -60,10 +59,10 @@ graph export "$oo/final/total_target2_pop.png", replace
 /**************************************************************
 EVENT STUDY FOR GAINERS AND LOSERS TOTAL POP
 **************************************************************/
-global covarspop "log_tot_age_0_17 log_tot_age_18_24 log_tot_age_25_34 log_tot_age_35_49 log_tot_r_white log_tot_r_black log_tot_r_asian log_tot_hs log_tot_in_school "
-global covarsnat "log_nat_age_0_17 log_nat_age_18_24 log_nat_age_25_34 log_nat_age_35_49 log_nat_r_white log_nat_r_black log_nat_r_asian log_nat_hs log_nat_in_school "
+global covarspop "log_tot_age_0_17 log_tot_age_18_24 log_tot_age_25_34 log_tot_age_35_49 log_tot_r_white log_tot_r_black log_tot_r_asian log_tot_hs log_tot_in_school log_tot_ownhome"
 
 use "$oi/migpuma_year_pops", clear
+keep if year>=2013
 
 gen gain_ry_plus2_group = gain_ry_plus2 | gain_ry_plus3
 gen lost_ry_plus3_group =  lost_ry_plus3 | lost_ry_plus4 | lost_ry_plus5 |lost_ry_plus6 
@@ -94,7 +93,7 @@ coefplot ///
 	xtitle("Relative year")   ytitle("Log target population") ///
 	title("(a) Gained treatment, target") ///
 	legend(order(4 "Active 287(g)" 2 "No 287(g)") row(1) pos(6)) xsize(6) ///
-	ylabel(-.3(0.1).2)
+	ylabel(-.75(0.25).5)
 graph export "$oo/final/logtargetpop_gain_estudy.png", replace
 
 **** LOSERS
@@ -107,7 +106,7 @@ coefplot ///
 	xtitle("Relative year")   ytitle("Log target population") ///
 	title("(b) Lost treatment, target") ///
 	legend(order(2 "Active 287(g)" 4 "No 287(g)") row(1) pos(6)) xsize(6) ///
-	ylabel(-.3(0.1).2)
+	ylabel(-.75(0.25).5)
 graph export "$oo/final/logtargetpop_lost_estudy.png", replace
 
 
@@ -131,7 +130,7 @@ coefplot ///
 	xtitle("Relative year")   ytitle("Log placebo population") ///
 	title("(c) Gained treatment, placebo") ///
 	legend(order(4 "Active 287(g)" 2 "No 287(g)") row(1) pos(6)) xsize(6) ///
-	ylabel(-1.5(0.5).5)
+	ylabel(-.75(0.25).5)
 graph export "$oo/final/logplacebopop_gain_estudy.png", replace
 
 **** LOSERS
@@ -144,7 +143,7 @@ coefplot ///
 	xtitle("Relative year")   ytitle("Log placebo population") ///
 	title("(d) Lost treatment, placebo") ///
 	legend(order(2 "Active 287(g)" 4 "No 287(g)") row(1) pos(6)) xsize(6) ///
-	ylabel(-1.5(0.5).5)
+	ylabel(-.75(0.25).5)
 graph export "$oo/final/logplacebopop_lost_estudy.png", replace
 
 

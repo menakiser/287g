@@ -26,7 +26,7 @@ drop if mi(perwt_wt)
 
 * Identify populations
 *targetpop2
-gen placebo1 = sex==1 & lowskill==1 & hispan!=0 & born_abroad==0 & young==1  & marst>=3  //hispanic citizens born in the usa
+gen placebo1 = sex==1 & lowskill==1 & hispan==0 & r_white==1 & born_abroad==0 & young==1  & marst>=3  //hispanic citizens born in the usa
 gen pop = age>=18 & age<=65
 gen target_movers = move_migpuma*targetpop2
 gen spillover1 = sex==1 & lowskill==1 & hispan!=0 & born_abroad==1 & citizen!=3 & young==1  & marst>=3 & yrnatur<2013
