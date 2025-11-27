@@ -29,7 +29,7 @@ gen ogorder = _n
 reshape long char val, i(ogorder) j(year)
 
 * restrict to focus years
-keep if year>=2012 & year<=2019
+keep if year>=2013 & year<=2019
 collapse (sum) val, by(char group)
 sort group val
 drop if val==0
@@ -42,7 +42,7 @@ format val %12.0fc
 twoway (bar val char, barw(0.6)  color(gs9) ) ///
 	(scatter val char , mstyle(none) mlabel(val) mlabcolor(black) mlabgap(1) mlabpos(12) mlabsize(3.7) ) ///
 	, legend(off) ytitle(Deportation count) xtitle(Fiscal year)  ///
-	xlabel(2012(1)2019) ylabel(0(5000)20000)
+	xlabel(2013(1)2019) ylabel(0(5000)15000)
 graph export "$oo/deportations.png", replace
 restore
 

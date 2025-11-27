@@ -11,7 +11,7 @@ global wd "/Users/jimenakiser/Desktop/287g/"
 global or "$wd/data/raw"
 global oi "$wd/data/int"
 
-
+/*
 
 use "$oi/working_acs" , clear
 * drop years and puma's we don't need
@@ -80,7 +80,7 @@ foreach v in  ever_treated_migpuma always_treated_migpuma gain_exp_migpuma lost_
 compress
 save  "$oi/working_acs" , replace
 
-
+*/
 
 ***** AT PUMA LEVEL
 

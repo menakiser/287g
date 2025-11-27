@@ -25,7 +25,7 @@ foreach v in  ever_treated_puma always_treated_puma gain_exp_puma lost_exp_puma 
 drop if always_treated_puma==1
 
 * define propensity weights
-merge m:1 statefip current_puma  using  "$oi/propensity_weights2012puma_t2" , nogen keep(3) keepusing( phat wt)
+merge m:1 statefip current_puma  using  "$oi/propensity_weights2013puma_t2" , nogen keep(3) keepusing( phat wt)
 gen perwt_wt = perwt*wt
 drop if mi(perwt_wt)
 
@@ -161,7 +161,7 @@ use "$oi/puma_year_pops", clear
 gen istexas = statefip==48
 gen red_state = inlist(statefip, 1, 2, 4, 5, 13, 16, 20, 21, 22, 28, 29, 30, 31, 38, 40, 45, 46, 47, 48, 49, 54, 56) //https://www.worldatlas.com/articles/states-that-have-voted-republican-in-the-most-consecutive-u-s-presidential-elections.html
 
-keep if year==2012
+keep if year==2013
 /* get propensity score for county exposure */	
 logit ever_treated_puma log_tot_pop log_tot_age_0_17 log_tot_age_18_24 log_tot_age_25_34 log_tot_age_35_49 log_tot_age_50plus ///
  log_tot_r_white log_tot_r_black log_tot_r_asian ///
@@ -190,7 +190,7 @@ label var d_0 "control group, unweighted"
 kdensity phat if ever_treated_puma==0 [aw=wt], gen(x_0w d_0w)
 label var d_0w "control group, weighted"
 twoway (line d_1 x_1, sort) (line d_0 x_0, sort) (line d_0w x_0w, sort), legend(pos(6) rows(1))
-//graph export "$oo/troubleshoot_propscore/propensity_weights2012puma_t2.pdf", replace
+//graph export "$oo/troubleshoot_propscore/propensity_weights2013puma_t2.pdf", replace
 
 /* look at distribution of weights -- sometimes end out putting tons of weight on a few obs */
 summ wt if ever_treated_puma==0, d
@@ -199,5 +199,5 @@ keep statefip current_puma phat ever_treated_puma wt d_1 x_1 d_0 x_0 d_0w x_0w
 
 
 compress
-save "$oi/propensity_weights2012puma_t2_logtot", replace
+save "$oi/propensity_weights2013puma_t2_logtot", replace
 */

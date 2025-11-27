@@ -15,7 +15,7 @@ global oo "$wd/output/"
 
 
 cap log close 
-log using "$oo/logs/prop_matching2012puma_t2.pdf", replace
+log using "$oo/logs/prop_matching2013puma_t2.pdf", replace
 
 * import ACS data 
 use "$oi/working_acs", clear 
@@ -86,7 +86,7 @@ label var d_0 "control group, unweighted"
 kdensity phat if ever_treated_puma==0 [aw=wt], gen(x_0w d_0w)
 label var d_0w "control group, weighted"
 twoway (line d_1 x_1, sort) (line d_0 x_0, sort) (line d_0w x_0w, sort), legend(pos(6) rows(1))
-//graph export "$oo/troubleshoot_propscore/propensity_weights2012puma_t2.pdf", replace
+//graph export "$oo/troubleshoot_propscore/propensity_weights2013puma_t2.pdf", replace
 
 /* look at distribution of weights -- sometimes end out putting tons of weight on a few obs */
 summ wt if ever_treated_puma==0, d
@@ -95,8 +95,8 @@ keep statefip current_puma phat ever_treated_puma wt d_1 x_1 d_0 x_0 d_0w x_0w
 
 
 compress
-save "$oi/propensity_weights2012puma_t2", replace
+save "$oi/propensity_weights2013puma_t2", replace
 
 
 log close 
-translate "$oo/logs/prop_matching2012puma_t2.pdf" "$oo/logs/prop_matching2012puma_t2.pdf", translator(smcl2pdf) replace
+translate "$oo/logs/prop_matching2013puma_t2.pdf" "$oo/logs/prop_matching2013puma_t2.pdf", translator(smcl2pdf) replace

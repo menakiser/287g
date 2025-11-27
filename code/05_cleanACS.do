@@ -232,11 +232,11 @@ label var targetpop9 "hispanic non-mexican immigrants unmarried, no kids"
 
 *define placebo
 cap drop placebo*
-gen placebo1 = sex==1 & lowskill==1 & hispan!=0 & born_abroad==0 & citizen!=3 & young==1  & marst>=3 & nchild==0 //hispanic citizens born in the usa, 113,260, n 
-gen placebo2 = sex==1 & lowskill==1 & hispan==0 & imm==1 & young==1 & yrimmig>2007 & inlist(yrsusa2 , 1 ,2) & marst>=3 & nchild==0 //same as target but not hispanic, 9,316, p
-gen placebo3 = sex==1 & lowskill==1 & hispan==0 & born_abroad==1 & citizen!=3 & young==1 & yrimmig>2007 & inlist(yrsusa2 , 1 ,2) & marst>=3 & nchild==0 //non-hispanic citizen (born to american parents, naturalized citizen) born abroad,  2,731 n
-gen placebo4 = sex==1 & lowskill==1 & hispan==0 & born_abroad==0 & citizen!=3 & young==1  & marst>=3 & nchild==0 //non-hispanic citizens born in the usa,  532,596 n
-gen placebo5 = sex==1 & lowskill==1 & hispan==0 & race==1 & born_abroad==0 & citizen!=3 & young==1  & marst>=3 & nchild==0 //non-hispanic white citizens born in the usa,  400,003 n
+gen placebo1 = sex==1 & lowskill==1 & hispan!=0 & born_abroad==0 & citizen!=3 & young==1  & marst>=3 //hispanic citizens born in the usa, 113,260, n 
+gen placebo2 = sex==1 & lowskill==1 & hispan==0 & imm==1 & young==1 & daca==0 & inlist(yrsusa2 , 1) & marst>=3 //same as target but not hispanic, 9,316, p
+gen placebo3 = sex==1 & lowskill==1 & hispan==0 & born_abroad==1 & citizen!=3 & young==1 & daca==0 & inlist(yrsusa2 , 1) & marst>=3 & nchild==0 //non-hispanic citizen (born to american parents, naturalized citizen) born abroad,  2,731 n
+gen placebo4 = sex==1 & lowskill==1 & hispan==0 & born_abroad==0 & citizen!=3 & young==1  & marst>=3  //non-hispanic citizens born in the usa,  532,596 n
+gen placebo5 = sex==1 & lowskill==1 & hispan==0 & race==1 & born_abroad==0 & citizen!=3 & young==1  & marst>=3 //non-hispanic white citizens born in the usa,  400,003 n
 
 label var placebo1 "hispanic citizen US born"
 label var placebo2 "non-hispanic target"

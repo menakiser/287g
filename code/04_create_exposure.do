@@ -79,6 +79,8 @@ gen month = month(date)
 * drop task force and hybrid after 2012
 replace exposure_state = 0 if  supporttype =="jail & task force" & year>=2013
 replace exposure_state = 0 if  supporttype =="task force" & year>=2013
+replace exposure_county = 0 if  supporttype =="jail & task force" & year>=2013
+replace exposure_county = 0 if  supporttype =="task force" & year>=2013
 
 keep if month==1 | month==2 | month==3
 collapse (max) exposure_state  exposure_county  , by(year supporttype statefips countyfips) 
@@ -157,6 +159,11 @@ collapse (max) exp_any_puma=exp_any_county exp_jail_puma=exp_jail_county exp_tas
 compress
 save "$oi/exposure_puma10_year", replace
 
+
+
+use "$oi/exposure_puma10_year", clear
+keep if year>=2013 & year<=2019
+collapse (max) 
 
 
 //evaluate how often a puma has multiple counties
