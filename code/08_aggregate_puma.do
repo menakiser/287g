@@ -25,7 +25,7 @@ foreach v in  ever_treated_puma always_treated_puma gain_exp_puma lost_exp_puma 
 drop if always_treated_puma==1
 
 * define propensity weights
-merge m:1 statefip current_migpuma  using  "$oi/propensity_weights2012migpuma_t2" , nogen keep(3) keepusing( phat wt)
+merge m:1 statefip current_puma  using  "$oi/propensity_weights2012puma_t2" , nogen keep(3) keepusing( phat wt)
 gen perwt_wt = perwt*wt
 drop if mi(perwt_wt)
 
