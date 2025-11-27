@@ -28,14 +28,13 @@ graph export "$oo/final/prop_score.png", replace
 /**************************************************************
 trends in pop
 **************************************************************/
-global covarspop "log_tot_age_0_17 log_tot_age_18_24 log_tot_age_25_34 log_tot_age_35_49 log_tot_r_white log_tot_r_black log_tot_r_asian log_tot_hs log_tot_in_school log_tot_ownhome"
-global covarsnat "log_nat_age_0_17 log_nat_age_18_24 log_nat_age_25_34 log_nat_age_35_49 log_nat_r_white log_nat_r_black log_nat_r_asian log_nat_hs log_nat_in_school log_nat_ownhome"
-global invars "exp_any_state "
+global covarspop "log_tot_age_0_17 log_tot_age_18_24 log_tot_age_25_34 log_tot_age_35_49 log_tot_r_white log_tot_r_black log_tot_r_asian log_tot_hs log_tot_in_school "
+global covarsnat "log_nat_age_0_17 log_nat_age_18_24 log_nat_age_25_34 log_nat_age_35_49 log_nat_r_white log_nat_r_black log_nat_r_asian log_nat_hs log_nat_in_school "
 
 use "$oi/migpuma_year_pops", clear
 
 foreach v of varlist tot_* {
-	gen mean_`v' = `v' if tot_targetpop1!=0
+	gen mean_`v' = `v' if tot_targetpop2!=0
 }
 
 collapse (sum) tot_*  (mean) mean_tot_* ,  by(year ever_treated_migpuma)
@@ -44,29 +43,16 @@ foreach v of varlist tot_* mean_tot_* {
 	format 	`v' %12.0fc
 }
 
-twoway (connected mean_tot_targetpop1 year if ever_treated_migpuma==1, mcolor(black) lcolor(black)) ///
-	(connected mean_tot_targetpop1 year if ever_treated_migpuma==0, mcolor(gray) lcolor(gray) lpattern(longdash)) ///
-	, legend(pos(6) row(1) order(1 "Treated" 2 "Untreated" )) ytitle("Migpuma mean population") xtitle("Year") ///
-	xlabel(2012(1)2019) ylabel(0(500)2500)
-graph export "$oo/final/mean_target1_pop.png", replace
-
-
-twoway (connected tot_targetpop1 year if ever_treated_migpuma==1, mcolor(black) lcolor(black)) ///
-	(connected tot_targetpop1 year if ever_treated_migpuma==0, mcolor(gray) lcolor(gray) lpattern(longdash)) ///
-	, legend(pos(6) row(1) order(1 "Treated" 2 "Untreated" )) ytitle("Total target population") xtitle("Year") ///
-	xlabel(2012(1)2019) ylabel(0(50000)250000)
-graph export "$oo/final/total_target1_pop.png", replace
-
 twoway (connected mean_tot_targetpop2 year if ever_treated_migpuma==1, mcolor(black) lcolor(black)) ///
 	(connected mean_tot_targetpop2 year if ever_treated_migpuma==0, mcolor(gray) lcolor(gray) lpattern(longdash)) ///
 	, legend(pos(6) row(1) order(1 "Treated" 2 "Untreated" )) ytitle("Migpuma mean population") xtitle("Year") ///
-	xlabel(2012(1)2019) ylabel(0(500)2000)
+	xlabel(2013(1)2019) ylabel(0(500)2500)
 graph export "$oo/final/mean_target2_pop.png", replace
 
 twoway (connected tot_targetpop2 year if ever_treated_migpuma==1, mcolor(black) lcolor(black)) ///
 	(connected tot_targetpop2 year if ever_treated_migpuma==0, mcolor(gray) lcolor(gray) lpattern(longdash)) ///
 	, legend(pos(6) row(1) order(1 "Treated" 2 "Untreated" )) ytitle("Total target population") xtitle("Year") ///
-	xlabel(2012(1)2019) ylabel(0(50000)200000)
+	xlabel(2013(1)2019) ylabel(0(50000)200000)
 graph export "$oo/final/total_target2_pop.png", replace
 
 
@@ -74,9 +60,8 @@ graph export "$oo/final/total_target2_pop.png", replace
 /**************************************************************
 EVENT STUDY FOR GAINERS AND LOSERS TOTAL POP
 **************************************************************/
-global covarspop "log_tot_age_0_17 log_tot_age_18_24 log_tot_age_25_34 log_tot_age_35_49 log_tot_r_white log_tot_r_black log_tot_r_asian log_tot_hs log_tot_in_school log_tot_ownhome"
-global covarsnat "log_nat_age_0_17 log_nat_age_18_24 log_nat_age_25_34 log_nat_age_35_49 log_nat_r_white log_nat_r_black log_nat_r_asian log_nat_hs log_nat_in_school log_nat_ownhome"
-global invars "exp_any_state "
+global covarspop "log_tot_age_0_17 log_tot_age_18_24 log_tot_age_25_34 log_tot_age_35_49 log_tot_r_white log_tot_r_black log_tot_r_asian log_tot_hs log_tot_in_school "
+global covarsnat "log_nat_age_0_17 log_nat_age_18_24 log_nat_age_25_34 log_nat_age_35_49 log_nat_r_white log_nat_r_black log_nat_r_asian log_nat_hs log_nat_in_school "
 
 use "$oi/migpuma_year_pops", clear
 
@@ -95,7 +80,7 @@ reghdfe log_tot_targetpop1 gain_ry_minus4_group gain_ry_minus3 gain_ry_minus2 o.
 	gain_ry_plus0 gain_ry_plus1 gain_ry_plus2_group   ///
 	lost_ry_minus4_group lost_ry_minus3 lost_ry_minus2 o.lost_ry_minus1 ///
 	lost_ry_plus0 lost_ry_plus1 lost_ry_plus2 lost_ry_plus3_group ///
-	$covarspop $invars [aw=tot_targetpop1] , ///
+	$covarspop [aw=tot_targetpop1] , ///
 	vce(robust) absorb(geoid_migpuma year)
 est store in_target1
 
@@ -132,7 +117,7 @@ reghdfe log_tot_placebo1 gain_ry_minus4_group gain_ry_minus3 gain_ry_minus2 o.ga
 	gain_ry_plus0 gain_ry_plus1 gain_ry_plus2_group  ///
 	lost_ry_minus4_group lost_ry_minus3 lost_ry_minus2 o.lost_ry_minus1 ///
 	lost_ry_plus0 lost_ry_plus1 lost_ry_plus2 lost_ry_plus3_group ///
-	$covarspop $invars [aw=tot_targetpop2] , ///
+	$covarspop [aw=tot_targetpop2] , ///
 	vce(robust) absorb(geoid_migpuma year)
 est store in_placebo
 
@@ -171,7 +156,7 @@ reghdfe log_tot_spillover1 gain_ry_minus6 gain_ry_minus5 gain_ry_minus4 gain_ry_
 	gain_ry_plus0 gain_ry_plus1 gain_ry_plus2 gain_ry_plus3  ///
 	lost_ry_minus6 lost_ry_minus5 lost_ry_minus4 lost_ry_minus3 lost_ry_minus2 o.lost_ry_minus1 ///
 	lost_ry_plus0 lost_ry_plus1 lost_ry_plus2 lost_ry_plus3 lost_ry_plus4 lost_ry_plus5 lost_ry_plus6 ///
-	$covarspop $invars [aw=tot_targetpop2] , ///
+	$covarspop [aw=tot_targetpop2] , ///
 	vce(robust) absorb(geoid_migpuma year)
 est store in_spillover
 

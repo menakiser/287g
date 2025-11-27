@@ -12,8 +12,8 @@ global or "$wd/data/raw"
 global oi "$wd/data/int"
 global oo "$wd/output/"
 
-global covarspop "log_tot_age_0_17 log_tot_age_18_24 log_tot_age_25_34 log_tot_age_35_49 log_tot_r_white log_tot_r_black log_tot_r_asian log_tot_hs log_tot_in_school "
-global covarsnat "log_nat_age_0_17 log_nat_age_18_24 log_nat_age_25_34 log_nat_age_35_49 log_nat_r_white log_nat_r_black log_nat_r_asian log_nat_hs log_nat_in_school "
+global covarspop "log_tot_age_0_17 log_tot_age_18_24 log_tot_age_25_34 log_tot_age_35_49 log_tot_r_white log_tot_r_black log_tot_r_asian log_tot_hs log_tot_in_school log_tot_ownhome"
+
 //global invars "exp_any_state SC_any"
 
 
@@ -1089,7 +1089,6 @@ merge m:1 statefip current_migpuma year using `t1vars', nogen keep(1 3)
 reghdfe log_tot_targetpop2 exp_gain_migpuma exp_lost_migpuma exp_gain_migpuma_t1 exp_lost_migpuma_t1 $covarspop  [aw=tot_targetpop2], vce(robust) absorb(geoid_migpuma year)
 
 
-global covarspop "log_tot_age_0_17 log_tot_age_18_24 log_tot_age_25_34 log_tot_age_35_49 log_tot_r_white log_tot_r_black log_tot_r_asian log_tot_hs log_tot_in_school "
 
 global covarssh "age r_white r_black r_asian hs in_school "
 reghdfe log_tot_targetpop2 exp_gain_migpuma exp_lost_migpuma $covarspop  [aw=tot_targetpop2] , vce(robust) absorb(geoid_migpuma year)
