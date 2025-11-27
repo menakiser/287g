@@ -67,18 +67,22 @@ foreach v of varlist targetpop1 targetpop2 targetpop3 targetpop4 targetpop5 targ
 
 * Obtain totals FOR HETEROGENEITY
 *target
+gen tot_target_women = sex==2 & lowskill==1 & hispan!=0 & imm==1 & young==1 & daca==0 & /*yrimmig>2007 &*/ inlist(yrsusa2 , 1) & marst>=3
 gen tot_target_mexican = tot_targetpop2 & (bpl==200 | hispan==1) //target mexican
 gen tot_target_noenglish = tot_targetpop2 & tot_no_english //target no english
-gen tot_target_old = tot_targetpop2 & inlist(yrsusa2 , 2)  //target old immigrants
+gen tot_target_old = sex==1 & lowskill==1 & hispan!=0 & imm==1 & young==1 & daca==0 & yrsusa2>1 & marst>=3  //target old immigrants
 gen tot_target_nochild = tot_targetpop2 & nchild==0 //target no children
 gen tot_target_nohisp= sex==1 & lowskill==1 & hispan==0 & imm==1 & young==1 & daca==0 & inlist(yrsusa2 , 1) & marst>=3  //target not hispanics
 *spillover
+gen tot_spill1_women = sex==2 & lowskill==1 & hispan!=0 & ((born_abroad==0 & citizen!=3) | (born_abroad==1 & citizen!=3 & yrnatur<2013)) & young==1  & marst>=3
 gen tot_spill1_mexican = tot_spillover1 & (bpl==200 | hispan==1) //spillover mexican
 gen tot_spill1_noenglish = tot_spillover1 & tot_no_english //spillover no english
 gen tot_spill1_old = tot_spillover1 & inlist(yrsusa2, 2)  //spillover new immigrants
 gen tot_spill1_nochild = tot_spillover1 & nchild==0 //spillover no children
 gen tot_spill1_nohisp= sex==1 & lowskill==1 & hispan==0 & ((born_abroad==0 & citizen!=3) | (born_abroad==1 & citizen!=3 & yrnatur<2013)) & young==1  & marst>=3 //spillover not hispanics
+
 *spillover2
+gen tot_spill2_women = sex==2 & lowskill==1 & hispan!=0 & (born_abroad==0 & citizen!=3) & young==1  & marst>=3 
 gen tot_spill2_mexican = tot_spillover2 & (bpl==200 | hispan==1) //spillover mexican
 gen tot_spill2_noenglish = tot_spillover2 & tot_no_english //spillover no english
 gen tot_spill2_old = tot_spillover2 & inlist(yrsusa2, 2)  //spillover new immigrants

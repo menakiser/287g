@@ -437,13 +437,13 @@ gen sample4 = e(sample)
 reg_to_mat, depvar( log_tot_placebo5 ) indvars( exp_any_puma ) mat(intarget) wt(tot_targetpop2) wttype(aw)
 
 //store pop size
-qui sum tot_targetpop2 if sample1 
+qui sum tot_targetpop2  [aw=tot_targetpop2] if sample1 
 local um1 = r(mean)
-qui sum tot_targetpop2 if sample2
+qui sum tot_targetpop2  [aw=tot_targetpop2] if sample2
 local um2 = r(mean)
-qui sum tot_placebo5 if sample3
+qui sum tot_placebo5 [aw=tot_targetpop2] if sample3
 local um3 = r(mean)
-qui sum tot_placebo5 if sample4
+qui sum tot_placebo5 [aw=tot_targetpop2] if sample4
 local um4 = r(mean)
 mat intarget = nullmat(intarget) \ (`um1', `um2', `um3' , `um4' )
 
@@ -518,13 +518,13 @@ gen sample4 = e(sample)
 reg_to_mat, depvar( log_tot_placebo5 ) indvars( exp_gain_puma exp_lost_puma) mat(intarget)  wt(tot_targetpop2) wttype(aw)
 
 //store pop size
-qui sum tot_targetpop2 if sample1 
+qui sum tot_targetpop2 [aw=tot_targetpop2] if sample1 
 local um1 = r(mean)
-qui sum tot_targetpop2 if sample2
+qui sum tot_targetpop2 [aw=tot_targetpop2] if sample2
 local um2 = r(mean)
-qui sum tot_placebo5 if sample3
+qui sum tot_placebo5 [aw=tot_targetpop2] if sample3
 local um3 = r(mean)
-qui sum tot_placebo5 if sample4
+qui sum tot_placebo5 [aw=tot_targetpop2] if sample4
 local um4 = r(mean)
 mat intarget = nullmat(intarget) \ (`um1', `um2', `um3' , `um4' )
 
@@ -612,65 +612,19 @@ gen sample6 = e(sample)
 reg_to_mat, depvar( log_tot_target_nohisp ) indvars( exp_gain_puma exp_lost_puma) mat(intarget)  wt(tot_targetpop2) wttype(aw)
 
 *** STORE POP SIZE ***
-qui sum tot_targetpop2 if sample1
+qui sum tot_targetpop2 [aw=tot_targetpop2] if sample1
 local um1 = r(mean)
-qui sum tot_target_mexican if sample2
+qui sum tot_target_mexican [aw=tot_targetpop2] if sample2
 local um2 = r(mean)
-qui sum tot_target_noenglish if sample3
+qui sum tot_target_noenglish [aw=tot_targetpop2] if sample3
 local um3 = r(mean)
-qui sum tot_target_old if sample4
+qui sum tot_target_old [aw=tot_targetpop2] if sample4
 local um4 = r(mean)
-qui sum tot_target_nochild if sample5
+qui sum tot_target_nochild [aw=tot_targetpop2] if sample5
 local um5 = r(mean)
-qui sum tot_target_nohisp if sample6
+qui sum tot_target_nohisp [aw=tot_targetpop2] if sample6
 local um6 = r(mean)
 mat intarget = nullmat(intarget) \ (`um1', `um2', `um3', `um4', `um5', `um6')
-drop sample*
-
-
-local i = 1
-cap mat drop inplacebo 
-* PLACEBO
-reghdfe log_tot_placebo5 exp_gain_puma exp_lost_puma $covarspop  [aw=tot_targetpop2], vce(robust) absorb(geoid_puma year)
-reg_to_mat, depvar( log_tot_placebo5 ) indvars( exp_gain_puma exp_lost_puma) mat(inplacebo)  wt(tot_targetpop2) wttype(aw)
-gen sample`i' = e(sample)
-local++ i
-* PLACEBO MEXICANS
-mat inplacebo = inplacebo , (9999 \ 9999 \ 9999 \ 9999 \ 9999 \ 9999 \ 9999 \ 9999 \ 9999 \ 9999)
-local++ i
-* PLACEBO POOR ENGLISH TARGET
-reghdfe log_tot_plac_noenglish exp_gain_puma exp_lost_puma $covarspop  [aw=tot_targetpop2], vce(robust) absorb(geoid_puma year)
-reg_to_mat, depvar( log_tot_plac_noenglish ) indvars( exp_gain_puma exp_lost_puma) mat(inplacebo)  wt(tot_targetpop2) wttype(aw)
-gen sample`i' = e(sample)
-local++ i
-* PLACEBO NEW IMMIGRANT
-mat inplacebo = inplacebo , (9999 \ 9999 \ 9999 \ 9999 \ 9999 \ 9999 \ 9999 \ 9999 \ 9999 \ 9999)
-local++ i
-* PLACEBO NO child
-reghdfe log_tot_plac_nochild exp_gain_puma exp_lost_puma $covarspop  [aw=tot_targetpop2], vce(robust) absorb(geoid_puma year)
-reg_to_mat, depvar( log_tot_plac_nochild ) indvars( exp_gain_puma exp_lost_puma) mat(inplacebo)  wt(tot_targetpop2) wttype(aw)
-gen sample`i' = e(sample)
-local++ i
-* PLACEBO NON HISPANIC
-reghdfe log_tot_plac_nohisp exp_gain_puma exp_lost_puma $covarspop  [aw=tot_targetpop2], vce(robust) absorb(geoid_puma year)
-reg_to_mat, depvar( log_tot_plac_nohisp ) indvars( exp_gain_puma exp_lost_puma) mat(inplacebo)  wt(tot_targetpop2) wttype(aw)
-gen sample`i' = e(sample)
-local++ i
-
-*** STORE POP SIZE ***
-qui sum tot_placebo5 if sample1
-local um1 = r(mean)
-qui sum tot_placebo5 if sample1
-local um2 = r(mean)
-qui sum tot_plac_noenglish if sample3
-local um3 = r(mean)
-qui sum tot_plac_noenglish if sample3
-local um4 = r(mean)
-qui sum tot_plac_nochild if sample5
-local um5 = r(mean)
-qui sum tot_plac_nohisp if sample6
-local um6 = r(mean)
-mat inplacebo = nullmat(inplacebo) \ (`um1', `um2', `um3', `um4', `um5', `um6')
 drop sample*
 
 
@@ -708,17 +662,17 @@ gen sample`i' = e(sample)
 local++ i
 
 *** STORE POP SIZE ***
-qui sum tot_spillover1 if sample1
+qui sum tot_spillover1 [aw=tot_targetpop2] if sample1
 local um1 = r(mean)
-qui sum tot_spill1_mexican if sample2
+qui sum tot_spill1_mexican [aw=tot_targetpop2] if sample2
 local um2 = r(mean)
-qui sum tot_spill1_noenglish if sample3
+qui sum tot_spill1_noenglish [aw=tot_targetpop2] if sample3
 local um3 = r(mean)
-qui sum tot_spill1_old if sample4
+qui sum tot_spill1_old [aw=tot_targetpop2] if sample4
 local um4 = r(mean)
-qui sum tot_spill1_nochild if sample5
+qui sum tot_spill1_nochild [aw=tot_targetpop2] if sample5
 local um5 = r(mean)
-qui sum tot_spill1_nohisp if sample6
+qui sum tot_spill1_nohisp [aw=tot_targetpop2] if sample6
 local um6 = r(mean)
 mat inspillover = nullmat(inspillover) \ (`um1', `um2', `um3', `um4', `um5', `um6')
 drop sample*
@@ -797,15 +751,15 @@ forval i = 1/2 {
     file write sumstat " & (`sd1') & (`sd2') & (`sd3') & (`sd4') & (`sd5') & (`sd6') \\" _n 
 }
 file write sumstat "\\" _n 
-file write sumstat " Controls & X & X & X & . & X & X \\" _n 
+file write sumstat " Controls & X & X & X & X & X & X \\" _n 
 forval c = 1/6 {
     local r`c' = string(inspillover[7,`c'], "%12.4fc" )
     local um`c' = string(inspillover[11,`c'], "%12.0fc" )
     local n`c' = string(inspillover[9,`c'], "%12.0fc" )
 }
-file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & . & `r5' & `r6'    \\" _n 
-file write sumstat " Untreated pop size & `um1' & `um2' & `um3' & . & `um5' & `um6'  \\" _n 
-file write sumstat "Sample Size & `n1' & `n2' & `n3' & . & `n5' & `n6'  \\" _n
+file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & `r4' & `r5' & `r6'    \\" _n 
+file write sumstat " Untreated pop size & `um1' & `um2' & `um3' &  `um4' & `um5' & `um6'  \\" _n 
+file write sumstat "Sample Size & `n1' & `n2' & `n3' & `n4' & `n5' & `n6'  \\" _n
 file write sumstat "\bottomrule" _n
 file write sumstat "\bottomrule" _n
 file write sumstat "\\" _n 
@@ -816,53 +770,6 @@ file close sumstat
 
 
 
-
-****
-* Create table
-cap file close sumstat
-file open sumstat using "$oo/final/logpops_het_spill.tex", write replace
-file write sumstat "\begin{tabular}{lcccccc}" _n
-file write sumstat "\toprule" _n
-file write sumstat "\toprule" _n
-file write sumstat " & Baseline & Mexican & Poor English & New Immigrant & No children & Non-Hispanic \\" _n
-file write sumstat "Log population & (1) & (2)  & (3) & (4) & (5) & (6) \\" _n
-file write sumstat "\midrule " _n
-
-global varnames `"  "Gain treatment" "Lose treatment" "'
-
-forval i = 1/2 {
-    local varname : word `i' of $varnames
-    forval c = 1/6  {
-        local row = 1 +3*(`i'-1)
-        local b`c' = string(inplacebo[`row',`c'], "%12.4fc" )
-        local temp = inplacebo[`row',`c']/inplacebo[5,`c']*100
-        local bmean`c' = string(`temp', "%12.2fc" )
-        local++ row
-        local p`c' = inplacebo[`row',`c']
-        local stars_abs`c' = cond(`p`c'' < 0.01, "***", cond(`p`c'' < 0.05, "**", cond(`p`c'' < 0.1, "*", "")))
-        local++ row
-        local sd`c' = string(inplacebo[`row',`c'], "%12.4fc" )
-        
-    }
-    file write sumstat " `varname' & `b1'`stars_abs1' & `b2'`stars_abs2' & `b3'`stars_abs3' & . & `b5'`stars_abs5' & `b6'`stars_abs6' \\" _n 
-    //file write sumstat "  & [`bmean1'$\%$] & [`bmean2'$\%$] & [`bmean3'$\%$] & [`bmean4'$\%$] \\" _n 
-    file write sumstat " & (`sd1') & (`sd2') & (`sd3') & . & (`sd5') & (`sd6') \\" _n 
-}
-file write sumstat "\\" _n 
-file write sumstat " Controls & X & X & X & . & X & X \\" _n 
-forval c = 1/6 {
-    local r`c' = string(inplacebo[7,`c'], "%12.4fc" )
-    local um`c' = string(inplacebo[11,`c'], "%12.0fc" )
-    local n`c' = string(inplacebo[9,`c'], "%12.0fc" )
-}
-file write sumstat " \textit{R2} & `r1' & `r2' & `r3' & . & `r5' & `r6'    \\" _n 
-file write sumstat " Untreated pop size & `um1' & `um2' & `um3' & . & `um5' & `um6'  \\" _n 
-file write sumstat "Sample Size & `n1' & `n2' & `n3' & . & `n5' & `n6'  \\" _n
-file write sumstat "\bottomrule" _n
-file write sumstat "\bottomrule" _n
-file write sumstat "\\" _n 
-file write sumstat "\end{tabular}"
-file close sumstat
 
 /**************************************************************
 LOG POPULATION DID GAINERS AND LOSERS IN SAME REGRESSION WITH PROP WEIGHT
@@ -900,13 +807,13 @@ reg_to_mat, depvar( log_tot_placebo5 ) indvars( exp_gain_puma exp_lost_puma) mat
 
 
 *** STORE POP SIZE ***
-qui sum tot_targetpop2 if sample1
+qui sum tot_targetpop2 [aw=popwt] if sample1
 local um1 = r(mean)
-qui sum tot_targetpop2 if sample2
+qui sum tot_targetpop2 [aw=popwt] if sample2
 local um2 = r(mean)
-qui sum tot_placebo5 if sample3
+qui sum tot_placebo5 [aw=popwt] if sample3
 local um3 = r(mean)
-qui sum tot_placebo5 if sample4
+qui sum tot_placebo5 [aw=popwt] if sample4
 local um4 = r(mean)
 mat intarget = nullmat(intarget) \ (`um1', `um2', `um3', `um4')
 drop sample*
