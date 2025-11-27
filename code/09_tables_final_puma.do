@@ -95,10 +95,13 @@ drop if always_treated_puma==1 //ruling out always treated counties
 
 
 * define propensity weights for hispanic singles
-merge m:1 statefip current_puma  using  "$oi/propensity_weights2012puma_t2" , nogen keep(3) keepusing(phat wt)
+merge m:1 statefip current_puma  using  "$oi/propensity_weights2013puma_t2" , nogen keep(3) keepusing(phat wt)
 rename (phat wt) (phat2 wt2)
 gen perwt_wt2 = perwt*wt2
 drop if mi(perwt_wt2)
+
+gen has_child = nchild>0
+gen hs_high = educ>=6
 
 //remember you see some effects in migration for born_abroad==1 & citizen!=3
 * create summary values
@@ -106,7 +109,7 @@ cap mat drop sumstat
 cap mat drop matse
 cap mat drop matpval
 
-foreach v in move_migpuma move_state move_abroad age nchild r_white r_black hs no_english in_school employed wkswork1 uhrswork incwage ownhome rentprice mortprice {
+foreach v in move_migpuma move_state move_abroad has_child nchild r_white r_black hs no_english in_school employed wkswork1 uhrswork incwage ownhome rentprice mortprice {
     di in red "Processing `v'"
     * TARGET POPULATION FOR HISPANICS
     * Ever exposed
@@ -186,7 +189,7 @@ forval r = 1/3 {
     local++ i
 }
 file write sumstat " \textbf{Demographics and education} & & &   \\" _n
-global varnames `" "Age" "Number of children" "Race: White" "Race: Black" "High School" "Poor English" "In School" "'
+global varnames `" "Age" "Has a child" "Race: White" "Race: Black" "High School" "Poor English" "In School" "'
 local i = 1
 forval r = 4/10 {
     local varname : word `i' of $varnames
@@ -247,6 +250,159 @@ file write sumstat "\bottomrule" _n
 file write sumstat "\\" _n 
 file write sumstat "\end{tabular}"
 file close sumstat
+
+
+******** BALANCE TABLE WITH WEIGHTS
+
+//remember you see some effects in migration for born_abroad==1 & citizen!=3
+* create summary values
+cap mat drop sumstat
+cap mat drop matse
+cap mat drop matpval
+
+foreach v in move_migpuma move_state move_abroad age has_child r_white r_black hs no_english in_school employed wkswork1 uhrswork incwage ownhome rentprice mortprice {
+    di in red "Processing `v'"
+    * TARGET POPULATION FOR HISPANICS
+    * Ever exposed
+    qui reg `v' targetpop2 [pw=perwt_wt2] if ever_treated_puma==1 , nocons 
+    local m1 = _b[targetpop]
+    local se1 = _se[targetpop]
+    local pval1 = 9999
+
+    * never exposed
+    qui reg `v' targetpop2 [pw=perwt_wt2] if ever_treated_puma==0 , nocons 
+    local m2 = _b[targetpop]
+    local se2 = _se[targetpop]
+    local pval2 = 9999
+   
+   * Difference without prop score
+    qui reg `v' ever_treated_puma [pw=perwt_wt2] if targetpop2==1, robust
+    local m3 = _b[ever_treated_puma]
+    local se3 = _se[ever_treated_puma]
+    local t = _b[ever_treated_puma] / _se[ever_treated_puma]
+    local pval3 =  2*ttail(e(df_r), abs(`t'))
+
+    mat sumstat = nullmat(sumstat) \ (`m1', `m2', `m3' )
+    mat matse = nullmat(matse) \ (`se1', `se2', `se3' )
+    mat matpval = nullmat(matpval) \ (`pval1' , `pval2', `pval3' )
+}
+
+qui count if targetpop2==1 & ever_treated_puma==1
+local m1 = r(N)
+qui count if targetpop2==1 & ever_treated_puma==0
+local m2 = r(N)
+qui count if targetpop2==1 
+local m3 = r(N)
+mat sumstat = nullmat(sumstat) \ (`m1', `m2', `m3' )
+
+qui sum targetpop2 [aw=perwt] if ever_treated_puma==1
+local m1 = r(sum)
+qui sum targetpop2 [aw=perwt] if ever_treated_puma==0
+local m2 = r(sum)
+qui sum targetpop2 [aw=perwt]
+local m3 = r(sum)
+mat sumstat = nullmat(sumstat) \ (`m1', `m2', `m3' )
+
+
+* Create table
+cap file close sumstat
+file open sumstat using "$oo/final/balancetable_prop.tex", write replace
+file write sumstat "\begin{tabular}{lccc}" _n
+file write sumstat "\toprule" _n
+file write sumstat "\toprule" _n
+file write sumstat " & \multicolumn{3}{c}{Target population} & \multicolumn{3}{c}{puma}  \\" _n
+file write sumstat " & Treated & Untreated & Difference   \\" _n
+file write sumstat " & (1) & (2) & (3)  \\" _n
+file write sumstat "\midrule " _n
+ 
+file write sumstat " \textbf{Mobility} & & &   \\" _n
+global varnames `" "Moved migpuma" "Moved state" "Moved from abroad" "'
+local i = 1
+forval r = 1/3 {
+    local varname : word `i' of $varnames
+    file write sumstat " `varname' "
+    di "Writing row `r'"
+    * mean
+    forval c = 1/3 {
+        di "Writing column `c'"
+        local a = string(sumstat[`r',`c'], "%12.2fc" )
+        local pval = matpval[`r', `c']
+        local stars_abs = cond(`pval' < 0.01, "***", cond(`pval' < 0.05, "**", cond(`pval' < 0.1, "*", "")))
+        file write sumstat " & `a'`stars_abs' "
+    }
+    file write sumstat "\\" _n 
+    * se
+    forval c = 1/3 {
+        local a = string(matse[`r',`c'], "%12.2fc" )
+        file write sumstat " & (`a')"
+    }
+    file write sumstat "\\" _n 
+    local++ i
+}
+file write sumstat " \textbf{Demographics and education} & & &   \\" _n
+global varnames `" "Age" "Has a child" "Race: White" "Race: Black" "High School" "Poor English" "In School" "'
+local i = 1
+forval r = 4/10 {
+    local varname : word `i' of $varnames
+    file write sumstat " `varname' "
+    di "Writing row `r'"
+    * mean
+    forval c = 1/3 {
+        di "Writing column `c'"
+        local a = string(sumstat[`r',`c'], "%12.2fc" )
+        local pval = matpval[`r', `c']
+        local stars_abs = cond(`pval' < 0.01, "***", cond(`pval' < 0.05, "**", cond(`pval' < 0.1, "*", "")))
+        file write sumstat " & `a'`stars_abs' "
+    }
+    file write sumstat "\\" _n 
+    * se
+    forval c = 1/3 {
+        local a = string(matse[`r',`c'], "%12.2fc" )
+        file write sumstat " & (`a')"
+    }
+    file write sumstat "\\" _n 
+    local++ i
+}
+file write sumstat " \textbf{Employment and housing} & & &   \\" _n
+global varnames `" "Employed" "Weeks worked" "Usual weekly hours worked" "Wage income" "Owns a home" "Rent price" "Mortgage price" "'
+local i = 1
+forval r = 11/17 {
+    local varname : word `i' of $varnames
+    file write sumstat " `varname' "
+    di "Writing row `r'"
+    * mean
+    forval c = 1/3 {
+        di "Writing column `c'"
+        local a = string(sumstat[`r',`c'], "%12.2fc" )
+        local pval = matpval[`r', `c']
+        local stars_abs = cond(`pval' < 0.01, "***", cond(`pval' < 0.05, "**", cond(`pval' < 0.1, "*", "")))
+        file write sumstat " & `a'`stars_abs' "
+    }
+    file write sumstat "\\" _n 
+    * se
+    forval c = 1/3 {
+        local a = string(matse[`r',`c'], "%12.2fc" )
+        file write sumstat " & (`a')"
+    }
+    file write sumstat "\\" _n 
+    local++ i
+}
+
+file write sumstat "\\" _n 
+local a1 = string(sumstat[18,1], "%12.0fc" )
+local a2 = string(sumstat[18,2], "%12.0fc" )
+local a3 = string(sumstat[18,3], "%12.0fc" )
+file write sumstat "Sample size & `a1' & `a2' & \\" _n
+local a1 = string(sumstat[19,1], "%12.0fc" )
+local a2 = string(sumstat[19,2], "%12.0fc" )
+local a3 = string(sumstat[19,3], "%12.0fc" )
+file write sumstat "Total population & `a1' & `a2' & \\" _n
+file write sumstat "\bottomrule" _n
+file write sumstat "\bottomrule" _n
+file write sumstat "\\" _n 
+file write sumstat "\end{tabular}"
+file close sumstat
+
 
 
 
@@ -331,10 +487,10 @@ file write sumstat "\\" _n
 file write sumstat "\end{tabular}"
 file close sumstat
 
-forval i = 1/5 {
+/*forval i = 1/5 {
     di in red "placebo `i' "
     reghdfe log_tot_placebo`i' exp_gain_puma exp_lost_puma $covarspop  [aw=tot_targetpop2], vce(robust) absorb(geoid_puma year)
-}
+}*/
 
 /**************************************************************
 LOG POPULATION DID GAINERS AND LOSERS IN SAME REGRESSION
@@ -713,7 +869,7 @@ LOG POPULATION DID GAINERS AND LOSERS IN SAME REGRESSION WITH PROP WEIGHT
 
 use "$oi/puma_year_pops", clear
 keep if year>=2013
-merge m:1 statefip current_puma  using  "$oi/propensity_weights2012puma_t2" , nogen keep(3) keepusing(phat wt)
+merge m:1 statefip current_puma  using  "$oi/propensity_weights2013puma_t2" , nogen keep(3) keepusing(phat wt)
 
 gen popwt = tot_targetpop2*wt
 
