@@ -254,6 +254,27 @@ file close sumstat
 
 ******** BALANCE TABLE WITH WEIGHTS
 
+* import clean ACS data ready for regressions
+use "$oi/working_acs", clear 
+gen rentprice = rent if ownhome==0
+gen mortprice = mortamt1 if ownhome==1
+
+* restrict sample 
+keep if year >= 2013
+bys statefip current_puma: egen ever_treated_puma = max( exp_any_puma==1)
+bys statefip current_puma: egen always_treated_puma = max( exp_any_puma==0)
+replace always_treated_puma = !always_treated_puma
+drop if always_treated_puma==1 //ruling out always treated counties
+
+
+* define propensity weights for hispanic singles
+merge m:1 statefip current_puma  using  "$oi/propensity_weights2013puma_t2" , nogen keep(3) keepusing(phat wt)
+rename (phat wt) (phat2 wt2)
+gen perwt_wt2 = perwt*wt2
+drop if mi(perwt_wt2)
+
+gen has_child = nchild>0
+gen hs_high = educ>=6
 //remember you see some effects in migration for born_abroad==1 & citizen!=3
 * create summary values
 cap mat drop sumstat
@@ -310,7 +331,7 @@ file open sumstat using "$oo/final/balancetable_prop.tex", write replace
 file write sumstat "\begin{tabular}{lccc}" _n
 file write sumstat "\toprule" _n
 file write sumstat "\toprule" _n
-file write sumstat " & \multicolumn{3}{c}{Target population} & \multicolumn{3}{c}{puma}  \\" _n
+file write sumstat " & \multicolumn{3}{c}{Target population} \\" _n
 file write sumstat " & Treated & Untreated & Difference   \\" _n
 file write sumstat " & (1) & (2) & (3)  \\" _n
 file write sumstat "\midrule " _n
